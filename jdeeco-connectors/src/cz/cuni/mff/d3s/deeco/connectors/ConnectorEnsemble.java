@@ -1,6 +1,7 @@
 package cz.cuni.mff.d3s.deeco.connectors;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cz.cuni.mff.d3s.deeco.annotations.Ensemble;
@@ -17,13 +18,13 @@ public class ConnectorEnsemble extends EnsembleBase {
 	
 	@Membership
 	public static boolean membership(
-			@In("member.role") String mRole,
-			@In("coord.role") String cRole,
+			@In("member.roles") List<String> mRoles,
+			@In("coord.roles") List<String> cRoles,
 			
 			@In("member.id") String mId,
 			@In("coord.id") String cId) {
 		
-		Boolean mem = matchRole("Connector", mRole, cRole) &&
+		Boolean mem = matchRole("Connector", mRoles, cRoles) &&
 					  !mId.equals(cId);
 		return mem;
 	}

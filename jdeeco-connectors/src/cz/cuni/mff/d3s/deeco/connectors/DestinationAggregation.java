@@ -1,5 +1,6 @@
 package cz.cuni.mff.d3s.deeco.connectors;
 
+import java.util.List;
 import java.util.Map;
 
 import cz.cuni.mff.d3s.deeco.annotations.Ensemble;
@@ -29,8 +30,8 @@ public class DestinationAggregation extends EnsembleBase {
 	 */
 	@Membership
 	public static boolean membership(
-			@In("member.role") String mRole,
-			@In("coord.role") String cRole, 
+			@In("member.roles") List<String> mRoles,
+			@In("coord.roles") List<String> cRoles, 
 			@In("member.dest") String mDest,
 			@In("coord.dest") String cDest,
 			@In("member.position") Position mPos,
@@ -41,7 +42,7 @@ public class DestinationAggregation extends EnsembleBase {
 			@In("coord.id") String cId
 			) {
 		
-		Boolean mem = matchRole("Vehicle", cRole, mRole) && 
+		Boolean mem = matchRole("Vehicle", cRoles, mRoles) && 
 					  matchDest(cDest, mDest) &&
 					  isBefore(cPos, mPos) &&
 					  // this condition is necessary because membership condition is also called
