@@ -10,16 +10,22 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 
 public final class BoundaryRecipientSelector implements DirectRecipientSelector {
 	
+	private List<String> recipients;
+	
 	public BoundaryRecipientSelector() {
-		// TODO: add parameters
+		recipients = new ArrayList<String>();
+	}
+	
+	public void addRecipient(String recipient) {
+		this.recipients.add(recipient);
 	}
 	
 	public Collection<String> getRecipients(KnowledgeData data, ReadOnlyKnowledgeManager sender) {
 		
-		List<String> recipients = new ArrayList<String>();
+		//List<String> recipients = new ArrayList<String>();
 		
 		// TODO: select list of recipients for current knowledge data and a sender
-		if (sender.getId() == "V1") {
+		/*if (sender.getId() == "V1") {
 			recipients.add("V2");
 			recipients.add("V3");
 		}
@@ -30,7 +36,7 @@ public final class BoundaryRecipientSelector implements DirectRecipientSelector 
 		else if (sender.getId() == "V3") {
 			recipients.add("V1");
 			recipients.add("V2");
-		}
+		}*/
 		
 		return recipients;
 	}

@@ -107,13 +107,18 @@ public class Main {
 		components.add(deployComponent(sim, new Vehicle("V2", "Berlin", 4d, 0d), DestinationAggregation.class));
 		components.add(deployComponent(sim, new Vehicle("V3", "Berlin", 1d, 0d), DestinationAggregation.class));
 		components.add(deployComponent(sim, new Vehicle("V4", "Munich"), DestinationAggregation.class));
-		//components.add(deployComponent(sim, new Connector("C1", "Berlin"), ConnectorEnsemble.class));
-		//components.add(deployComponent(sim, new Connector("C2", "Munich"), ConnectorEnsemble.class));
+//		components.add(deployComponent(sim, new Connector("C1", "Berlin"), ConnectorEnsemble.class));
+//		components.add(deployComponent(sim, new Connector("C2", "Berlin"), ConnectorEnsemble.class));
+//		components.add(deployComponent(sim, new Connector("C3", "Berlin"), ConnectorEnsemble.class));
 		
 		
 		Collection<TimerTaskListener> listeners = null;
 		if (knowledgeHandler instanceof TimerTaskListener)
 			listeners = Arrays.asList((TimerTaskListener)knowledgeHandler);
+		
+		for (ComponentInfo comp : components) {
+			recipientSelector.addRecipient(comp.host.getHostId());
+		}
 		
 		for (ComponentInfo comp : components) {
 			RuntimeFramework runtime = builder.build(comp.host, sim, listeners, comp.model, recipientSelectors, gossipStrategy);

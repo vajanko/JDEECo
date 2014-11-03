@@ -67,7 +67,7 @@ public class Connector extends EnsembleComponent {
 			@TriggerOnChange @In("registry") HashMap<String, ConnectorRegistry> registry) {
 		// There is nothing to be done here
 		// Connectors only communicate on the ensemble level
-		System.out.print("Node " + id + " registry [ ");
+		/*System.out.print("Node " + id + " registry [ ");
 		for (ConnectorRegistry reg : registry.values()) {
 			System.out.print(reg.getKey() + ": (");
 			int count = reg.getRelays().size();
@@ -79,7 +79,12 @@ public class Connector extends EnsembleComponent {
 			}
 			System.out.print(") ");
 		}
-		System.out.println("]");
+		System.out.println("]");*/
+		System.out.println(id + ": ");
+		for (ConnectorRegistry reg : registry.values()) {
+			System.out.println(reg);
+		}
+		
 	}
 }
 
@@ -101,6 +106,16 @@ class ConnectorRegistry {
 	}
 	public Collection<String> getRelays() {
 		return relays;
+	}
+	
+	public String toString() {
+		String res = key + " = {";
+		for (int i = 0; i < relays.size() - 1; i++)
+			res += relays.get(i) + ", ";
+		if (relays.size() > 0)
+			res += relays.get(relays.size() - 1);
+		res += "}";
+		return res;
 	}
 	
 	public ConnectorRegistry(String key) {
