@@ -5,6 +5,7 @@ package cz.cuni.mff.d3s.deeco.model.runtime.impl;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.Condition;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.EnsembleDefinition;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.Exchange;
+import cz.cuni.mff.d3s.deeco.model.runtime.api.Partition;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.Trigger;
 
 import cz.cuni.mff.d3s.deeco.model.runtime.meta.RuntimeMetadataPackage;
@@ -39,6 +40,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link cz.cuni.mff.d3s.deeco.model.runtime.impl.EnsembleDefinitionImpl#getKnowledgeExchange <em>Knowledge Exchange</em>}</li>
  *   <li>{@link cz.cuni.mff.d3s.deeco.model.runtime.impl.EnsembleDefinitionImpl#getTriggers <em>Triggers</em>}</li>
  *   <li>{@link cz.cuni.mff.d3s.deeco.model.runtime.impl.EnsembleDefinitionImpl#getCommunicationBoundary <em>Communication Boundary</em>}</li>
+ *   <li>{@link cz.cuni.mff.d3s.deeco.model.runtime.impl.EnsembleDefinitionImpl#getPartition <em>Partition</em>}</li>
  * </ul>
  * </p>
  *
@@ -114,6 +116,16 @@ public class EnsembleDefinitionImpl extends MinimalEObjectImpl.Container impleme
 	 * @ordered
 	 */
 	protected CommunicationBoundaryPredicate communicationBoundary = COMMUNICATION_BOUNDARY_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getPartition() <em>Partition</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPartition()
+	 * @generated
+	 * @ordered
+	 */
+	protected Partition partition;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -279,6 +291,49 @@ public class EnsembleDefinitionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Partition getPartition() {
+		return partition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetPartition(Partition newPartition, NotificationChain msgs) {
+		Partition oldPartition = partition;
+		partition = newPartition;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, RuntimeMetadataPackage.ENSEMBLE_DEFINITION__PARTITION, oldPartition, newPartition);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setPartition(Partition newPartition) {
+		if (newPartition != partition) {
+			NotificationChain msgs = null;
+			if (partition != null)
+				msgs = ((InternalEObject)partition).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - RuntimeMetadataPackage.ENSEMBLE_DEFINITION__PARTITION, null, msgs);
+			if (newPartition != null)
+				msgs = ((InternalEObject)newPartition).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - RuntimeMetadataPackage.ENSEMBLE_DEFINITION__PARTITION, null, msgs);
+			msgs = basicSetPartition(newPartition, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RuntimeMetadataPackage.ENSEMBLE_DEFINITION__PARTITION, newPartition, newPartition));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -288,6 +343,8 @@ public class EnsembleDefinitionImpl extends MinimalEObjectImpl.Container impleme
 				return basicSetKnowledgeExchange(null, msgs);
 			case RuntimeMetadataPackage.ENSEMBLE_DEFINITION__TRIGGERS:
 				return ((InternalEList<?>)getTriggers()).basicRemove(otherEnd, msgs);
+			case RuntimeMetadataPackage.ENSEMBLE_DEFINITION__PARTITION:
+				return basicSetPartition(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -310,6 +367,8 @@ public class EnsembleDefinitionImpl extends MinimalEObjectImpl.Container impleme
 				return getTriggers();
 			case RuntimeMetadataPackage.ENSEMBLE_DEFINITION__COMMUNICATION_BOUNDARY:
 				return getCommunicationBoundary();
+			case RuntimeMetadataPackage.ENSEMBLE_DEFINITION__PARTITION:
+				return getPartition();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -339,6 +398,9 @@ public class EnsembleDefinitionImpl extends MinimalEObjectImpl.Container impleme
 			case RuntimeMetadataPackage.ENSEMBLE_DEFINITION__COMMUNICATION_BOUNDARY:
 				setCommunicationBoundary((CommunicationBoundaryPredicate)newValue);
 				return;
+			case RuntimeMetadataPackage.ENSEMBLE_DEFINITION__PARTITION:
+				setPartition((Partition)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -366,6 +428,9 @@ public class EnsembleDefinitionImpl extends MinimalEObjectImpl.Container impleme
 			case RuntimeMetadataPackage.ENSEMBLE_DEFINITION__COMMUNICATION_BOUNDARY:
 				setCommunicationBoundary(COMMUNICATION_BOUNDARY_EDEFAULT);
 				return;
+			case RuntimeMetadataPackage.ENSEMBLE_DEFINITION__PARTITION:
+				setPartition((Partition)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -388,6 +453,8 @@ public class EnsembleDefinitionImpl extends MinimalEObjectImpl.Container impleme
 				return triggers != null && !triggers.isEmpty();
 			case RuntimeMetadataPackage.ENSEMBLE_DEFINITION__COMMUNICATION_BOUNDARY:
 				return COMMUNICATION_BOUNDARY_EDEFAULT == null ? communicationBoundary != null : !COMMUNICATION_BOUNDARY_EDEFAULT.equals(communicationBoundary);
+			case RuntimeMetadataPackage.ENSEMBLE_DEFINITION__PARTITION:
+				return partition != null;
 		}
 		return super.eIsSet(featureID);
 	}

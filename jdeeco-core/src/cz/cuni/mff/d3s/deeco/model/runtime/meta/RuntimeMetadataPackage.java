@@ -519,13 +519,22 @@ public interface RuntimeMetadataPackage extends EPackage {
 	int ENSEMBLE_DEFINITION__COMMUNICATION_BOUNDARY = 4;
 
 	/**
+	 * The feature id for the '<em><b>Partition</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENSEMBLE_DEFINITION__PARTITION = 5;
+
+	/**
 	 * The number of structural features of the '<em>Ensemble Definition</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ENSEMBLE_DEFINITION_FEATURE_COUNT = 5;
+	int ENSEMBLE_DEFINITION_FEATURE_COUNT = 6;
 
 	/**
 	 * The number of operations of the '<em>Ensemble Definition</em>' class.
@@ -997,6 +1006,52 @@ public interface RuntimeMetadataPackage extends EPackage {
 	int STRING_TO_OBJECT_MAP_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link cz.cuni.mff.d3s.deeco.model.runtime.impl.PartitionImpl <em>Partition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see cz.cuni.mff.d3s.deeco.model.runtime.impl.PartitionImpl
+	 * @see cz.cuni.mff.d3s.deeco.model.runtime.impl.RuntimeMetadataPackageImpl#getPartition()
+	 * @generated
+	 */
+	int PARTITION = 20;
+
+	/**
+	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARTITION__PARAMETERS = INVOCABLE__PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>Method</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARTITION__METHOD = INVOCABLE__METHOD;
+
+	/**
+	 * The number of structural features of the '<em>Partition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARTITION_FEATURE_COUNT = INVOCABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of operations of the '<em>Partition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARTITION_OPERATION_COUNT = INVOCABLE_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link cz.cuni.mff.d3s.deeco.model.runtime.api.ParameterDirection <em>Parameter Direction</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1004,7 +1059,7 @@ public interface RuntimeMetadataPackage extends EPackage {
 	 * @see cz.cuni.mff.d3s.deeco.model.runtime.impl.RuntimeMetadataPackageImpl#getParameterDirection()
 	 * @generated
 	 */
-	int PARAMETER_DIRECTION = 20;
+	int PARAMETER_DIRECTION = 21;
 
 	/**
 	 * The meta object id for the '<em>Method</em>' data type.
@@ -1014,7 +1069,7 @@ public interface RuntimeMetadataPackage extends EPackage {
 	 * @see cz.cuni.mff.d3s.deeco.model.runtime.impl.RuntimeMetadataPackageImpl#getMethod()
 	 * @generated
 	 */
-	int METHOD = 21;
+	int METHOD = 22;
 
 	/**
 	 * The meta object id for the '<em>Knowledge Manager</em>' data type.
@@ -1024,7 +1079,7 @@ public interface RuntimeMetadataPackage extends EPackage {
 	 * @see cz.cuni.mff.d3s.deeco.model.runtime.impl.RuntimeMetadataPackageImpl#getKnowledgeManager()
 	 * @generated
 	 */
-	int KNOWLEDGE_MANAGER = 22;
+	int KNOWLEDGE_MANAGER = 23;
 
 	/**
 	 * The meta object id for the '<em>Shadow Knowledge Manager Registry</em>' data type.
@@ -1034,7 +1089,7 @@ public interface RuntimeMetadataPackage extends EPackage {
 	 * @see cz.cuni.mff.d3s.deeco.model.runtime.impl.RuntimeMetadataPackageImpl#getShadowKnowledgeManagerRegistry()
 	 * @generated
 	 */
-	int SHADOW_KNOWLEDGE_MANAGER_REGISTRY = 23;
+	int SHADOW_KNOWLEDGE_MANAGER_REGISTRY = 24;
 
 	/**
 	 * The meta object id for the '<em>Communication Boundary</em>' data type.
@@ -1044,7 +1099,7 @@ public interface RuntimeMetadataPackage extends EPackage {
 	 * @see cz.cuni.mff.d3s.deeco.model.runtime.impl.RuntimeMetadataPackageImpl#getCommunicationBoundary()
 	 * @generated
 	 */
-	int COMMUNICATION_BOUNDARY = 24;
+	int COMMUNICATION_BOUNDARY = 25;
 
 
 	/**
@@ -1390,6 +1445,17 @@ public interface RuntimeMetadataPackage extends EPackage {
 	EAttribute getEnsembleDefinition_CommunicationBoundary();
 
 	/**
+	 * Returns the meta object for the containment reference '{@link cz.cuni.mff.d3s.deeco.model.runtime.api.EnsembleDefinition#getPartition <em>Partition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Partition</em>'.
+	 * @see cz.cuni.mff.d3s.deeco.model.runtime.api.EnsembleDefinition#getPartition()
+	 * @see #getEnsembleDefinition()
+	 * @generated
+	 */
+	EReference getEnsembleDefinition_Partition();
+
+	/**
 	 * Returns the meta object for class '{@link cz.cuni.mff.d3s.deeco.model.runtime.api.Condition <em>Condition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1644,6 +1710,16 @@ public interface RuntimeMetadataPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getStringToObjectMap_Value();
+
+	/**
+	 * Returns the meta object for class '{@link cz.cuni.mff.d3s.deeco.model.runtime.api.Partition <em>Partition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Partition</em>'.
+	 * @see cz.cuni.mff.d3s.deeco.model.runtime.api.Partition
+	 * @generated
+	 */
+	EClass getPartition();
 
 	/**
 	 * Returns the meta object for enum '{@link cz.cuni.mff.d3s.deeco.model.runtime.api.ParameterDirection <em>Parameter Direction</em>}'.
@@ -1999,6 +2075,14 @@ public interface RuntimeMetadataPackage extends EPackage {
 		EAttribute ENSEMBLE_DEFINITION__COMMUNICATION_BOUNDARY = eINSTANCE.getEnsembleDefinition_CommunicationBoundary();
 
 		/**
+		 * The meta object literal for the '<em><b>Partition</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ENSEMBLE_DEFINITION__PARTITION = eINSTANCE.getEnsembleDefinition_Partition();
+
+		/**
 		 * The meta object literal for the '{@link cz.cuni.mff.d3s.deeco.model.runtime.impl.ConditionImpl <em>Condition</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2209,6 +2293,16 @@ public interface RuntimeMetadataPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute STRING_TO_OBJECT_MAP__VALUE = eINSTANCE.getStringToObjectMap_Value();
+
+		/**
+		 * The meta object literal for the '{@link cz.cuni.mff.d3s.deeco.model.runtime.impl.PartitionImpl <em>Partition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see cz.cuni.mff.d3s.deeco.model.runtime.impl.PartitionImpl
+		 * @see cz.cuni.mff.d3s.deeco.model.runtime.impl.RuntimeMetadataPackageImpl#getPartition()
+		 * @generated
+		 */
+		EClass PARTITION = eINSTANCE.getPartition();
 
 		/**
 		 * The meta object literal for the '{@link cz.cuni.mff.d3s.deeco.model.runtime.api.ParameterDirection <em>Parameter Direction</em>}' enum.

@@ -39,7 +39,7 @@ public class RuntimeMetadataFactoryImpl extends EFactoryImpl implements RuntimeM
 	 */
 	public static RuntimeMetadataFactory init() {
 		try {
-			RuntimeMetadataFactory theRuntimeMetadataFactory = (RuntimeMetadataFactory)EPackage.Registry.INSTANCE.getEFactory("http://cz.cuni.mff.d3s.deeco.model.runtime/1.0"); 
+			RuntimeMetadataFactory theRuntimeMetadataFactory = (RuntimeMetadataFactory)EPackage.Registry.INSTANCE.getEFactory(RuntimeMetadataPackage.eNS_URI);
 			if (theRuntimeMetadataFactory != null) {
 				return theRuntimeMetadataFactory;
 			}
@@ -86,6 +86,7 @@ public class RuntimeMetadataFactoryImpl extends EFactoryImpl implements RuntimeM
 			case RuntimeMetadataPackage.PATH_NODE_MEMBER: return createPathNodeMember();
 			case RuntimeMetadataPackage.PATH_NODE_COMPONENT_ID: return createPathNodeComponentId();
 			case RuntimeMetadataPackage.STRING_TO_OBJECT_MAP: return (EObject)createStringToObjectMap();
+			case RuntimeMetadataPackage.PARTITION: return createPartition();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -315,6 +316,16 @@ public class RuntimeMetadataFactoryImpl extends EFactoryImpl implements RuntimeM
 	public Map.Entry<String, Object> createStringToObjectMap() {
 		StringToObjectMapImpl stringToObjectMap = new StringToObjectMapImpl();
 		return stringToObjectMap;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Partition createPartition() {
+		PartitionImpl partition = new PartitionImpl();
+		return partition;
 	}
 
 	/**
