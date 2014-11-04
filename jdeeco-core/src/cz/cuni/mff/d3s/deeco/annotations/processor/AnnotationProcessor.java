@@ -24,6 +24,7 @@ import cz.cuni.mff.d3s.deeco.annotations.KnowledgeExchange;
 import cz.cuni.mff.d3s.deeco.annotations.Local;
 import cz.cuni.mff.d3s.deeco.annotations.Membership;
 import cz.cuni.mff.d3s.deeco.annotations.Out;
+import cz.cuni.mff.d3s.deeco.annotations.PartitionKey;
 import cz.cuni.mff.d3s.deeco.annotations.PeriodicScheduling;
 import cz.cuni.mff.d3s.deeco.annotations.Process;
 import cz.cuni.mff.d3s.deeco.annotations.TriggerOnChange;
@@ -392,6 +393,9 @@ public class AnnotationProcessor {
 			CommunicationBoundaryPredicate cBoundary = createCommunicationBoundary(clazz);			
 			ensembleDefinition.setCommunicationBoundary(cBoundary);
 			
+			Partition partition = createPartition(clazz);
+			ensembleDefinition.setPartition(partition);
+			
 			TimeTrigger periodicEnsembleTrigger = createPeriodicTrigger(clazz);
 			List<KnowledgeChangeTrigger> exchangeKChangeTriggers = createKnowledgeChangeTriggers(exchange.getMethod(), false);
 			List<KnowledgeChangeTrigger> conditionKChangeTriggers = createKnowledgeChangeTriggers(condition.getMethod(), false);
@@ -477,6 +481,23 @@ public class AnnotationProcessor {
 		}		
 	}
 
+	Partition createPartition(Class<?> clazz) throws AnnotationProcessorException,ParseException {
+		try {
+			Method m = getAnnotatedMethodInEnsemble(clazz, PartitionKey.class);
+			Partition part = factory.createPartition();
+			part.setMethod(m);
+			return part;
+		} catch (AnnotationProcessorException e) {
+			// THIS IS A TERRIBLE HACK
+			if (e.getMessage().startsWith("No") && e.getMessage().endsWith("annotation was found")) {
+				return null;
+			} else {
+				String msg = KnowledgeExchange.class.getSimpleName()+"->"+e.getMessage();
+				throw new AnnotationProcessorException(msg, e);
+			}
+		}
+	}
+	
 	/**
 	 * Creator of a single correctly-initialized {@link ComponentProcess} object from a method.
 	 * It calls all the necessary sub-creators to obtain the full graph of the Ecore object.
