@@ -3,16 +3,19 @@ package cz.cuni.mff.d3s.deeco.connectors;
 import java.util.List;
 import java.util.Map;
 
+import cz.cuni.mff.d3s.deeco.annotations.CommunicationBoundary;
 import cz.cuni.mff.d3s.deeco.annotations.Ensemble;
 import cz.cuni.mff.d3s.deeco.annotations.In;
 import cz.cuni.mff.d3s.deeco.annotations.InOut;
 import cz.cuni.mff.d3s.deeco.annotations.KnowledgeExchange;
 import cz.cuni.mff.d3s.deeco.annotations.Membership;
 import cz.cuni.mff.d3s.deeco.annotations.TriggerOnChange;
+import cz.cuni.mff.d3s.deeco.knowledge.ReadOnlyKnowledgeManager;
+import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.task.ParamHolder;
 
 @Ensemble
-public class DestinationAggregation extends EnsembleBase {
+public class DestinationEnsemble extends EnsembleBase {
 	
 	public static Boolean matchDest(String cDest, String mDest) {
 		return mDest.equals(cDest);
@@ -69,7 +72,39 @@ public class DestinationAggregation extends EnsembleBase {
 		
 		// knowledge exchange is performed only when coord is before member
 		
-		// update member's knowledge about coordiantor's position
-		mLeaders.value.put(cId, cPosition);
+		// exclude relay nodes
+		if (!cId.startsWith("R")) {
+			// update member's knowledge about coordiantor's position
+			mLeaders.value.put(cId, cPosition);
+		}
 	}
+	
+	
+	// TODO: this must be implemented as in the membership method
+	@CommunicationBoundary
+	public static boolean boundary(KnowledgeData data, ReadOnlyKnowledgeManager sender) {
+		
+//		KnowledgePath kpPosition = KnowledgePathBuilder.buildSimplePath("position");
+//		KnowledgePath kpTeam = KnowledgePathBuilder.buildSimplePath("teamId");
+//		//Position ownerPos = (Position) data.getKnowledge().getValue(kpPosition);
+//		Position senderPos = (Position) sender.get(Arrays.asList(kpPosition)).getValue(kpPosition);
+//		String ownerTeam = (String) data.getKnowledge().getValue(kpTeam);
+//	
+//		// if the current component does not hawe a position or the owner does
+//		// not belong to a team then we do not propagate the knowledge (includes
+//		// all O*)
+//		if (senderPos == null || ownerTeam == null || !data.getMetaData().componentId.startsWith("M"))
+//			return false;
+//		return AreaNetworkRegistry.INSTANCE.isAtTheTeamsSite(ownerTeam, senderPos);
+		
+		return true;
+	}
+	
+	/*@EnsemblePartition
+	public static String partition(
+			@In("dest") String dest,
+			@In("position") Position pos) {
+		
+		return dest;
+	}*/
 }
