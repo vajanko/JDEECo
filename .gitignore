@@ -61,3 +61,5 @@ doc.zip
 
 jdeeco-core/.pmd
 /.metadata
+/.JETEmitters
+/.recommenders
