@@ -1,0 +1,1 @@
+﻿$input | Where { $_ -like "DEBUG*" }
