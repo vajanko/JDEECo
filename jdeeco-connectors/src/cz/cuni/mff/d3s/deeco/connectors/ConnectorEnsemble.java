@@ -13,7 +13,7 @@ import cz.cuni.mff.d3s.deeco.annotations.PeriodicScheduling;
 import cz.cuni.mff.d3s.deeco.task.ParamHolder;
 
 @Ensemble
-@PeriodicScheduling(period = 2000)
+@PeriodicScheduling(period = 1000)
 public class ConnectorEnsemble extends EnsembleBase {
 	
 	@Membership
@@ -31,6 +31,7 @@ public class ConnectorEnsemble extends EnsembleBase {
 	
 	
 	@KnowledgeExchange
+	@PeriodicScheduling(period = 1000)
 	public static void map(
 			@In("member.registry") HashMap<String, ConnectorRegistry> mReg,
 			@InOut("coord.registry") ParamHolder<HashMap<String, ConnectorRegistry>> cReg) {

@@ -9,6 +9,7 @@ import cz.cuni.mff.d3s.deeco.annotations.In;
 import cz.cuni.mff.d3s.deeco.annotations.InOut;
 import cz.cuni.mff.d3s.deeco.annotations.KnowledgeExchange;
 import cz.cuni.mff.d3s.deeco.annotations.Membership;
+import cz.cuni.mff.d3s.deeco.annotations.PartitionKey;
 import cz.cuni.mff.d3s.deeco.annotations.TriggerOnChange;
 import cz.cuni.mff.d3s.deeco.knowledge.ReadOnlyKnowledgeManager;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
@@ -100,11 +101,11 @@ public class DestinationEnsemble extends EnsembleBase {
 		return true;
 	}
 	
-	/*@EnsemblePartition
+	@PartitionKey
 	public static String partition(
 			@In("dest") String dest,
 			@In("position") Position pos) {
 		
 		return dest;
-	}*/
+	}
 }

@@ -37,7 +37,7 @@ public class Main {
 						  new Vehicle("V3", "Berlin", 1d, 0d),
 						  new Vehicle("V4", "Munich", 3d, 0d),
 						  // Components 
-						  DestinationAggregation.class 
+						  DestinationEnsemble.class 
 						  // Ensembles
 						  );
 		
@@ -71,16 +71,12 @@ public class Main {
 		runtime.start();
 	}
 	
-	private static ComponentInfo deployComponent(JDEECoSimulation sim, EnsembleComponent component, Class ensemble) throws AnnotationProcessorException {
+	private static ComponentInfo deployComponent(JDEECoSimulation sim, EnsembleComponent component, Class ... ensemble) throws AnnotationProcessorException {
 		
 		RuntimeMetadata model = RuntimeMetadataFactoryExt.eINSTANCE.createRuntimeMetadata();
 		AnnotationProcessor processor = new AnnotationProcessor(RuntimeMetadataFactoryExt.eINSTANCE, model);
 		
-		//recipientSelector.addComponet(component);
-		if (ensemble != null)
-			processor.process(component, ensemble);
-		else
-			processor.process(component);
+		processor.process(component, ensemble);
 		
 		ComponentInfo info = new ComponentInfo();
 		info.host = sim.getHost(component.id);
@@ -103,11 +99,19 @@ public class Main {
 		
 		ArrayList<ComponentInfo> components = new ArrayList<ComponentInfo>();
 		
-		components.add(deployComponent(sim, new Vehicle("V1", "Berlin", 7d, 0d), DestinationAggregation.class));
-		components.add(deployComponent(sim, new Vehicle("V2", "Berlin", 4d, 0d), DestinationAggregation.class));
-		components.add(deployComponent(sim, new Vehicle("V3", "Berlin", 1d, 0d), DestinationAggregation.class));
-		components.add(deployComponent(sim, new Vehicle("V4", "Munich"), DestinationAggregation.class));
-//		components.add(deployComponent(sim, new Connector("C1", "Berlin"), ConnectorEnsemble.class));
+		// vehicles
+		components.add(deployComponent(sim, new Vehicle("V1", "Berlin", 7d, 0d), RelayEnsemble.class, DestinationEnsemble.class));
+		components.add(deployComponent(sim, new Vehicle("V2", "Berlin", 4d, 0d), DestinationEnsemble.class));
+		components.add(deployComponent(sim, new Vehicle("V3", "Berlin", 1d, 0d), DestinationEnsemble.class));
+//		for (int i = 4; i < 20; i++) {
+//			components.add(deployComponent(sim, new Vehicle("V" + i, "Munich", (double)i, 0d), DestinationAggregation.class));
+//		}
+		//components.add(deployComponent(sim, new Vehicle("V4", "Munich"), DestinationAggregation.class));
+		
+		// relays
+		components.add(deployComponent(sim, new VehicleRelay("R1", "Berlin", 9d, 0d), DestinationEnsemble.class));
+		
+		components.add(deployComponent(sim, new Connector("C1", "Berlin"), ConnectorEnsemble.class));
 //		components.add(deployComponent(sim, new Connector("C2", "Berlin"), ConnectorEnsemble.class));
 //		components.add(deployComponent(sim, new Connector("C3", "Berlin"), ConnectorEnsemble.class));
 		
@@ -116,9 +120,9 @@ public class Main {
 		if (knowledgeHandler instanceof TimerTaskListener)
 			listeners = Arrays.asList((TimerTaskListener)knowledgeHandler);
 		
-		for (ComponentInfo comp : components) {
-			recipientSelector.addRecipient(comp.host.getHostId());
-		}
+//		for (ComponentInfo comp : components) {
+//			recipientSelector.addRecipient(comp.host.getHostId());
+//		}
 		
 		for (ComponentInfo comp : components) {
 			RuntimeFramework runtime = builder.build(comp.host, sim, listeners, comp.model, recipientSelectors, gossipStrategy);
