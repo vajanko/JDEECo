@@ -121,6 +121,26 @@ public class EnsembleDefinitionImpl extends MinimalEObjectImpl.Container impleme
 	protected String partitionedBy = PARTITIONED_BY_EDEFAULT;
 
 	/**
+	 * The default value of the '{@link #getPartitionedBy() <em>Partitioned By</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPartitionedBy()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String PARTITIONED_BY_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getPartitionedBy() <em>Partitioned By</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPartitionedBy()
+	 * @generated
+	 * @ordered
+	 */
+	protected String partitionedBy = PARTITIONED_BY_EDEFAULT;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
