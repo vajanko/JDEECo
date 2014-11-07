@@ -219,8 +219,7 @@ public class SimulationScheduler implements Scheduler,
 			if (!firstExecution && nextExecutionTime <= host.getCurrentMilliseconds()) {
 				return; // nextExecutionTime = host.getSimulationTime() + 1;
 			}
-			// FIXME: (kovaco) +1 was added because otherwise task won't be executed
-			callbackProvider.callAt(nextExecutionTime + 1, host.getHostId());
+			callbackProvider.callAt(nextExecutionTime, host.getHostId());
 			// System.out.println("Scheduler " + host.getId() +
 			// " registering callback at " + nextExecutionTime);
 		}
