@@ -21,7 +21,7 @@ public class Main {
 	
 	private static void DirectSimulation() throws AnnotationProcessorException
 	{
-		NetworkKnowledgeDataHandler knowledgeHandler = new DirectKnowledgeDataHandler(); 
+		/*NetworkKnowledgeDataHandler knowledgeHandler = new DirectKnowledgeDataHandler(); 
 				//new DelayedKnowledgeDataHandler(100);
 		JDEECoSimulation sim = new JDEECoSimulation(0, 1000, knowledgeHandler);
 		
@@ -50,11 +50,11 @@ public class Main {
 		
 		sim.run();
 		
-		System.out.println("Simulation finished.");
+		System.out.println("Simulation finished.");*/
 	}
 	private static void OmnetSimulation() throws AnnotationProcessorException
 	{
-		OMNetSimulation sim = new OMNetSimulation();
+		/*OMNetSimulation sim = new OMNetSimulation();
 		
 		SimulationRuntimeBuilder builder = new SimulationRuntimeBuilder();
 		
@@ -83,7 +83,7 @@ public class Main {
 		//sim.run("Tkenv", "omnetpp.ini");
 		
 		sim.finalize();
-		System.out.println("Simulation finished.");
+		System.out.println("Simulation finished.");*/
 	}
 
 	public static void main(String[] args) throws AnnotationProcessorException {

@@ -16,11 +16,11 @@ import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath;
  */
 public class CloningKnowledgeManager extends BaseKnowledgeManager {
 
-	private final Cloner cloner;
+	private final Cloner c;
 	
 	public CloningKnowledgeManager(String id) {
 		super(id);
-		cloner = new Cloner();
+		c = new Cloner();
 	}
 	
 	/*
@@ -41,7 +41,7 @@ public class CloningKnowledgeManager extends BaseKnowledgeManager {
 			if (isLocal(p)) {
 				result.setValue(p, values.getValue(p));
 			} else {
-				result.setValue(p, cloner.deepClone(values.getValue(p)));
+				result.setValue(p, c.deepClone(values.getValue(p)));
 			}
 		}
 		return result;

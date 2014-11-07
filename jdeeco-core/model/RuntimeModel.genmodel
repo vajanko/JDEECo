@@ -57,7 +57,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RuntimeModel.ecore#//EnsembleDefinition/knowledgeExchange"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RuntimeModel.ecore#//EnsembleDefinition/triggers"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RuntimeModel.ecore#//EnsembleDefinition/communicationBoundary"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RuntimeModel.ecore#//EnsembleDefinition/partition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RuntimeModel.ecore#//EnsembleDefinition/partitionedBy"/>
     </genClasses>
     <genClasses ecoreClass="RuntimeModel.ecore#//Condition"/>
     <genClasses ecoreClass="RuntimeModel.ecore#//Exchange"/>
@@ -88,6 +88,5 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RuntimeModel.ecore#//StringToObjectMap/key"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RuntimeModel.ecore#//StringToObjectMap/value"/>
     </genClasses>
-    <genClasses ecoreClass="RuntimeModel.ecore#//Partition"/>
   </genPackages>
 </genmodel:GenModel>

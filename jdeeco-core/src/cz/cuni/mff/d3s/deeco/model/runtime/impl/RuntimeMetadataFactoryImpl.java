@@ -47,7 +47,7 @@ public class RuntimeMetadataFactoryImpl extends EFactoryImpl implements RuntimeM
 		catch (Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
-		return new cz.cuni.mff.d3s.deeco.model.runtime.custom.RuntimeMetadataFactoryExt();
+		return new cz.cuni.mff.d3s.deeco.model.runtime.custom.RuntimeMetadataFactoryExt();// RuntimeMetadataFactoryImpl();
 	}
 
 	/**
@@ -86,7 +86,6 @@ public class RuntimeMetadataFactoryImpl extends EFactoryImpl implements RuntimeM
 			case RuntimeMetadataPackage.PATH_NODE_MEMBER: return createPathNodeMember();
 			case RuntimeMetadataPackage.PATH_NODE_COMPONENT_ID: return createPathNodeComponentId();
 			case RuntimeMetadataPackage.STRING_TO_OBJECT_MAP: return (EObject)createStringToObjectMap();
-			case RuntimeMetadataPackage.PARTITION: return createPartition();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -316,16 +315,6 @@ public class RuntimeMetadataFactoryImpl extends EFactoryImpl implements RuntimeM
 	public Map.Entry<String, Object> createStringToObjectMap() {
 		StringToObjectMapImpl stringToObjectMap = new StringToObjectMapImpl();
 		return stringToObjectMap;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Partition createPartition() {
-		PartitionImpl partition = new PartitionImpl();
-		return partition;
 	}
 
 	/**

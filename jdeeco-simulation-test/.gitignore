@@ -4,3 +4,7 @@
 /.settings
 /logs
 /libjdeeco-omnetpp.dll
+/libinet.dll
+/omnetpp.ini
+/results
+/*.dll

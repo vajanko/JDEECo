@@ -12,7 +12,6 @@ import cz.cuni.mff.d3s.deeco.model.runtime.api.Invocable;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgeChangeTrigger;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.Parameter;
-import cz.cuni.mff.d3s.deeco.model.runtime.api.Partition;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.PathNodeComponentId;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.PathNodeCoordinator;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.PathNodeField;
@@ -20,7 +19,6 @@ import cz.cuni.mff.d3s.deeco.model.runtime.api.PathNodeMapKey;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.PathNodeMember;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.RuntimeMetadata;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.TimeTrigger;
-
 import org.eclipse.emf.ecore.EFactory;
 
 /**
@@ -192,15 +190,6 @@ public interface RuntimeMetadataFactory extends EFactory {
 	 * @generated
 	 */
 	PathNodeComponentId createPathNodeComponentId();
-
-	/**
-	 * Returns a new object of class '<em>Partition</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Partition</em>'.
-	 * @generated
-	 */
-	Partition createPartition();
 
 	/**
 	 * Returns the package supported by this factory.

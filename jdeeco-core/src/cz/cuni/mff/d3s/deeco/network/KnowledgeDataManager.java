@@ -195,7 +195,7 @@ KnowledgeDataPublisher {
 				}
 			} else {
 				//System.out.println("Broadcasting data at " + host + data);
-				knowledgeDataSender.broadcastKnowledgeData(data);
+				//knowledgeDataSender.broadcastKnowledgeData(data);
 			}
 			
 			sendDirect(data);
