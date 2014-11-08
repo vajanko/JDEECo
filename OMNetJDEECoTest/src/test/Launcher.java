@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Scanner;
 
-import register.IPGossipClient;
 import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessor;
 import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessorException;
 import cz.cuni.mff.d3s.deeco.knowledge.CloningKnowledgeManagerFactory;
@@ -16,6 +15,7 @@ import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManagerFactory;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.RuntimeMetadata;
 import cz.cuni.mff.d3s.deeco.model.runtime.custom.RuntimeMetadataFactoryExt;
 import cz.cuni.mff.d3s.deeco.network.PacketSender;
+import cz.cuni.mff.d3s.deeco.network.connector.IPGossipClient;
 import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
 import cz.cuni.mff.d3s.deeco.simulation.SimulationRuntimeBuilder;
 import cz.cuni.mff.d3s.deeco.simulation.omnet.OMNetSimulation;
@@ -53,8 +53,9 @@ public class Launcher {
 		omnetCfg.append(String.format("**.node[%d].appl.id = \"%s\" %n%n", nodeId, component.id));
 		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
 		
-		//IPGossipClient strategy = new IPGossipClient("C1", model, (PacketSender)host.getKnowledgeDataSender());
-		HashedIPGossip strategy = new HashedIPGossip(model, storage);
+		// dor DEBUG purpose - initialize with other ID then itself
+		IPGossipClient strategy = new IPGossipClient("V" + (nodeId + 1) % 8, host);
+		//HashedIPGossip strategy = new HashedIPGossip(model, storage);
 		
 		RuntimeFramework runtime = builder.build(host, sim, null, model, strategy, null);
 		runtime.start();

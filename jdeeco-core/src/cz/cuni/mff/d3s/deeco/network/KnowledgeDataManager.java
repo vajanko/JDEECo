@@ -50,7 +50,7 @@ import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
  * @see KnowledgeDataSender
  * @see KnowledgeDataReceiver 
  */
-public class KnowledgeDataManager implements KnowledgeDataReceiver,
+public class KnowledgeDataManager implements KnowledgeDataReceiver, DataReceiver,
 KnowledgeDataPublisher {
 	
 	// this rssi corresponds to roughly 20m distance
@@ -195,7 +195,7 @@ KnowledgeDataPublisher {
 				}
 			} else {
 				//System.out.println("Broadcasting data at " + host + data);
-				//knowledgeDataSender.broadcastKnowledgeData(data);
+				knowledgeDataSender.broadcastKnowledgeData(data);
 			}
 			
 			sendDirect(data);
@@ -237,6 +237,15 @@ KnowledgeDataPublisher {
 			if (Log.isDebugLoggable())
 				Log.d(String.format("Rebroadcast finished (%d) at %s, data %s", timeProvider.getCurrentMilliseconds(), host, sig));
 		}
+	}
+	
+	public void receiveData(Object data) {
+		if (!(data instanceof List<?>))
+			return;
+		
+		List<? extends KnowledgeData> knowledgeData = (List<? extends KnowledgeData>)data;
+		
+		receive(knowledgeData);
 	}
 
 	@Override

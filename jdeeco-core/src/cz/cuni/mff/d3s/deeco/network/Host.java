@@ -27,11 +27,11 @@ public class Host extends AbstractHost implements NetworkInterface {
 	public Host(NetworkProvider networkProvider, CurrentTimeProvider timeProvider, String jDEECoAppModuleId) {
 		this(networkProvider, timeProvider, jDEECoAppModuleId, true, true);
 	}
-
-	public void setKnowledgeDataReceiver(KnowledgeDataReceiver knowledgeDataReceiver) {
-		packetReceiver.setKnowledgeDataReceiver(knowledgeDataReceiver);
+	@Override
+	public void addDataReceiver(DataReceiver dataReceiver) {
+		packetReceiver.addDataReceiver(dataReceiver);
 	}
-	
+	@Override
 	public KnowledgeDataSender getKnowledgeDataSender() {
 		return packetSender;
 	}

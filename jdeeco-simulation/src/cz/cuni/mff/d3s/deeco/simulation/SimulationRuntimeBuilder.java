@@ -35,7 +35,7 @@ public class SimulationRuntimeBuilder {
 		SimulationScheduler scheduler = new SimulationScheduler(host, callbackProvider);
 		scheduler.setExecutor(executor);
 		
-		// kovaco
+		// FIXME: kovaco
 		if (host instanceof SimulationTimeEventListenerHolder)
 			((SimulationTimeEventListenerHolder) host).setSimulationTimeEventListener(scheduler);
 
@@ -45,7 +45,9 @@ public class SimulationRuntimeBuilder {
 		KnowledgeDataManager kdManager = new KnowledgeDataManager(container,
 				host.getKnowledgeDataSender(), model.getEnsembleDefinitions(),
 				host.getHostId(), scheduler, ipGossipStrategy);
-		host.setKnowledgeDataReceiver(kdManager);
+		
+		host.addDataReceiver(kdManager);
+		
 		// Set up the publisher task
 		TimeTriggerExt publisherTrigger = new TimeTriggerExt();
 		publisherTrigger.setPeriod(Integer.getInteger(
