@@ -18,7 +18,7 @@ import cz.cuni.mff.d3s.deeco.logging.Log;
  * @see PacketReceiver
  * 
  */
-public class PacketSender implements KnowledgeDataSender {
+public class PacketSender implements KnowledgeDataSender, DataSender {
 
 	public static int DEFAULT_PACKET_SIZE = 1000;
 	
@@ -76,6 +76,9 @@ public class PacketSender implements KnowledgeDataSender {
 		sendData(knowledgeData, recipient);
 	}
 
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.network.DataSender#sendData(java.lang.Object, java.lang.String)
+	 */
 	public void sendData(Object data, String recipient) {
 		try {
 			byte[] serialized = Serializer.serialize(data);
