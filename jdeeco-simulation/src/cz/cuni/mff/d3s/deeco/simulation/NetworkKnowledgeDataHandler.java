@@ -32,6 +32,9 @@ public abstract class NetworkKnowledgeDataHandler implements KnowledgeDataReceiv
 	public void addDataReceiver(AbstractHost host, DataReceiver receiver) {
 		this.receivers.put(host, receiver);
 	}
+	public DataSender getDataSender(AbstractHost host) {
+		return (DataSender)this.knowledgeDataSenders.get(host);
+	}
 	
 	public KnowledgeDataSender getKnowledgeDataSender(AbstractHost host) {
 		KnowledgeDataSender result = knowledgeDataSenders.get(host);

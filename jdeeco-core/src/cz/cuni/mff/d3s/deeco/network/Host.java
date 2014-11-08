@@ -27,6 +27,13 @@ public class Host extends AbstractHost implements NetworkInterface {
 	public Host(NetworkProvider networkProvider, CurrentTimeProvider timeProvider, String jDEECoAppModuleId) {
 		this(networkProvider, timeProvider, jDEECoAppModuleId, true, true);
 	}
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.network.HostDataHandler#getDataSender()
+	 */
+	@Override
+	public DataSender getDataSender() {
+		return packetSender;
+	}
 	@Override
 	public void addDataReceiver(DataReceiver dataReceiver) {
 		packetReceiver.addDataReceiver(dataReceiver);

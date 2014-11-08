@@ -8,14 +8,18 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Scanner;
 
+import register.Connector;
 import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessor;
 import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessorException;
 import cz.cuni.mff.d3s.deeco.knowledge.CloningKnowledgeManagerFactory;
 import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManagerFactory;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.RuntimeMetadata;
 import cz.cuni.mff.d3s.deeco.model.runtime.custom.RuntimeMetadataFactoryExt;
+import cz.cuni.mff.d3s.deeco.network.DataSender;
 import cz.cuni.mff.d3s.deeco.network.PacketSender;
+import cz.cuni.mff.d3s.deeco.network.connector.HashedIPGossipStorage;
 import cz.cuni.mff.d3s.deeco.network.connector.IPGossipClient;
+import cz.cuni.mff.d3s.deeco.network.connector.IPGossipServer;
 import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
 import cz.cuni.mff.d3s.deeco.simulation.SimulationRuntimeBuilder;
 import cz.cuni.mff.d3s.deeco.simulation.omnet.OMNetSimulation;
@@ -54,15 +58,33 @@ public class Launcher {
 		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
 		
 		// dor DEBUG purpose - initialize with other ID then itself
-		IPGossipClient strategy = new IPGossipClient("V" + (nodeId + 1) % 8, host);
+		// "V" + (nodeId + 1) % 8
+		IPGossipClient strategy = new IPGossipClient("C1", host);
 		//HashedIPGossip strategy = new HashedIPGossip(model, storage);
 		
 		RuntimeFramework runtime = builder.build(host, sim, null, model, strategy, null);
 		runtime.start();
 	}
 	public static void deployConnector(OMNetSimulation sim, SimulationRuntimeBuilder builder, StringBuilder omnetCfg,
-			HashedIPGossipStorage storage) {
+			Connector component) throws AnnotationProcessorException {
+		final int nodeId = getNextNodeId();
 		
+		KnowledgeManagerFactory knowledgeManagerFactory = new CloningKnowledgeManagerFactory();
+		RuntimeMetadata model = RuntimeMetadataFactoryExt.eINSTANCE.createRuntimeMetadata();
+		AnnotationProcessor processor = new AnnotationProcessor(RuntimeMetadataFactoryExt.eINSTANCE, model,
+				knowledgeManagerFactory, new PartitionedByProcessor());
+		
+		processor.process(DataExchange.class);
+		
+		omnetCfg.append(String.format("**.node[%d].mobility.initialX = %dm %n", nodeId, component.xCoord.longValue()));
+		omnetCfg.append(String.format("**.node[%d].mobility.initialY = %dm %n", nodeId, component.yCoord.longValue()));
+		omnetCfg.append(String.format("**.node[%d].mobility.initialZ = 0m %n", nodeId));
+		omnetCfg.append(String.format("**.node[%d].appl.id = \"%s\" %n%n", nodeId, component.id));
+		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
+		
+		HashedIPGossipStorage storage = new HashedIPGossipStorage();
+		DataSender sender = host.getDataSender();
+		host.addDataReceiver(new IPGossipServer(sender, storage, model));		
 	}
 
 	public static void main(String[] args) throws AnnotationProcessorException, IOException {
@@ -84,8 +106,9 @@ public class Launcher {
 		deployVehicle(sim, builder, omnetConfig, new Vehicle("V4", 400.0, 900.0, "Drsden"), storage);
 		deployVehicle(sim, builder, omnetConfig, new Vehicle("V6", 400.0, 100.0, "Drsden"), storage);
 		deployVehicle(sim, builder, omnetConfig, new Vehicle("V8", 100.0, 400.0, "Drsden"), storage);
-		// TODO: deploy one connector node
-
+		// Deploy connectors
+		deployConnector(sim, builder, omnetConfig, new Connector("C1", 0.0, 0.0));
+		
 		// Preparing omnetpp config
 		String confName = "omnetpp";
 		String confFile = confName + ".ini";

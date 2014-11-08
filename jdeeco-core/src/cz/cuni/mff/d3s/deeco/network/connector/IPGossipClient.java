@@ -53,7 +53,7 @@ public class IPGossipClient implements IPGossipStrategy, DataReceiver {
 				ipRegister.remove(entry.getAddress());
 				break;
 			default:
-				Log.w("Unknown operation type " + entry.getOperation() + " received from Connectore registry");
+				Log.w("Unknown operation type " + entry.getOperation() + " received from Connector registry");
 				break;
 			}
 		}

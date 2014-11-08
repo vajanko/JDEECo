@@ -3,6 +3,7 @@ package cz.cuni.mff.d3s.deeco.simulation;
 import static cz.cuni.mff.d3s.deeco.simulation.Simulation.secondsToMilliseconds;
 import cz.cuni.mff.d3s.deeco.network.AbstractHost;
 import cz.cuni.mff.d3s.deeco.network.DataReceiver;
+import cz.cuni.mff.d3s.deeco.network.DataSender;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeDataReceiver;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeDataSender;
 import cz.cuni.mff.d3s.deeco.scheduler.CurrentTimeProvider;
@@ -22,14 +23,17 @@ public class DirectSimulationHost extends AbstractHost implements SimulationTime
 	public KnowledgeDataSender getKnowledgeDataSender() {
 		return handler.getKnowledgeDataSender(this);
 	}
-
+	@Override
+	public DataSender getDataSender() {
+		return handler.getDataSender(this);
+	}
 	@Override
 	public void addDataReceiver(DataReceiver dataReceiver) {
 		this.handler.addDataReceiver(this, dataReceiver);
 	}
 	public void setKnowledgeDataReceiver(
 			KnowledgeDataReceiver knowledgeDataReceiver) {
-		this.handler.addKnowledgeDataReceiver(this, knowledgeDataReceiver);
+		//this.handler.addKnowledgeDataReceiver(this, knowledgeDataReceiver);
 	}
 	
 	public void setSimulationTimeEventListener(
