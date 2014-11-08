@@ -14,7 +14,6 @@ import cz.cuni.mff.d3s.deeco.model.runtime.api.RuntimeMetadata;
 import cz.cuni.mff.d3s.deeco.model.runtime.custom.RuntimeMetadataFactoryExt;
 import cz.cuni.mff.d3s.deeco.network.DirectRecipientSelector;
 import cz.cuni.mff.d3s.deeco.network.IPGossipStrategy;
-import cz.cuni.mff.d3s.deeco.network.connector.DummyGossipStrategy;
 import cz.cuni.mff.d3s.deeco.runtime.RuntimeConfiguration;
 import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
 import cz.cuni.mff.d3s.deeco.runtime.RuntimeFrameworkBuilder;
@@ -28,7 +27,6 @@ import cz.cuni.mff.d3s.deeco.simulation.JDEECoSimulation;
 import cz.cuni.mff.d3s.deeco.simulation.NetworkKnowledgeDataHandler;
 import cz.cuni.mff.d3s.deeco.simulation.SimulationRuntimeBuilder;
 import cz.cuni.mff.d3s.deeco.simulation.TimerTaskListener;
-import cz.cuni.mff.d3s.jdeeco.simulation.connector.PartitionedByProcessor;
 
 public class Main {
 	

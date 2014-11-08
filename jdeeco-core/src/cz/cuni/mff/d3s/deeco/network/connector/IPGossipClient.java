@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager;
+import cz.cuni.mff.d3s.deeco.logging.Log;
 import cz.cuni.mff.d3s.deeco.network.AbstractHost;
 import cz.cuni.mff.d3s.deeco.network.DataReceiver;
 import cz.cuni.mff.d3s.deeco.network.DataSender;
@@ -37,9 +38,25 @@ public class IPGossipClient implements IPGossipStrategy, DataReceiver {
 	 */
 	@Override
 	public void receiveData(Object data) {
-//		if (data instanceof String) {	// TODO: create some type for incoming messages
-//			
-//		}
+		if (data instanceof ConnectorMessage) {
+			processMessage((ConnectorMessage)data);
+		}
+	}
+	
+	private void processMessage(ConnectorMessage msg) {
+		for (AddressEntry entry : msg.getEntries()) {
+			switch(entry.getOperation()) {
+			case Add:
+				ipRegister.add(entry.getAddress());
+				break;
+			case Remove:
+				ipRegister.remove(entry.getAddress());
+				break;
+			default:
+				Log.w("Unknown operation type " + entry.getOperation() + " received from Connectore registry");
+				break;
+			}
+		}
 	}
 	
 	public IPGossipClient(String initialHost, AbstractHost host) {
