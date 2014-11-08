@@ -7,13 +7,16 @@ import java.util.List;
 import java.util.Map;
 
 import cz.cuni.mff.d3s.deeco.network.AbstractHost;
+import cz.cuni.mff.d3s.deeco.network.DataReceiver;
+import cz.cuni.mff.d3s.deeco.network.DataSender;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeDataReceiver;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeDataSender;
 
 public abstract class NetworkKnowledgeDataHandler implements KnowledgeDataReceiversHolder {
 
-	private final Map<AbstractHost, KnowledgeDataReceiver> receivers;
+	//private final Map<AbstractHost, KnowledgeDataReceiver> receivers;
+	private final Map<AbstractHost, DataReceiver> receivers;
 	private final Map<AbstractHost, KnowledgeDataSender> knowledgeDataSenders;
 
 	public NetworkKnowledgeDataHandler() {
@@ -24,7 +27,10 @@ public abstract class NetworkKnowledgeDataHandler implements KnowledgeDataReceiv
 	@Override
 	public void addKnowledgeDataReceiver(AbstractHost host,
 			KnowledgeDataReceiver receiver) {
-		receivers.put(host, receiver);
+		//receivers.put(host, receiver);
+	}
+	public void addDataReceiver(AbstractHost host, DataReceiver receiver) {
+		this.receivers.put(host, receiver);
 	}
 	
 	public KnowledgeDataSender getKnowledgeDataSender(AbstractHost host) {
@@ -48,9 +54,14 @@ public abstract class NetworkKnowledgeDataHandler implements KnowledgeDataReceiv
 		}
 		
 		@Override
-		public void broadcastKnowledgeData(
-				List<? extends KnowledgeData> knowledgeData) {
-			Collection<KnowledgeDataReceiver> sendTo = new LinkedList<KnowledgeDataReceiver>(receivers.values());
+		public void broadcastKnowledgeData(List<? extends KnowledgeData> knowledgeData) {
+			//Collection<KnowledgeDataReceiver> sendTo = new LinkedList<KnowledgeDataReceiver>(receivers.values());
+			Collection<KnowledgeDataReceiver> sendTo = new LinkedList<KnowledgeDataReceiver>();
+			for (DataReceiver receiver : receivers.values()) {
+				if (receiver instanceof KnowledgeDataReceiver) {
+					sendTo.add((KnowledgeDataReceiver)receiver);
+				}
+			}
 			sendTo.remove(receivers.get(host));
 			networkBroadcast(host, knowledgeData, sendTo);
 			
@@ -61,7 +72,10 @@ public abstract class NetworkKnowledgeDataHandler implements KnowledgeDataReceiv
 				List<? extends KnowledgeData> knowledgeData, String recipient) {
 			for (AbstractHost host : receivers.keySet()) {
 				if (host.getHostId().equals(recipient)) {
-					networkSend(host, knowledgeData, receivers.get(host));
+					DataReceiver receiver = receivers.get(host);
+					if (receiver instanceof KnowledgeDataReceiver)
+						networkSend(host, knowledgeData, (KnowledgeDataReceiver)receivers.get(host));
+					//networkSend(host, knowledgeData, receivers.get(host));
 					break;
 				}
 			}

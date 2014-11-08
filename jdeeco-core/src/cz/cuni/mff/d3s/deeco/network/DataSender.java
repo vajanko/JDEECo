@@ -18,4 +18,9 @@ public interface DataSender {
 	 * @param recipient String identification of the recipient
 	 */
 	void sendData(Object data, String recipient);
+	
+	/**
+	 * @param data
+	 */
+	void broadcastData(Object data);
 }

@@ -75,6 +75,10 @@ public class PacketSender implements KnowledgeDataSender, DataSender {
 	public void sendKnowledgeData(List<? extends KnowledgeData> knowledgeData, String recipient) {
 		sendData(knowledgeData, recipient);
 	}
+	
+	public void broadcastData(Object data) {
+		sendData(data, "");
+	}
 
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.network.DataSender#sendData(java.lang.Object, java.lang.String)
