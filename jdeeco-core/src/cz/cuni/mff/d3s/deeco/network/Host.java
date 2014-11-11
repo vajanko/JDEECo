@@ -1,9 +1,5 @@
 package cz.cuni.mff.d3s.deeco.network;
 
-import java.util.List;
-
-import cz.cuni.mff.d3s.deeco.network.connector.ConnectorDataSender;
-import cz.cuni.mff.d3s.deeco.network.connector.ConnectorDataSenderWrapper;
 import cz.cuni.mff.d3s.deeco.scheduler.CurrentTimeProvider;
 
 /**
