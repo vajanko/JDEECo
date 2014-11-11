@@ -9,8 +9,8 @@ import java.util.List;
  * @author Michal Kit <kit@d3s.mff.cuni.cz>
  * 
  */
-public interface KnowledgeDataSender {
+public interface KnowledgeDataSender extends GenericDataSender<List<? extends KnowledgeData>> {
 	
-	public void broadcastKnowledgeData(List<? extends KnowledgeData> knowledgeData);
-	public void sendKnowledgeData(List<? extends KnowledgeData> knowledgeData, String recipient);
+	//public void broadcastKnowledgeData(List<? extends KnowledgeData> knowledgeData);
+	//public void sendKnowledgeData(List<? extends KnowledgeData> knowledgeData, String recipient);
 }

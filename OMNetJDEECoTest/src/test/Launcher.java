@@ -17,6 +17,8 @@ import cz.cuni.mff.d3s.deeco.model.runtime.api.RuntimeMetadata;
 import cz.cuni.mff.d3s.deeco.model.runtime.custom.RuntimeMetadataFactoryExt;
 import cz.cuni.mff.d3s.deeco.network.DataSender;
 import cz.cuni.mff.d3s.deeco.network.PacketSender;
+import cz.cuni.mff.d3s.deeco.network.connector.ConnectorDataSender;
+import cz.cuni.mff.d3s.deeco.network.connector.ConnectorDataSenderWrapper;
 import cz.cuni.mff.d3s.deeco.network.connector.HashedIPGossipStorage;
 import cz.cuni.mff.d3s.deeco.network.connector.IPGossipClient;
 import cz.cuni.mff.d3s.deeco.network.connector.IPGossipServer;
@@ -57,8 +59,6 @@ public class Launcher {
 		omnetCfg.append(String.format("**.node[%d].appl.id = \"%s\" %n%n", nodeId, component.id));
 		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
 		
-		// dor DEBUG purpose - initialize with other ID then itself
-		// "V" + (nodeId + 1) % 8
 		IPGossipClient strategy = new IPGossipClient("C1", host);
 		//HashedIPGossip strategy = new HashedIPGossip(model, storage);
 		
@@ -83,7 +83,7 @@ public class Launcher {
 		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
 		
 		HashedIPGossipStorage storage = new HashedIPGossipStorage();
-		DataSender sender = host.getDataSender();
+		ConnectorDataSender sender = new ConnectorDataSenderWrapper(host.getDataSender());
 		host.addDataReceiver(new IPGossipServer(sender, storage, model));		
 	}
 

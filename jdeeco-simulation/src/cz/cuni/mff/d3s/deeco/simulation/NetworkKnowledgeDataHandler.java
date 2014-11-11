@@ -57,7 +57,7 @@ public abstract class NetworkKnowledgeDataHandler implements KnowledgeDataReceiv
 		}
 		
 		@Override
-		public void broadcastKnowledgeData(List<? extends KnowledgeData> knowledgeData) {
+		public void broadcastData(List<? extends KnowledgeData> knowledgeData) {
 			//Collection<KnowledgeDataReceiver> sendTo = new LinkedList<KnowledgeDataReceiver>(receivers.values());
 			Collection<KnowledgeDataReceiver> sendTo = new LinkedList<KnowledgeDataReceiver>();
 			for (DataReceiver receiver : receivers.values()) {
@@ -71,8 +71,7 @@ public abstract class NetworkKnowledgeDataHandler implements KnowledgeDataReceiv
 		}
 
 		@Override
-		public void sendKnowledgeData(
-				List<? extends KnowledgeData> knowledgeData, String recipient) {
+		public void sendData(List<? extends KnowledgeData> knowledgeData, String recipient) {
 			for (AbstractHost host : receivers.keySet()) {
 				if (host.getHostId().equals(recipient)) {
 					DataReceiver receiver = receivers.get(host);
@@ -83,8 +82,7 @@ public abstract class NetworkKnowledgeDataHandler implements KnowledgeDataReceiv
 				}
 			}
 			
-		}
-		
+		}		
 	}
 
 }

@@ -191,11 +191,11 @@ KnowledgeDataPublisher {
 				// thus reduce network collisions.
 				for (KnowledgeData kd: data) {
 					//System.out.println("Broadcasting data at " + host + kd);
-					knowledgeDataSender.broadcastKnowledgeData(Arrays.asList(kd));
+					knowledgeDataSender.broadcastData(Arrays.asList(kd));
 				}
 			} else {
 				//System.out.println("Broadcasting data at " + host + data);
-				knowledgeDataSender.broadcastKnowledgeData(data);
+				knowledgeDataSender.broadcastData(data);
 			}
 			
 			sendDirect(data);
@@ -210,7 +210,7 @@ KnowledgeDataPublisher {
 			Collection<String> recipients = ipGossipStrategy.getRecipients(kd, getNodeKnowledge());
 			for (String recipient: recipients) {					
 				logPublish(data, recipient);
-				knowledgeDataSender.sendKnowledgeData(Arrays.asList(kd), recipient);					
+				knowledgeDataSender.sendData(Arrays.asList(kd), recipient);					
 			}
 		}
 	}	
@@ -222,7 +222,7 @@ KnowledgeDataPublisher {
 		if (nicType.equals(NICType.MANET) && dataToRebroadcastOverMANET.containsKey(sig)) {	
 			data = prepareForRebroadcast(dataToRebroadcastOverMANET.get(sig));
 			logPublish(Arrays.asList(data));
-			knowledgeDataSender.broadcastKnowledgeData(Arrays.asList(data));
+			knowledgeDataSender.broadcastData(Arrays.asList(data));
 			dataToRebroadcastOverMANET.remove(sig);
 			
 			if (Log.isDebugLoggable())

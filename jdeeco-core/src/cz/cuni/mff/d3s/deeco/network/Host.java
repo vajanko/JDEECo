@@ -1,5 +1,9 @@
 package cz.cuni.mff.d3s.deeco.network;
 
+import java.util.List;
+
+import cz.cuni.mff.d3s.deeco.network.connector.ConnectorDataSender;
+import cz.cuni.mff.d3s.deeco.network.connector.ConnectorDataSenderWrapper;
 import cz.cuni.mff.d3s.deeco.scheduler.CurrentTimeProvider;
 
 /**
@@ -40,7 +44,9 @@ public class Host extends AbstractHost implements NetworkInterface {
 	}
 	@Override
 	public KnowledgeDataSender getKnowledgeDataSender() {
-		return packetSender;
+		KnowledgeDataSenderWrapper wrapper = new KnowledgeDataSenderWrapper(packetSender);
+		return wrapper;
+		//return packetSender;
 	}
 
 	// Method used by the simulation

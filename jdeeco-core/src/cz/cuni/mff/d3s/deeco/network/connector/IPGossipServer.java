@@ -19,7 +19,7 @@ import cz.cuni.mff.d3s.deeco.task.KnowledgePathHelperTest;
 public class IPGossipServer implements DataReceiver {
 	
 	private IPGossipStorage storage;
-	private DataSender dataSender;
+	private ConnectorDataSender dataSender;
 	private Set<String> partitions;
 	
 	/*private Collection<String> getRecipients(RequestMessage msg) {
@@ -83,7 +83,7 @@ public class IPGossipServer implements DataReceiver {
 		}
 	};
 	
-	public IPGossipServer(DataSender dataSender, IPGossipStorage storage, RuntimeMetadata model) {
+	public IPGossipServer(ConnectorDataSender dataSender, IPGossipStorage storage, RuntimeMetadata model) {
 		this.dataSender = dataSender;
 		this.storage = storage;
 		this.partitions = new HashSet<String>();

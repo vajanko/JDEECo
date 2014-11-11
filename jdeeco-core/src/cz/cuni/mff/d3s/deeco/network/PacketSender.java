@@ -18,7 +18,7 @@ import cz.cuni.mff.d3s.deeco.logging.Log;
  * @see PacketReceiver
  * 
  */
-public class PacketSender implements KnowledgeDataSender, DataSender {
+public class PacketSender implements /*KnowledgeDataSender,*/ DataSender {
 
 	public static int DEFAULT_PACKET_SIZE = 1000;
 	
@@ -66,7 +66,7 @@ public class PacketSender implements KnowledgeDataSender, DataSender {
 		return hasIPNic;
 	}
 	
-	@Override
+	/*@Override
 	public void broadcastKnowledgeData(List<? extends KnowledgeData> knowledgeData) {
 		sendData(knowledgeData, "");
 	}
@@ -74,7 +74,7 @@ public class PacketSender implements KnowledgeDataSender, DataSender {
 	@Override
 	public void sendKnowledgeData(List<? extends KnowledgeData> knowledgeData, String recipient) {
 		sendData(knowledgeData, recipient);
-	}
+	}*/
 	
 	public void broadcastData(Object data) {
 		sendData(data, "");
