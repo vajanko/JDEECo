@@ -59,7 +59,8 @@ public class Launcher {
 		omnetCfg.append(String.format("**.node[%d].appl.id = \"%s\" %n%n", nodeId, component.id));
 		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
 		
-		IPGossipClient strategy = new IPGossipClient("C1", host);
+		String partition = model.getEnsembleDefinitions().get(0).getPartitionedBy();
+		IPGossipClient strategy = new IPGossipClient(partition, "C1", host);
 		//HashedIPGossip strategy = new HashedIPGossip(model, storage);
 		
 		RuntimeFramework runtime = builder.build(host, sim, null, model, strategy, null);
