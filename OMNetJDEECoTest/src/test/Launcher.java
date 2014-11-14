@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Scanner;
 
-import register.Connector;
 import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessor;
 import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessorException;
 import cz.cuni.mff.d3s.deeco.knowledge.CloningKnowledgeManagerFactory;
@@ -17,8 +16,10 @@ import cz.cuni.mff.d3s.deeco.model.runtime.api.RuntimeMetadata;
 import cz.cuni.mff.d3s.deeco.model.runtime.custom.RuntimeMetadataFactoryExt;
 import cz.cuni.mff.d3s.deeco.network.DataSender;
 import cz.cuni.mff.d3s.deeco.network.PacketSender;
+import cz.cuni.mff.d3s.deeco.network.connector.ConnectorComponent;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorDataSender;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorDataSenderWrapper;
+import cz.cuni.mff.d3s.deeco.network.connector.ConnectorEnsemble;
 import cz.cuni.mff.d3s.deeco.network.connector.HashedIPGossipStorage;
 import cz.cuni.mff.d3s.deeco.network.connector.IPGossipClient;
 import cz.cuni.mff.d3s.deeco.network.connector.IPGossipServer;
@@ -59,6 +60,7 @@ public class Launcher {
 		omnetCfg.append(String.format("**.node[%d].appl.id = \"%s\" %n%n", nodeId, component.id));
 		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
 		
+		// TODO: here are some hacks
 		String partition = model.getEnsembleDefinitions().get(0).getPartitionedBy();
 		IPGossipClient strategy = new IPGossipClient(partition, "C1", host);
 		//HashedIPGossip strategy = new HashedIPGossip(model, storage);
@@ -67,7 +69,7 @@ public class Launcher {
 		runtime.start();
 	}
 	public static void deployConnector(OMNetSimulation sim, SimulationRuntimeBuilder builder, StringBuilder omnetCfg,
-			Connector component) throws AnnotationProcessorException {
+			ConnectorComponent component) throws AnnotationProcessorException {
 		final int nodeId = getNextNodeId();
 		
 		KnowledgeManagerFactory knowledgeManagerFactory = new CloningKnowledgeManagerFactory();
@@ -75,7 +77,7 @@ public class Launcher {
 		AnnotationProcessor processor = new AnnotationProcessor(RuntimeMetadataFactoryExt.eINSTANCE, model,
 				knowledgeManagerFactory, new PartitionedByProcessor());
 		
-		processor.process(DataExchange.class);
+		processor.process(component, DataExchange.class, ConnectorEnsemble.class);
 		
 		omnetCfg.append(String.format("**.node[%d].mobility.initialX = %dm %n", nodeId, component.xCoord.longValue()));
 		omnetCfg.append(String.format("**.node[%d].mobility.initialY = %dm %n", nodeId, component.yCoord.longValue()));
@@ -83,9 +85,16 @@ public class Launcher {
 		omnetCfg.append(String.format("**.node[%d].appl.id = \"%s\" %n%n", nodeId, component.id));
 		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
 		
+		// TODO: here are some hacks
+		String partition = model.getEnsembleDefinitions().get(1).getPartitionedBy();
+		IPGossipClient strategy = new IPGossipClient(partition, component.id.equals("C1") ? "C2" : "C1", host);
+		
 		HashedIPGossipStorage storage = new HashedIPGossipStorage();
 		ConnectorDataSender sender = new ConnectorDataSenderWrapper(host.getDataSender());
-		host.addDataReceiver(new IPGossipServer(sender, storage, model));		
+		host.addDataReceiver(new IPGossipServer(sender, storage, model));	
+		
+		RuntimeFramework runtime = builder.build(host, sim, null, model, strategy, null);
+		runtime.start();
 	}
 
 	public static void main(String[] args) throws AnnotationProcessorException, IOException {
@@ -108,7 +117,8 @@ public class Launcher {
 		deployVehicle(sim, builder, omnetConfig, new Vehicle("V6", 400.0, 100.0, "Drsden"), storage);
 		deployVehicle(sim, builder, omnetConfig, new Vehicle("V8", 100.0, 400.0, "Drsden"), storage);
 		// Deploy connectors
-		deployConnector(sim, builder, omnetConfig, new Connector("C1", 0.0, 0.0));
+		deployConnector(sim, builder, omnetConfig, new ConnectorComponent("C1", 0.0, 0.0));
+		deployConnector(sim, builder, omnetConfig, new ConnectorComponent("C2", 0.0, 0.0));
 		
 		// Preparing omnetpp config
 		String confName = "omnetpp";
