@@ -3,6 +3,9 @@
  */
 package cz.cuni.mff.d3s.deeco.network.ip;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import cz.cuni.mff.d3s.deeco.logging.Log;
 import cz.cuni.mff.d3s.deeco.network.DataReceiver;
 
@@ -10,9 +13,10 @@ import cz.cuni.mff.d3s.deeco.network.DataReceiver;
  * 
  * @author Ondrej Kováč <info@vajanko.me>
  */
-public class IPControllerImpl implements IPController, IPDataReceiver, DataReceiver {
+public class IPControllerImpl implements IPController, IPDataReceiver {
 
 	private IPTable ipTable;
+	private IPDataReceiverHandler ipReceiver;
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.network.ip.IPController#getIPTable()
@@ -25,18 +29,8 @@ public class IPControllerImpl implements IPController, IPDataReceiver, DataRecei
 	 * @see cz.cuni.mff.d3s.deeco.network.ip.IPController#getIPDataReceiver()
 	 */
 	@Override
-	public IPDataReceiver getIPDataReceiver() {
-		return this;
-	}
-
-
-	/* (non-Javadoc)
-	 * @see cz.cuni.mff.d3s.deeco.network.DataReceiver#receiveData(java.lang.Object)
-	 */
-	@Override
-	public void receiveData(Object data) {
-		if (data instanceof IPData)
-			receive((IPData)data);
+	public DataReceiver getDataReceiver() {
+		return ipReceiver;
 	}
 
 	/* (non-Javadoc)
@@ -59,7 +53,11 @@ public class IPControllerImpl implements IPController, IPDataReceiver, DataRecei
 		}
 	}
 
-	public IPControllerImpl() {
-		this.ipTable = new IPTable();
+	public IPControllerImpl(String initialHost) {
+		this(Arrays.asList(initialHost));
+	}
+	public IPControllerImpl(Collection<String> initialHosts) {
+		this.ipTable = new IPTable(initialHosts);
+		this.ipReceiver = new IPDataReceiverHandler(this);
 	}
 }
