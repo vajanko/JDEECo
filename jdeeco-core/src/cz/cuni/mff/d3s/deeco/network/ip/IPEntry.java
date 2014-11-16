@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cz.cuni.mff.d3s.deeco.network.connector;
+package cz.cuni.mff.d3s.deeco.network.ip;
 
 import java.io.Serializable;
 
@@ -9,7 +9,7 @@ import java.io.Serializable;
  * 
  * @author Ondrej Kováč <info@vajanko.me>
  */
-public class AddressEntry implements Serializable {
+public class IPEntry implements Serializable {
 	private String address;
 	private OperationType operation;
 	
@@ -20,7 +20,7 @@ public class AddressEntry implements Serializable {
 		return address;
 	}
 	
-	public AddressEntry(String address, OperationType operation) {
+	public IPEntry(String address, OperationType operation) {
 		this.address = address;
 		this.operation = operation;
 	}

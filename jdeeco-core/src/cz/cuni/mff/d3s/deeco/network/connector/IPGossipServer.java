@@ -13,13 +13,16 @@ import cz.cuni.mff.d3s.deeco.network.AbstractHost;
 import cz.cuni.mff.d3s.deeco.network.DataReceiver;
 import cz.cuni.mff.d3s.deeco.network.DataSender;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
-import cz.cuni.mff.d3s.deeco.network.connector.AddressEntry.OperationType;
+import cz.cuni.mff.d3s.deeco.network.ip.IPEntry;
+import cz.cuni.mff.d3s.deeco.network.ip.IPData;
+import cz.cuni.mff.d3s.deeco.network.ip.IPDataSender;
+import cz.cuni.mff.d3s.deeco.network.ip.IPEntry.OperationType;
 import cz.cuni.mff.d3s.deeco.task.KnowledgePathHelperTest;
 
 public class IPGossipServer implements DataReceiver {
 	
 	private IPGossipStorage storage;
-	private ConnectorDataSender dataSender;
+	private IPDataSender dataSender;
 	private Set<String> partitions;
 	
 	/*private Collection<String> getRecipients(RequestMessage msg) {
@@ -44,8 +47,8 @@ public class IPGossipServer implements DataReceiver {
 	public void receiveMessage(RequestMessage msg) {
 		
 	}*/
-	private ConnectorMessage createResponse(KnowledgeData knowledgeData, String sender) {
-		ConnectorMessage msg = new ConnectorMessage();
+	private IPData createResponse(KnowledgeData knowledgeData, String sender) {
+		IPData msg = new IPData();
 			
 		ValueSet knowledge = knowledgeData.getKnowledge();
 		
@@ -60,7 +63,7 @@ public class IPGossipServer implements DataReceiver {
 		}
 		
 		for (String peer : peers) {
-			msg.getEntries().add(new AddressEntry(peer, OperationType.Add));
+			msg.getEntries().add(new IPEntry(peer, OperationType.Add));
 		}
 		
 		return msg;
@@ -77,13 +80,13 @@ public class IPGossipServer implements DataReceiver {
 		for (KnowledgeData knowledgeData : knowledgeDataItems) {
 			String sender = knowledgeData.getMetaData().sender;
 			
-			ConnectorMessage msg = createResponse(knowledgeData, sender);
+			IPData msg = createResponse(knowledgeData, sender);
 			if (msg != null)
 				dataSender.sendData(msg, sender);
 		}
 	};
 	
-	public IPGossipServer(ConnectorDataSender dataSender, IPGossipStorage storage, RuntimeMetadata model) {
+	public IPGossipServer(IPDataSender dataSender, IPGossipStorage storage, RuntimeMetadata model) {
 		this.dataSender = dataSender;
 		this.storage = storage;
 		this.partitions = new HashSet<String>();

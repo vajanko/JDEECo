@@ -15,6 +15,8 @@ import cz.cuni.mff.d3s.deeco.network.DataReceiver;
 import cz.cuni.mff.d3s.deeco.network.DataSender;
 import cz.cuni.mff.d3s.deeco.network.IPGossipStrategy;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
+import cz.cuni.mff.d3s.deeco.network.ip.IPEntry;
+import cz.cuni.mff.d3s.deeco.network.ip.IPData;
 
 /**
  * 
@@ -56,13 +58,13 @@ public class IPGossipClient implements IPGossipStrategy, DataReceiver {
 	 */
 	@Override
 	public void receiveData(Object data) {
-		if (data instanceof ConnectorMessage) {
-			processMessage((ConnectorMessage)data);
+		if (data instanceof IPData) {
+			processMessage((IPData)data);
 		}
 	}
 	
-	private void processMessage(ConnectorMessage msg) {
-		for (AddressEntry entry : msg.getEntries()) {
+	private void processMessage(IPData msg) {
+		for (IPEntry entry : msg.getEntries()) {
 			switch(entry.getOperation()) {
 			case Add:
 				ipRegister.add(entry.getAddress());

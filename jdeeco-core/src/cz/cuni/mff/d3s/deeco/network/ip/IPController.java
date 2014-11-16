@@ -10,4 +10,12 @@ package cz.cuni.mff.d3s.deeco.network.ip;
  */
 public interface IPController {
 	public IPTable getIPTable(/* may be there should be some key here */);
+	
+	/**
+	 * Gets {@link IPDataReceiver} used by current {@link IPController} to receive
+	 * notifications about IP address changes from the network.
+	 * 
+	 * @return Instance of {@link IPDataReceiver}
+	 */
+	public IPDataReceiver getIPDataReceiver();
 }

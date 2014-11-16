@@ -15,12 +15,12 @@ import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManagerFactory;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.RuntimeMetadata;
 import cz.cuni.mff.d3s.deeco.model.runtime.custom.RuntimeMetadataFactoryExt;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorComponent;
-import cz.cuni.mff.d3s.deeco.network.connector.ConnectorDataSender;
-import cz.cuni.mff.d3s.deeco.network.connector.ConnectorDataSenderWrapper;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorEnsemble;
 import cz.cuni.mff.d3s.deeco.network.connector.HashedIPGossipStorage;
 import cz.cuni.mff.d3s.deeco.network.connector.IPGossipClient;
 import cz.cuni.mff.d3s.deeco.network.connector.IPGossipServer;
+import cz.cuni.mff.d3s.deeco.network.ip.IPDataSender;
+import cz.cuni.mff.d3s.deeco.network.ip.IPDataSenderWrapper;
 import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
 import cz.cuni.mff.d3s.deeco.simulation.SimulationRuntimeBuilder;
 import cz.cuni.mff.d3s.deeco.simulation.omnet.OMNetSimulation;
@@ -88,7 +88,7 @@ public class Launcher {
 		IPGossipClient strategy = new IPGossipClient(partition, component.id.equals("C1") ? "C2" : "C1", host);
 		
 		HashedIPGossipStorage storage = new HashedIPGossipStorage();
-		ConnectorDataSender sender = new ConnectorDataSenderWrapper(host.getDataSender());
+		IPDataSender sender = new IPDataSenderWrapper(host.getDataSender());
 		host.addDataReceiver(new IPGossipServer(sender, storage, model));	
 		
 		RuntimeFramework runtime = builder.build(host, sim, null, model, strategy, null);
