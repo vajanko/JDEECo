@@ -37,6 +37,6 @@ public class IPGossipClientStrategy implements IPGossipStrategy {
 	}
 	
 	public IPGossipClientStrategy(IPController controller) {
-		controller.getIPTable();
+		ipTable = controller.getIPTable();
 	}
 }
