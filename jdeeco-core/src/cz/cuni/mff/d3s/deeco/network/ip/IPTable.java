@@ -31,6 +31,9 @@ public class IPTable {
 	}
 	
 	public IPTable() {
-		this.register = new HashSet<String>(); 
+		this.register = new HashSet<String>();
+	}
+	public IPTable(Collection<String> initialEntries) {
+		this.register = new HashSet<String>(initialEntries);
 	}
 }
