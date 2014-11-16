@@ -41,27 +41,7 @@ public class ConnectorEnsemble {
 	@KnowledgeExchange
 	public static void exchange(
 			@In("coord.id") String cId, 
-			@In("member.id") String mId,
-			@InOut("coord.storage") ParamHolder<Map<String, Set<String>>> storage,
-			@In("member.range") Set<String> range) {
+			@In("member.id") String mId) {
 		
-		// TODO: divide all ranges fairly
-		
-		Set<String> all = new HashSet<String>(range);
-		if (storage.value.containsKey(cId))
-			all.addAll(storage.value.get(mId));
-	
-		Set<String> newSet = new HashSet<String>();
-		ArrayList<String> allList = new ArrayList<String>(all);
-		
-		if (cId.compareTo(mId) < 0) {
-			for (int i = 0; i < all.size() / 2; i++)
-				newSet.add(allList.get(i));
-		}
-		else {
-			for (int i = all.size() / 2; i < all.size(); i++)
-				newSet.add(allList.get(i));
-		}
-		storage.value.put(cId, newSet);
 	}
 }

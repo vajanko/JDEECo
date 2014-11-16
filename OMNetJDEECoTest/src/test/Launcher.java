@@ -14,8 +14,6 @@ import cz.cuni.mff.d3s.deeco.knowledge.CloningKnowledgeManagerFactory;
 import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManagerFactory;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.RuntimeMetadata;
 import cz.cuni.mff.d3s.deeco.model.runtime.custom.RuntimeMetadataFactoryExt;
-import cz.cuni.mff.d3s.deeco.network.DataSender;
-import cz.cuni.mff.d3s.deeco.network.PacketSender;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorComponent;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorDataSender;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorDataSenderWrapper;
