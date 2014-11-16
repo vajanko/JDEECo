@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cz.cuni.mff.d3s.deeco.network.connector;
+package cz.cuni.mff.d3s.deeco.network.ip;
 
 import java.util.Collection;
 import java.util.HashSet;
