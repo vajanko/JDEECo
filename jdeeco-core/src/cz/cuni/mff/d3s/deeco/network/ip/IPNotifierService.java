@@ -9,6 +9,7 @@ import cz.cuni.mff.d3s.deeco.network.ip.IPEntry.OperationType;
  * 
  * @author Ondrej Kováč <info@vajanko.me>
  */
-public interface IPService {
+public interface IPNotifierService {
 	void notify(String recipient, String address, OperationType op);
+	void pushNotifications();
 }
