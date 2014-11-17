@@ -13,7 +13,8 @@ import cz.cuni.mff.d3s.deeco.network.ip.IPEntry.OperationType;
  */
 public interface IPController{
 	
-	public IPTable getIPTable();
+	//IPTable getIPTable(String partition);
+	IPTable getIPTable();
 	
 	void notify(String recipient, String address, OperationType op);
 	
@@ -25,5 +26,5 @@ public interface IPController{
 	 * 
 	 * @return Instance of {@link DataReceiver}
 	 */
-	public DataReceiver getDataReceiver();
+	DataReceiver getDataReceiver();
 }

@@ -15,7 +15,10 @@ import cz.cuni.mff.d3s.deeco.network.ip.IPEntry.OperationType;
  * @author Ondrej Kováč <info@vajanko.me>
  */
 public class IPData implements Serializable {
+	
 	private List<IPEntry> entries;
+	// TODO: IPData should be specific for a partition 
+	private String partition;
 	
 	public Collection<IPEntry> getEntries() {
 		return entries;
