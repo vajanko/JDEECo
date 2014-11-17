@@ -9,6 +9,6 @@ import java.util.List;
  * @author Michal Kit <kit@d3s.mff.cuni.cz>
  *
  */
-public interface KnowledgeDataReceiver {
-	public void receive(List<? extends KnowledgeData> knowledgeData);
+public interface KnowledgeDataReceiver extends GenericDataReceiver<List<? extends KnowledgeData>> {
+	//public void receive(List<? extends KnowledgeData> knowledgeData);
 }
