@@ -9,8 +9,8 @@ package cz.cuni.mff.d3s.deeco.network;
  */
 public class GenericDataReceiverHandler<TData> implements DataReceiver {
 	
-	private Class<?> dataType;
-	private GenericDataReceiver<TData> dataReceiver;
+	private Class<TData> dataType;
+	protected GenericDataReceiver<TData> dataReceiver;
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.network.DataReceiver#receiveData(java.lang.Object)
@@ -23,7 +23,7 @@ public class GenericDataReceiverHandler<TData> implements DataReceiver {
 		}
 	}
 	
-	public GenericDataReceiverHandler(GenericDataReceiver<TData> dataReceiver, Class<?> dataType) {
+	public GenericDataReceiverHandler(GenericDataReceiver<TData> dataReceiver, Class<TData> dataType) {
 		this.dataReceiver = dataReceiver;
 		this.dataType = dataType;		
 	}

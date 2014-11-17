@@ -25,28 +25,6 @@ public class IPGossipServer implements DataReceiver {
 	private IPDataSender dataSender;
 	private Set<String> partitions;
 	
-	/*private Collection<String> getRecipients(RequestMessage msg) {
-		
-		Collection<String> peers = new HashSet<String>();
-		
-		for (Object key : msg.getKeys()) {
-			// Update record in database
-			// TODO: getAndUpdate can be an interface, implement distributed gossip storage
-			Set<String> dests = storage.getAndUpdate(key, msg.getSenderId());
-			
-			// Add destinations to peers
-			peers.addAll(dests);
-		}
-		
-		// Return (peers omitting sender)
-		while (peers.remove(msg.getSenderId()))
-			;
-		
-		return peers;
-	}
-	public void receiveMessage(RequestMessage msg) {
-		
-	}*/
 	private IPData createResponse(KnowledgeData knowledgeData, String sender) {
 		IPData msg = new IPData();
 			
@@ -81,8 +59,8 @@ public class IPGossipServer implements DataReceiver {
 			String sender = knowledgeData.getMetaData().sender;
 			
 			IPData msg = createResponse(knowledgeData, sender);
-			if (msg != null)
-				dataSender.sendData(msg, sender);
+//			if (msg != null)
+//				dataSender.sendData(msg, sender);
 		}
 	};
 	

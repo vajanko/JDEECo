@@ -5,6 +5,8 @@ package cz.cuni.mff.d3s.deeco.network.ip;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import cz.cuni.mff.d3s.deeco.logging.Log;
 import cz.cuni.mff.d3s.deeco.network.DataReceiver;
@@ -16,7 +18,7 @@ import cz.cuni.mff.d3s.deeco.network.DataReceiver;
 public class IPControllerImpl implements IPController, IPDataReceiver {
 
 	private IPTable ipTable;
-	private IPDataReceiverHandler ipReceiver;
+	private DataReceiver receiver;
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.network.ip.IPController#getIPTable()
@@ -30,7 +32,7 @@ public class IPControllerImpl implements IPController, IPDataReceiver {
 	 */
 	@Override
 	public DataReceiver getDataReceiver() {
-		return ipReceiver;
+		return receiver;
 	}
 
 	/* (non-Javadoc)
@@ -58,6 +60,6 @@ public class IPControllerImpl implements IPController, IPDataReceiver {
 	}
 	public IPControllerImpl(Collection<String> initialHosts) {
 		this.ipTable = new IPTable(initialHosts);
-		this.ipReceiver = new IPDataReceiverHandler(this);
+		this.receiver = new IPDataReceiverHandler(this);
 	}
 }

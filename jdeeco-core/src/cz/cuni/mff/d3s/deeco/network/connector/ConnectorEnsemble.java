@@ -14,6 +14,7 @@ import cz.cuni.mff.d3s.deeco.annotations.KnowledgeExchange;
 import cz.cuni.mff.d3s.deeco.annotations.Membership;
 import cz.cuni.mff.d3s.deeco.annotations.PartitionedBy;
 import cz.cuni.mff.d3s.deeco.annotations.PeriodicScheduling;
+import cz.cuni.mff.d3s.deeco.network.DicEntry;
 import cz.cuni.mff.d3s.deeco.task.ParamHolder;
 
 /**
@@ -38,16 +39,16 @@ public class ConnectorEnsemble {
 	public static void exchange(
 			@In("coord.id") String cId, 
 			@In("member.id") String mId,
-			@InOut("coord.outputEntries") ParamHolder<Collection<DicEntry>> cOutput,
-			@InOut("coord.inputEntries") ParamHolder<Collection<DicEntry>> mInput,
-			@In("member.range") Set<Object> mRange
+			@InOut("member.outputEntries") ParamHolder<Collection<DicEntry>> mOutput,
+			@InOut("coord.inputEntries") ParamHolder<Collection<DicEntry>> cInput,
+			@In("coord.range") Set<Object> mRange
 			) {
 		
-		Iterator<DicEntry> it = cOutput.value.iterator();
+		Iterator<DicEntry> it = mOutput.value.iterator();
 		while (it.hasNext()) {
 			DicEntry entry = it.next();
 			if (mRange.contains(entry.getKey())) {
-				mInput.value.add(entry);
+				cInput.value.add(entry);
 				it.remove();
 			}
 		}

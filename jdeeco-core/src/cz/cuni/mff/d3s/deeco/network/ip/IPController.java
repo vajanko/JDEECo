@@ -11,7 +11,7 @@ import cz.cuni.mff.d3s.deeco.network.DataReceiver;
  * @author Ondrej Kováč <info@vajanko.me>
  */
 public interface IPController {
-	public IPTable getIPTable(/* may be there should be some key here */);
+	public IPTable getIPTable();
 	
 	/**
 	 * Gets {@link DataReceiver} used by current {@link IPController} to receive

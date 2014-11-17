@@ -19,6 +19,10 @@ public class IPEntry implements Serializable {
 	public String getAddress() {
 		return address;
 	}
+	@Override
+	public String toString() {
+		return address + (operation == OperationType.Add ? "+" : "-");
+	}
 	
 	public IPEntry(String address, OperationType operation) {
 		this.address = address;

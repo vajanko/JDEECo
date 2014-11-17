@@ -1,27 +1,22 @@
-package cz.cuni.mff.d3s.deeco.network.ip;
+/**
+ * 
+ */
+package cz.cuni.mff.d3s.deeco.network.connector;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager;
-import cz.cuni.mff.d3s.deeco.knowledge.ValueSet;
-import cz.cuni.mff.d3s.deeco.logging.Log;
-import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath;
-import cz.cuni.mff.d3s.deeco.network.AbstractHost;
-import cz.cuni.mff.d3s.deeco.network.DataReceiver;
-import cz.cuni.mff.d3s.deeco.network.DataSender;
 import cz.cuni.mff.d3s.deeco.network.IPGossipStrategy;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
+import cz.cuni.mff.d3s.deeco.network.ip.IPController;
+import cz.cuni.mff.d3s.deeco.network.ip.IPTable;
 
 /**
- * Provides list of recipient IP addresses for given knowledge data and sender.
  * 
  * @author Ondrej Kováč <info@vajanko.me>
  */
-public class IPGossipClientStrategy implements IPGossipStrategy {
+public class IPGossipConnectorStrategy implements IPGossipStrategy {
 	
 	private IPTable ipTable;
 	
@@ -31,14 +26,17 @@ public class IPGossipClientStrategy implements IPGossipStrategy {
 	@Override
 	public Collection<String> getRecipients(KnowledgeData data, KnowledgeManager sender) {
 		
-		// Notice that recipients are always the same for any kind of data. 
+		// Notice that recipients are always the same for any kind of data.
+		
+		if (!data.getMetaData().componentId.startsWith("C"))
+			return new ArrayList<String>();
 		
 		ArrayList<String> res = new ArrayList<String>(ipTable.getAddresses());
 		res.remove(sender.getId());
 		return res;
 	}
 	
-	public IPGossipClientStrategy(IPController controller) {
+	public IPGossipConnectorStrategy(IPController controller) {
 		ipTable = controller.getIPTable();
 	}
 }

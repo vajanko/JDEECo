@@ -12,12 +12,19 @@ import java.util.List;
  */
 public class KnowledgeDataReceiverHandler extends GenericDataReceiverHandler<List<? extends KnowledgeData>> {
 
+	@Override
+	public void receiveData(Object data) {
+		if (data == null || data instanceof List<?>) {
+			dataReceiver.receive((List<? extends KnowledgeData>)data);
+		}
+	}
+	
 	/**
 	 * @param dataReceiver
 	 * @param dataType
 	 */
 	public KnowledgeDataReceiverHandler(GenericDataReceiver<List<? extends KnowledgeData>> dataReceiver) {
-		super(dataReceiver, new ArrayList<KnowledgeData>().getClass());
+		super(dataReceiver, null);
 	}
 
 }

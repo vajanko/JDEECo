@@ -6,21 +6,29 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Scanner;
 
 import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessor;
 import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessorException;
 import cz.cuni.mff.d3s.deeco.knowledge.CloningKnowledgeManagerFactory;
 import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManagerFactory;
+import cz.cuni.mff.d3s.deeco.model.runtime.api.EnsembleDefinition;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.RuntimeMetadata;
 import cz.cuni.mff.d3s.deeco.model.runtime.custom.RuntimeMetadataFactoryExt;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorComponent;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorEnsemble;
 import cz.cuni.mff.d3s.deeco.network.connector.HashedIPGossipStorage;
-import cz.cuni.mff.d3s.deeco.network.connector.IPGossipClient;
+import cz.cuni.mff.d3s.deeco.network.connector.IPGossipConnectorStrategy;
 import cz.cuni.mff.d3s.deeco.network.connector.IPGossipServer;
+import cz.cuni.mff.d3s.deeco.network.ip.IPController;
+import cz.cuni.mff.d3s.deeco.network.ip.IPControllerImpl;
 import cz.cuni.mff.d3s.deeco.network.ip.IPDataSender;
 import cz.cuni.mff.d3s.deeco.network.ip.IPDataSenderWrapper;
+import cz.cuni.mff.d3s.deeco.network.ip.IPGossipClientStrategy;
+import cz.cuni.mff.d3s.deeco.network.ip.IPGossipService;
 import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
 import cz.cuni.mff.d3s.deeco.simulation.SimulationRuntimeBuilder;
 import cz.cuni.mff.d3s.deeco.simulation.omnet.OMNetSimulation;
@@ -57,11 +65,11 @@ public class Launcher {
 		omnetCfg.append(String.format("**.node[%d].mobility.initialZ = 0m %n", nodeId));
 		omnetCfg.append(String.format("**.node[%d].appl.id = \"%s\" %n%n", nodeId, component.id));
 		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
+			
+		IPControllerImpl controller = new IPControllerImpl(Arrays.asList("C1"));
+		host.addDataReceiver(controller.getDataReceiver());
 		
-		// TODO: here are some hacks
-		String partition = model.getEnsembleDefinitions().get(0).getPartitionedBy();
-		IPGossipClient strategy = new IPGossipClient(partition, "C1", host);
-		//HashedIPGossip strategy = new HashedIPGossip(model, storage);
+		IPGossipClientStrategy strategy = new IPGossipClientStrategy(controller);
 		
 		RuntimeFramework runtime = builder.build(host, sim, null, model, strategy, null);
 		runtime.start();
@@ -69,6 +77,13 @@ public class Launcher {
 	public static void deployConnector(OMNetSimulation sim, SimulationRuntimeBuilder builder, StringBuilder omnetCfg,
 			ConnectorComponent component) throws AnnotationProcessorException {
 		final int nodeId = getNextNodeId();
+		
+		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
+		component.sender = new IPDataSenderWrapper(host.getDataSender());
+		
+		IPGossipService service = new IPGossipService(/*component, partitions*/);
+		host.addDataReceiver(service.getDataReceiver());
+		component.knowledgeQueue = service;
 		
 		KnowledgeManagerFactory knowledgeManagerFactory = new CloningKnowledgeManagerFactory();
 		RuntimeMetadata model = RuntimeMetadataFactoryExt.eINSTANCE.createRuntimeMetadata();
@@ -81,15 +96,16 @@ public class Launcher {
 		omnetCfg.append(String.format("**.node[%d].mobility.initialY = %dm %n", nodeId, component.yCoord.longValue()));
 		omnetCfg.append(String.format("**.node[%d].mobility.initialZ = 0m %n", nodeId));
 		omnetCfg.append(String.format("**.node[%d].appl.id = \"%s\" %n%n", nodeId, component.id));
-		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
 		
-		// TODO: here are some hacks
-		String partition = model.getEnsembleDefinitions().get(1).getPartitionedBy();
-		IPGossipClient strategy = new IPGossipClient(partition, component.id.equals("C1") ? "C2" : "C1", host);
+
+		IPControllerImpl controller = new IPControllerImpl(Arrays.asList("C2"));	// provide list of initial IPs
+		//IPControllerImpl controller = new IPControllerImpl(new ArrayList<String>());	// provide list of initial IPs
+		host.addDataReceiver(controller.getDataReceiver());
 		
-		HashedIPGossipStorage storage = new HashedIPGossipStorage();
-		IPDataSender sender = new IPDataSenderWrapper(host.getDataSender());
-		host.addDataReceiver(new IPGossipServer(sender, storage, model));	
+		for (EnsembleDefinition ens : model.getEnsembleDefinitions())
+			service.getPartitions().add(ens.getPartitionedBy());
+		
+		IPGossipConnectorStrategy strategy = new IPGossipConnectorStrategy(controller);	
 		
 		RuntimeFramework runtime = builder.build(host, sim, null, model, strategy, null);
 		runtime.start();
@@ -105,18 +121,18 @@ public class Launcher {
 		HashedIPGossipStorage storage = new HashedIPGossipStorage();
 
 		// Deploy vehicles
-		deployVehicle(sim, builder, omnetConfig, new Vehicle("V0", 100.0, 100.0, "Berlin"), storage);
-		deployVehicle(sim, builder, omnetConfig, new Vehicle("V2", 400.0, 400.0, "Berlin"), storage);
-		deployVehicle(sim, builder, omnetConfig, new Vehicle("V1", 900.0, 900.0, "Prague"), storage);
-		deployVehicle(sim, builder, omnetConfig, new Vehicle("V3", 900.0, 400.0, "Prague"), storage);
-		deployVehicle(sim, builder, omnetConfig, new Vehicle("V5", 900.0, 100.0, "Prague"), storage);
-		deployVehicle(sim, builder, omnetConfig, new Vehicle("V7", 100.0, 900.0, "Prague"), storage);
-		deployVehicle(sim, builder, omnetConfig, new Vehicle("V4", 400.0, 900.0, "Drsden"), storage);
-		deployVehicle(sim, builder, omnetConfig, new Vehicle("V6", 400.0, 100.0, "Drsden"), storage);
-		deployVehicle(sim, builder, omnetConfig, new Vehicle("V8", 100.0, 400.0, "Drsden"), storage);
+		deployVehicle(sim, builder, omnetConfig, new Vehicle("V0", 000.0, 000.0, "Berlin"), storage);
+		deployVehicle(sim, builder, omnetConfig, new Vehicle("V2", 300.0, 300.0, "Berlin"), storage);
+		deployVehicle(sim, builder, omnetConfig, new Vehicle("V1", 600.0, 600.0, "Prague"), storage);
+		deployVehicle(sim, builder, omnetConfig, new Vehicle("V3", 600.0, 300.0, "Prague"), storage);
+		deployVehicle(sim, builder, omnetConfig, new Vehicle("V5", 600.0, 000.0, "Prague"), storage);
+		deployVehicle(sim, builder, omnetConfig, new Vehicle("V7", 000.0, 600.0, "Prague"), storage);
+		deployVehicle(sim, builder, omnetConfig, new Vehicle("V4", 300.0, 600.0, "Drsden"), storage);
+		deployVehicle(sim, builder, omnetConfig, new Vehicle("V6", 300.0, 000.0, "Drsden"), storage);
+		deployVehicle(sim, builder, omnetConfig, new Vehicle("V8", 000.0, 300.0, "Drsden"), storage);
 		// Deploy connectors
-		deployConnector(sim, builder, omnetConfig, new ConnectorComponent("C1", 0.0, 0.0));
-		deployConnector(sim, builder, omnetConfig, new ConnectorComponent("C2", 0.0, 0.0));
+		deployConnector(sim, builder, omnetConfig, new ConnectorComponent("C1", 900.0, 900.0, Arrays.asList((Object)"Berlin")));
+		deployConnector(sim, builder, omnetConfig, new ConnectorComponent("C2", 900.0, 0.0, Arrays.asList((Object)"Prague", "Drsden") ));
 		
 		// Preparing omnetpp config
 		String confName = "omnetpp";
