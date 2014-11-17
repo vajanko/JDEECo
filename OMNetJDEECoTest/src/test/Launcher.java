@@ -99,7 +99,6 @@ public class Launcher {
 		
 
 		IPControllerImpl controller = new IPControllerImpl(Arrays.asList("C2"));	// provide list of initial IPs
-		//IPControllerImpl controller = new IPControllerImpl(new ArrayList<String>());	// provide list of initial IPs
 		host.addDataReceiver(controller.getDataReceiver());
 		
 		for (EnsembleDefinition ens : model.getEnsembleDefinitions())

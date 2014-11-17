@@ -3,8 +3,6 @@
  */
 package cz.cuni.mff.d3s.deeco.network.connector;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +22,6 @@ import cz.cuni.mff.d3s.deeco.network.ip.IPDataSender;
 import cz.cuni.mff.d3s.deeco.network.ip.IPEntry;
 import cz.cuni.mff.d3s.deeco.network.ip.IPEntry.OperationType;
 import cz.cuni.mff.d3s.deeco.network.ip.KnowledgeQueue;
-import cz.cuni.mff.d3s.deeco.network.ip.IPTable;
 import cz.cuni.mff.d3s.deeco.task.ParamHolder;
 
 /**
