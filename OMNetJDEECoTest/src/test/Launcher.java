@@ -66,7 +66,7 @@ public class Launcher {
 		omnetCfg.append(String.format("**.node[%d].appl.id = \"%s\" %n%n", nodeId, component.id));
 		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
 			
-		IPControllerImpl controller = new IPControllerImpl(Arrays.asList("C1"));
+		IPControllerImpl controller = new IPControllerImpl(Arrays.asList("C1"), host.getDataSender());
 		host.addDataReceiver(controller.getDataReceiver());
 		
 		IPGossipClientStrategy strategy = new IPGossipClientStrategy(controller);
@@ -79,11 +79,15 @@ public class Launcher {
 		final int nodeId = getNextNodeId();
 		
 		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
-		component.sender = new IPDataSenderWrapper(host.getDataSender());
 		
-		KnowledgeQueue service = new KnowledgeQueue(/*component, partitions*/);
-		host.addDataReceiver(service.getDataReceiver());
-		component.knowledgeQueue = service;
+		// provide list of initial IPs
+		IPControllerImpl controller = new IPControllerImpl(Arrays.asList("C2", "C3"), host.getDataSender());	
+		host.addDataReceiver(controller.getDataReceiver());
+		component.controller =  controller;
+		
+		KnowledgeQueue queue = new KnowledgeQueue();
+		host.addDataReceiver(queue.getDataReceiver());
+		component.knowledgeQueue = queue;
 		
 		KnowledgeManagerFactory knowledgeManagerFactory = new CloningKnowledgeManagerFactory();
 		RuntimeMetadata model = RuntimeMetadataFactoryExt.eINSTANCE.createRuntimeMetadata();
@@ -97,12 +101,8 @@ public class Launcher {
 		omnetCfg.append(String.format("**.node[%d].mobility.initialZ = 0m %n", nodeId));
 		omnetCfg.append(String.format("**.node[%d].appl.id = \"%s\" %n%n", nodeId, component.id));
 		
-
-		IPControllerImpl controller = new IPControllerImpl(Arrays.asList("C2"));	// provide list of initial IPs
-		host.addDataReceiver(controller.getDataReceiver());
-		
 		for (EnsembleDefinition ens : model.getEnsembleDefinitions())
-			service.getPartitions().add(ens.getPartitionedBy());
+			queue.getPartitions().add(ens.getPartitionedBy());
 		
 		IPGossipConnectorStrategy strategy = new IPGossipConnectorStrategy(controller);	
 		
@@ -131,7 +131,8 @@ public class Launcher {
 		deployVehicle(sim, builder, omnetConfig, new Vehicle("V8", 000.0, 300.0, "Drsden"), storage);
 		// Deploy connectors
 		deployConnector(sim, builder, omnetConfig, new ConnectorComponent("C1", 900.0, 900.0, Arrays.asList((Object)"Berlin")));
-		deployConnector(sim, builder, omnetConfig, new ConnectorComponent("C2", 900.0, 0.0, Arrays.asList((Object)"Prague", "Drsden") ));
+		deployConnector(sim, builder, omnetConfig, new ConnectorComponent("C2", 900.0, 000.0, Arrays.asList((Object)"Prague")));//, "Drsden") ));
+		deployConnector(sim, builder, omnetConfig, new ConnectorComponent("C3", 000.0, 900.0, Arrays.asList((Object)"Drsden")));
 		
 		// Preparing omnetpp config
 		String confName = "omnetpp";

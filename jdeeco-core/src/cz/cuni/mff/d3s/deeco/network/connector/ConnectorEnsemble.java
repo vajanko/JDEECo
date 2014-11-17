@@ -14,6 +14,7 @@ import cz.cuni.mff.d3s.deeco.annotations.KnowledgeExchange;
 import cz.cuni.mff.d3s.deeco.annotations.Membership;
 import cz.cuni.mff.d3s.deeco.annotations.PartitionedBy;
 import cz.cuni.mff.d3s.deeco.annotations.PeriodicScheduling;
+import cz.cuni.mff.d3s.deeco.annotations.TriggerOnChange;
 import cz.cuni.mff.d3s.deeco.network.DicEntry;
 import cz.cuni.mff.d3s.deeco.task.ParamHolder;
 
@@ -22,7 +23,7 @@ import cz.cuni.mff.d3s.deeco.task.ParamHolder;
  * @author Ondrej Kováč <info@vajanko.me>
  */
 @Ensemble
-@PeriodicScheduling(period = 2000)
+//@PeriodicScheduling(period = 2000)
 @PartitionedBy("partition")
 public class ConnectorEnsemble {
 	
@@ -39,10 +40,12 @@ public class ConnectorEnsemble {
 	public static void exchange(
 			@In("coord.id") String cId, 
 			@In("member.id") String mId,
-			@InOut("member.outputEntries") ParamHolder<Collection<DicEntry>> mOutput,
+			@TriggerOnChange @InOut("member.outputEntries") ParamHolder<Collection<DicEntry>> mOutput,
 			@InOut("coord.inputEntries") ParamHolder<Collection<DicEntry>> cInput,
 			@In("coord.range") Set<Object> mRange
 			) {
+		
+		cInput.value.clear();
 		
 		Iterator<DicEntry> it = mOutput.value.iterator();
 		while (it.hasNext()) {

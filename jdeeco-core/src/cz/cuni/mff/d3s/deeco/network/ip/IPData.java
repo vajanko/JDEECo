@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import cz.cuni.mff.d3s.deeco.network.ip.IPEntry.OperationType;
+
 /**
  * 
  * @author Ondrej Kováč <info@vajanko.me>
@@ -18,8 +20,14 @@ public class IPData implements Serializable {
 	public Collection<IPEntry> getEntries() {
 		return entries;
 	}
+	public void addEntry(String address, OperationType op) {
+		entries.add(new IPEntry(address, op));
+	}
 	
 	public IPData() {
-		entries = new ArrayList<IPEntry>();
+		this.entries = new ArrayList<IPEntry>();
+	}
+	public IPData(Collection<IPEntry> entries) {
+		this.entries = new ArrayList<IPEntry>(entries);
 	}
 }

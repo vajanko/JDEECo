@@ -10,6 +10,8 @@ import java.util.Map;
 
 import cz.cuni.mff.d3s.deeco.logging.Log;
 import cz.cuni.mff.d3s.deeco.network.DataReceiver;
+import cz.cuni.mff.d3s.deeco.network.DataSender;
+import cz.cuni.mff.d3s.deeco.network.ip.IPEntry.OperationType;
 
 /**
  * 
@@ -19,6 +21,7 @@ public class IPControllerImpl implements IPController, IPDataReceiver {
 
 	private IPTable ipTable;
 	private DataReceiver receiver;
+	private IPNotifierService notifierService;
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.network.ip.IPController#getIPTable()
@@ -27,6 +30,22 @@ public class IPControllerImpl implements IPController, IPDataReceiver {
 	public IPTable getIPTable() {
 		return ipTable;
 	}
+	
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.network.ip.IPController#notify(java.lang.String, java.lang.String, cz.cuni.mff.d3s.deeco.network.ip.IPEntry.OperationType)
+	 */
+	@Override
+	public void notify(String recipient, String address, OperationType op) {
+		notifierService.notify(recipient, address, op);
+	}
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.network.ip.IPNotifierService#pushNotifications()
+	 */
+	@Override
+	public void pushNotifications() {
+		notifierService.pushNotifications();
+	}
+	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.network.ip.IPController#getIPDataReceiver()
 	 */
@@ -55,11 +74,12 @@ public class IPControllerImpl implements IPController, IPDataReceiver {
 		}
 	}
 
-	public IPControllerImpl(String initialHost) {
-		this(Arrays.asList(initialHost));
+	public IPControllerImpl(String initialHost, DataSender sender) {
+		this(Arrays.asList(initialHost), sender);
 	}
-	public IPControllerImpl(Collection<String> initialHosts) {
+	public IPControllerImpl(Collection<String> initialHosts, DataSender sender) {
 		this.ipTable = new IPTable(initialHosts);
 		this.receiver = new IPDataReceiverHandler(this);
+		this.notifierService = new IPNotifierServiceImpl(new IPDataSenderWrapper(sender));
 	}
 }
