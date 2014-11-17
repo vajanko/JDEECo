@@ -23,7 +23,7 @@ import cz.cuni.mff.d3s.deeco.network.ip.IPData;
 import cz.cuni.mff.d3s.deeco.network.ip.IPDataSender;
 import cz.cuni.mff.d3s.deeco.network.ip.IPEntry;
 import cz.cuni.mff.d3s.deeco.network.ip.IPEntry.OperationType;
-import cz.cuni.mff.d3s.deeco.network.ip.IPGossipService;
+import cz.cuni.mff.d3s.deeco.network.ip.KnowledgeQueue;
 import cz.cuni.mff.d3s.deeco.network.ip.IPTable;
 import cz.cuni.mff.d3s.deeco.task.ParamHolder;
 
@@ -54,7 +54,7 @@ public class ConnectorComponent {
 	@Local public Set<Object> range;
 	
 	@Local public IPDataSender sender;
-	@Local public IPGossipService knowledgeQueue;
+	@Local public KnowledgeQueue knowledgeQueue;
 	
 	public Set<DicEntry> inputEntries;
 	public Set<DicEntry> outputEntries;
@@ -107,7 +107,7 @@ public class ConnectorComponent {
 	@Process
 	@PeriodicScheduling(period = 1000)
 	public static void processKnowledge(
-			@In("knowledgeQueue") IPGossipService knowledgeQueue,
+			@In("knowledgeQueue") KnowledgeQueue knowledgeQueue,
 			@In("range") Set<Object> range,
 			@In("storage") IPGossipStorage storage,
 			@InOut("outputEntries") ParamHolder<Set<DicEntry>> outputEntries

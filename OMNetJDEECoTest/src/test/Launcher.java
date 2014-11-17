@@ -28,7 +28,7 @@ import cz.cuni.mff.d3s.deeco.network.ip.IPControllerImpl;
 import cz.cuni.mff.d3s.deeco.network.ip.IPDataSender;
 import cz.cuni.mff.d3s.deeco.network.ip.IPDataSenderWrapper;
 import cz.cuni.mff.d3s.deeco.network.ip.IPGossipClientStrategy;
-import cz.cuni.mff.d3s.deeco.network.ip.IPGossipService;
+import cz.cuni.mff.d3s.deeco.network.ip.KnowledgeQueue;
 import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
 import cz.cuni.mff.d3s.deeco.simulation.SimulationRuntimeBuilder;
 import cz.cuni.mff.d3s.deeco.simulation.omnet.OMNetSimulation;
@@ -81,7 +81,7 @@ public class Launcher {
 		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
 		component.sender = new IPDataSenderWrapper(host.getDataSender());
 		
-		IPGossipService service = new IPGossipService(/*component, partitions*/);
+		KnowledgeQueue service = new KnowledgeQueue(/*component, partitions*/);
 		host.addDataReceiver(service.getDataReceiver());
 		component.knowledgeQueue = service;
 		
