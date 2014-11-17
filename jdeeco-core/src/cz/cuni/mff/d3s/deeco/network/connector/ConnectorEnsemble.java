@@ -3,12 +3,8 @@
  */
 package cz.cuni.mff.d3s.deeco.network.connector;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import cz.cuni.mff.d3s.deeco.annotations.Ensemble;
@@ -25,7 +21,7 @@ import cz.cuni.mff.d3s.deeco.task.ParamHolder;
  * @author Ondrej Kováč <info@vajanko.me>
  */
 @Ensemble
-@PeriodicScheduling(period = 1000)
+@PeriodicScheduling(period = 2000)
 @PartitionedBy("partition")
 public class ConnectorEnsemble {
 	
@@ -41,7 +37,19 @@ public class ConnectorEnsemble {
 	@KnowledgeExchange
 	public static void exchange(
 			@In("coord.id") String cId, 
-			@In("member.id") String mId) {
+			@In("member.id") String mId,
+			@InOut("coord.outputEntries") ParamHolder<Collection<DicEntry>> cOutput,
+			@InOut("coord.inputEntries") ParamHolder<Collection<DicEntry>> mInput,
+			@In("member.range") Set<Object> mRange
+			) {
 		
+		Iterator<DicEntry> it = cOutput.value.iterator();
+		while (it.hasNext()) {
+			DicEntry entry = it.next();
+			if (mRange.contains(entry.getKey())) {
+				mInput.value.add(entry);
+				it.remove();
+			}
+		}
 	}
 }

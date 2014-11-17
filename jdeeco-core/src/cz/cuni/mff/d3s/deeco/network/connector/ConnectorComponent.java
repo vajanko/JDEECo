@@ -3,7 +3,9 @@
  */
 package cz.cuni.mff.d3s.deeco.network.connector;
 
+import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import cz.cuni.mff.d3s.deeco.annotations.Component;
@@ -31,26 +33,56 @@ public class ConnectorComponent {
 	public String partition = "destination";
 	
 	@Local public IPTable ipTable;
+	@Local public IPGossipStorage storage;
 	
-	public Collection<KnowledgeData> nodes;
+	//public Collection<KnowledgeData> nodes;
 	
-	public ConnectorComponent(String id) {
-		this(id, 0.0, 0.0);
-	}
-	public ConnectorComponent(String id, Double xCoord, Double yCoord) {
+	// key space range - current connector stores values for this collection of keys
+	// for now suppose that key space partitioning is given
+	@Local public Set<Object> range;
+	
+	public Collection<DicEntry> inputEntries;
+	public Collection<DicEntry> outputEntries;
+	
+	public ConnectorComponent(String id, Collection<Object> range) {
 		this.id = id;
-		this.xCoord = xCoord;
-		this.yCoord = yCoord;
+		this.range = new HashSet<Object>(range);
 	}
 	
 	@Process
-	@PeriodicScheduling(period = 1000)
-	public static void updateIPTable(@In("id") String id,
-			@InOut("ipTable") ParamHolder<IPTable> ipTable,
-			@In("nodes") Collection<KnowledgeData> nodes
-			) {
+	@PeriodicScheduling(period = 2000)
+	public static void processEntries(
+			@InOut("storage") ParamHolder<IPGossipStorage> storage,
+			@InOut("inputEntries") ParamHolder<Collection<DicEntry>> inputEntries) {
 		
-		
-		
+		// move these entries to my local storage
+		for (DicEntry entry : inputEntries.value)
+			storage.value.getAndUpdate(entry.key, entry.address);
+		inputEntries.value.clear();
 	}
+	
+	
+//	@Process
+//	@PeriodicScheduling(period = 1000)
+//	public static void updateIPTable(
+//			@In("id") String id,
+//			@InOut("ipTable") ParamHolder<IPTable> ipTable,
+//			@In("nodes") Collection<KnowledgeData> nodes) {
+//		
+//	}
+	
+//	@Process
+//	@PeriodicScheduling(period = 1000)
+//	public static void paring(
+//			@InOut("nodes") ParamHolder<Collection<KnowledgeData>> nodes) {
+//		
+//	}
+}
+
+class DicEntry implements Serializable {
+	public Object key;
+	public String address;
+	
+	public Object getKey() { return key; }
+	public String getAddress() { return address; }
 }
