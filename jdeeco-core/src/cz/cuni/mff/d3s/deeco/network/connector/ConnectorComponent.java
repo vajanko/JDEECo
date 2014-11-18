@@ -70,6 +70,7 @@ public class ConnectorComponent {
 	@Process
 	//@PeriodicScheduling(period = 2000)
 	public static void processEntries(
+			@In("id") String id,
 			@In("storage") IPGossipStorage storage,
 			@In("controller") IPController controller,
 			@TriggerOnChange @InOut("inputEntries") ParamHolder<Collection<DicEntry>> inputEntries) {
@@ -132,7 +133,11 @@ public class ConnectorComponent {
 						// there is another connector responsible for this key
 						outputEntries.value.add(new DicEntry(key, sender));
 						// notify sender of this knowledge not to use this controller any more
-						//controller.notify(sender, id, OperationType.Remove);
+						
+						// FIXME: exclude connectors for now, because they are also using IPControllers
+						// and if some IP is removed they won't be able to communication with each other
+						if (!sender.startsWith("C"))
+							controller.notify(sender, id, OperationType.Remove);
 					}
 				}
 			}
