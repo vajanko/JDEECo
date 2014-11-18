@@ -34,8 +34,8 @@ public class IPGossipClientStrategy implements IPGossipStrategy {
 	@Override
 	public Collection<String> getRecipients(KnowledgeData data, KnowledgeManager sender) {
 		
-		
-		
+		// TODO: only return IPs of partitions of current knowledge
+
 		ArrayList<String> res = new ArrayList<String>(ipTable.getAddresses());
 		res.remove(sender.getId());
 		return res;

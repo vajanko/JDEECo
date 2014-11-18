@@ -122,6 +122,11 @@ public class ConnectorComponent {
 						// notify sender of this knowledge about all its peers
 						for (String peer : peers)
 							controller.notify(sender, peer, OperationType.Add);
+						
+						// this is knowledge sent to the right connector because it is responsible for
+						// partition key contained in this knowledge
+						// should be performed a knowledge exchange??? (in another process) - for each pair
+						// should this knowledge be kept here forever
 					}
 					else {
 						// there is another connector responsible for this key
@@ -134,30 +139,11 @@ public class ConnectorComponent {
 		}
 	}
 	
-	/*@Process
-	@PeriodicScheduling(period = 2000)
-	public static void notifyNodes(
-			@In("id") String id,
-			@In("storage") IPGossipStorage storage,
-			@In("range") Set<Object> range,
-			@In("sender") IPDataSender sender
-			) {
-		
-		for (Object key : range) {
-			Set<String> peers = storage.getAndUpdate(key, id);
-			IPData data = new IPData();
-			for (String peer : peers)
-				data.getEntries().add(new IPEntry(peer, OperationType.Add));
-			for (String recipient : peers)
-				if (!recipient.equals(id))
-					sender.sendData(data, recipient);
-		}
-	}*/
 //	@Process
 //	@PeriodicScheduling(period = 1000)
 //	public static void updateIPTable(
 //			@In("id") String id,
-//			@InOut("ipTable") ParamHolder<IPTable> ipTable,
+//			@In("controller") IPController controller,
 //			@In("nodes") Collection<KnowledgeData> nodes) {
 //		
 //	}
@@ -165,7 +151,7 @@ public class ConnectorComponent {
 //	@Process
 //	@PeriodicScheduling(period = 1000)
 //	public static void paring(
-//			@InOut("nodes") ParamHolder<Collection<KnowledgeData>> nodes) {
+//			@In("nodes") Collection<KnowledgeData> nodes) {
 //		
 //	}
 }

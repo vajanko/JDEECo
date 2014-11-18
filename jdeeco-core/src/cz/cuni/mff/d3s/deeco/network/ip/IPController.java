@@ -3,7 +3,6 @@
  */
 package cz.cuni.mff.d3s.deeco.network.ip;
 
-import cz.cuni.mff.d3s.deeco.network.DataReceiver;
 import cz.cuni.mff.d3s.deeco.network.ip.IPEntry.OperationType;
 
 /**
@@ -11,9 +10,9 @@ import cz.cuni.mff.d3s.deeco.network.ip.IPEntry.OperationType;
  * 
  * @author Ondrej Kováč <info@vajanko.me>
  */
-public interface IPController{
+public interface IPController {
 	
-	//IPTable getIPTable(String partition);
+	//IPTable getIPTable(String partitionId);
 	IPTable getIPTable();
 	
 	void notify(String recipient, String address, OperationType op);
@@ -26,5 +25,5 @@ public interface IPController{
 	 * 
 	 * @return Instance of {@link DataReceiver}
 	 */
-	DataReceiver getDataReceiver();
+	//DataReceiver getDataReceiver();
 }

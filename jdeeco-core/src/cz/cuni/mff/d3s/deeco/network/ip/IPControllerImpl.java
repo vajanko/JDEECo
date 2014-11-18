@@ -46,10 +46,16 @@ public class IPControllerImpl implements IPController, IPDataReceiver {
 		notifierService.pushNotifications();
 	}
 	
-	/* (non-Javadoc)
-	 * @see cz.cuni.mff.d3s.deeco.network.ip.IPController#getIPDataReceiver()
+//	/* (non-Javadoc)
+//	 * @see cz.cuni.mff.d3s.deeco.network.ip.IPController#getIPDataReceiver()
+//	 */
+//	@Override
+	/**
+	 * Gets {@link DataReceiver} used by current {@link IPController} to receive
+	 * notifications about IP address changes from the network.
+	 * 
+	 * @return Instance of {@link DataReceiver}
 	 */
-	@Override
 	public DataReceiver getDataReceiver() {
 		return receiver;
 	}
