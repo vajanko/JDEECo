@@ -52,19 +52,6 @@ public class IPControllerImpl implements IPController, IPDataReceiver {
 		IPTable ipTable = getIPTable(data.getPartition());
 		
 		ipTable.addAll(data.getAddresses());
-//		for (IPEntry entry : data.getEntries()) {
-//			switch(entry.getOperation()) {
-//			case Add:
-//				ipTable.addAddress(entry.getAddress());
-//				break;
-//			case Remove:
-//				ipTable.removeAddress(entry.getAddress());
-//				break;
-//			default:
-//				Log.w("Unknown operation type " + entry.getOperation() + " received from in IPData message");
-//				break;
-//			}
-//		}
 	}
 	
 	public IPControllerImpl(String partitionId, String initialHost) {
