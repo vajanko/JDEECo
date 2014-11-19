@@ -21,8 +21,6 @@ import cz.cuni.mff.d3s.deeco.model.runtime.custom.RuntimeMetadataFactoryExt;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorComponent;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorEnsemble;
 import cz.cuni.mff.d3s.deeco.network.connector.HashedIPGossipStorage;
-import cz.cuni.mff.d3s.deeco.network.connector.IPGossipConnectorStrategy;
-import cz.cuni.mff.d3s.deeco.network.connector.IPGossipServer;
 import cz.cuni.mff.d3s.deeco.network.ip.IPController;
 import cz.cuni.mff.d3s.deeco.network.ip.IPControllerImpl;
 import cz.cuni.mff.d3s.deeco.network.ip.IPDataSender;
@@ -66,7 +64,7 @@ public class Launcher {
 		omnetCfg.append(String.format("**.node[%d].appl.id = \"%s\" %n%n", nodeId, component.id));
 		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
 			
-		IPControllerImpl controller = new IPControllerImpl(Arrays.asList("C1"), host.getDataSender());
+		IPControllerImpl controller = new IPControllerImpl("destination", "C1");
 		host.addDataReceiver(controller.getDataReceiver());
 		
 		IPGossipClientStrategy strategy = new IPGossipClientStrategy(controller);
@@ -81,7 +79,7 @@ public class Launcher {
 		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
 		
 		// provide list of initial IPs
-		IPControllerImpl controller = new IPControllerImpl(Arrays.asList("C2", "C3"), host.getDataSender());	
+		IPControllerImpl controller = new IPControllerImpl("partition", Arrays.asList("C2", "C3"));	
 		host.addDataReceiver(controller.getDataReceiver());
 		component.controller =  controller;
 		
@@ -104,7 +102,7 @@ public class Launcher {
 		for (EnsembleDefinition ens : model.getEnsembleDefinitions())
 			queue.getPartitions().add(ens.getPartitionedBy());
 		
-		IPGossipConnectorStrategy strategy = new IPGossipConnectorStrategy(controller);	
+		IPGossipClientStrategy strategy = new IPGossipClientStrategy(controller);	
 		
 		RuntimeFramework runtime = builder.build(host, sim, null, model, strategy, null);
 		runtime.start();

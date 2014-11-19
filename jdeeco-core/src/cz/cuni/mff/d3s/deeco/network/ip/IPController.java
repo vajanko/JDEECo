@@ -3,8 +3,6 @@
  */
 package cz.cuni.mff.d3s.deeco.network.ip;
 
-import cz.cuni.mff.d3s.deeco.network.ip.IPEntry.OperationType;
-
 /**
  * Manages and provides collection of IP addresses known by current host.
  * 
@@ -12,18 +10,6 @@ import cz.cuni.mff.d3s.deeco.network.ip.IPEntry.OperationType;
  */
 public interface IPController {
 	
-	//IPTable getIPTable(String partitionId);
-	IPTable getIPTable();
+	IPTable getIPTable(String partitionId);
 	
-	void notify(String recipient, String address, OperationType op);
-	
-	void pushNotifications();
-	
-	/**
-	 * Gets {@link DataReceiver} used by current {@link IPController} to receive
-	 * notifications about IP address changes from the network.
-	 * 
-	 * @return Instance of {@link DataReceiver}
-	 */
-	//DataReceiver getDataReceiver();
 }

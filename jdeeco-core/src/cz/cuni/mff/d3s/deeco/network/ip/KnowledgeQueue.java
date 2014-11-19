@@ -9,15 +9,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import cz.cuni.mff.d3s.deeco.knowledge.ValueSet;
-import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath;
 import cz.cuni.mff.d3s.deeco.network.DataReceiver;
-import cz.cuni.mff.d3s.deeco.network.DicEntry;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeDataReceiver;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeDataReceiverHandler;
-import cz.cuni.mff.d3s.deeco.network.connector.ConnectorComponent;
-import cz.cuni.mff.d3s.deeco.network.ip.IPEntry.OperationType;
 
 /**
  * 

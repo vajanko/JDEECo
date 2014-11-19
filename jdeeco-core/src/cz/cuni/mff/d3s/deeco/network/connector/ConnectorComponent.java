@@ -19,10 +19,6 @@ import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath;
 import cz.cuni.mff.d3s.deeco.network.DicEntry;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.ip.IPController;
-import cz.cuni.mff.d3s.deeco.network.ip.IPData;
-import cz.cuni.mff.d3s.deeco.network.ip.IPDataSender;
-import cz.cuni.mff.d3s.deeco.network.ip.IPEntry;
-import cz.cuni.mff.d3s.deeco.network.ip.IPEntry.OperationType;
 import cz.cuni.mff.d3s.deeco.network.ip.KnowledgeQueue;
 import cz.cuni.mff.d3s.deeco.task.ParamHolder;
 
@@ -82,8 +78,8 @@ public class ConnectorComponent {
 			// these entries were sent from another connector not responsible for given partition key
 			// notify back to given address of knowledge sender about all its peers
 			// This should also contain current connector address
-			for (String peer : peers)
-				controller.notify(entry.getAddress(), peer, OperationType.Add);
+//			for (String peer : peers)
+//				controller.notify(entry.getAddress(), peer, OperationType.Add);
 		}
 		inputEntries.value.clear();
 	}
@@ -91,7 +87,8 @@ public class ConnectorComponent {
 	@Process
 	@PeriodicScheduling(period = 2000)
 	public static void notifyNodes(@In("controller") IPController controller) {
-		controller.pushNotifications();
+		//controller.pushNotifications();
+		// TODO: send IP tables
 	}
 	
 	@Process
@@ -120,9 +117,6 @@ public class ConnectorComponent {
 					if (range.contains(key)) {
 						// current connector is responsible for this key
 						Set<String> peers = storage.getAndUpdate(key, sender);
-						// notify sender of this knowledge about all its peers
-						for (String peer : peers)
-							controller.notify(sender, peer, OperationType.Add);
 						
 						// this is knowledge sent to the right connector because it is responsible for
 						// partition key contained in this knowledge
@@ -132,12 +126,6 @@ public class ConnectorComponent {
 					else {
 						// there is another connector responsible for this key
 						outputEntries.value.add(new DicEntry(key, sender));
-						// notify sender of this knowledge not to use this controller any more
-						
-						// FIXME: exclude connectors for now, because they are also using IPControllers
-						// and if some IP is removed they won't be able to communication with each other
-						if (!sender.startsWith("C"))
-							controller.notify(sender, id, OperationType.Remove);
 					}
 				}
 			}

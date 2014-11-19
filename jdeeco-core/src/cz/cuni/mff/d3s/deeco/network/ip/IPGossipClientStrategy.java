@@ -25,8 +25,8 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
  */
 public class IPGossipClientStrategy implements IPGossipStrategy {
 	
-	private IPTable ipTable;
-	private Map<String, IPTable> partitions;
+	private IPController controller;
+	private Set<String> partitions;
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.network.IPGossipStrategy#getRecipients(cz.cuni.mff.d3s.deeco.network.KnowledgeData, cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager)
@@ -34,15 +34,19 @@ public class IPGossipClientStrategy implements IPGossipStrategy {
 	@Override
 	public Collection<String> getRecipients(KnowledgeData data, KnowledgeManager sender) {
 		
+		ArrayList<String> res = new ArrayList<String>();
 		// TODO: only return IPs of partitions of current knowledge
-
-		ArrayList<String> res = new ArrayList<String>(ipTable.getAddresses());
+		
+		for (String part : partitions) {
+			// TODO: get partition value from knowledge data and
+			// add all IPs from that table to the result
+		}
+		
 		res.remove(sender.getId());
 		return res;
 	}
 	
 	public IPGossipClientStrategy(IPController controller) {
-		ipTable = controller.getIPTable();
-		this.partitions = new HashMap<String, IPTable>();
+		this.controller = controller;
 	}
 }

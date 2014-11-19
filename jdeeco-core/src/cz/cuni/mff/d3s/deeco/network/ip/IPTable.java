@@ -20,14 +20,20 @@ public class IPTable {
 	 * If IP address already exists in the collection it won't be affected. 
 	 * @param address IP address to be added.
 	 */
-	public void addAddress(String address) {
+	public void add(String address) {
 		register.add(address);
 	}
-	public void removeAddress(String address) {
+	public void addAll(Collection<String> addresses) {
+		register.addAll(addresses);
+	}
+	public void remove(String address) {
 		register.remove(address);
 	}
 	public Collection<String> getAddresses() {
 		return register;
+	}
+	public void clear() {
+		register.clear();
 	}
 	
 	public IPTable() {

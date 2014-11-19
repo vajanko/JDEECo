@@ -6,9 +6,9 @@ package cz.cuni.mff.d3s.deeco.network.ip;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-
-import cz.cuni.mff.d3s.deeco.network.ip.IPEntry.OperationType;
+import java.util.Set;
 
 /**
  * 
@@ -16,21 +16,25 @@ import cz.cuni.mff.d3s.deeco.network.ip.IPEntry.OperationType;
  */
 public class IPData implements Serializable {
 	
-	private List<IPEntry> entries;
-	// TODO: IPData should be specific for a partition 
+	private Set<String> addresses; 
 	private String partition;
 	
-	public Collection<IPEntry> getEntries() {
-		return entries;
+	public String getPartition() {
+		return partition;
 	}
-	public void addEntry(String address, OperationType op) {
-		entries.add(new IPEntry(address, op));
+	public Collection<String> getAddresses() {
+		return addresses;
+	}
+	public void addAddress(String address) {
+		addresses.add(address);
 	}
 	
-	public IPData() {
-		this.entries = new ArrayList<IPEntry>();
+	public IPData(String partition) {
+		this.partition = partition;
+		this.addresses = new HashSet<String>();
 	}
-	public IPData(Collection<IPEntry> entries) {
-		this.entries = new ArrayList<IPEntry>(entries);
+	public IPData(String partition, Collection<String> addresses) {
+		this.partition = partition;
+		this.addresses = new HashSet<String>(addresses);
 	}
 }
