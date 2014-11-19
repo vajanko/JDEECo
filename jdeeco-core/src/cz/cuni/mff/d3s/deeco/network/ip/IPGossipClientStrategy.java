@@ -17,6 +17,7 @@ import cz.cuni.mff.d3s.deeco.network.DataReceiver;
 import cz.cuni.mff.d3s.deeco.network.DataSender;
 import cz.cuni.mff.d3s.deeco.network.IPGossipStrategy;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
+import cz.cuni.mff.d3s.deeco.network.KnowledgeHelper;
 
 /**
  * Provides list of recipient IP addresses for given knowledge data and sender.
@@ -26,7 +27,7 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 public class IPGossipClientStrategy implements IPGossipStrategy {
 	
 	private IPController controller;
-	private Set<String> partitions;
+	private Collection<String> partitions;
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.network.IPGossipStrategy#getRecipients(cz.cuni.mff.d3s.deeco.network.KnowledgeData, cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager)
@@ -35,18 +36,20 @@ public class IPGossipClientStrategy implements IPGossipStrategy {
 	public Collection<String> getRecipients(KnowledgeData data, KnowledgeManager sender) {
 		
 		ArrayList<String> res = new ArrayList<String>();
-		// TODO: only return IPs of partitions of current knowledge
 		
 		for (String part : partitions) {
-			// TODO: get partition value from knowledge data and
-			// add all IPs from that table to the result
+			if (KnowledgeHelper.getValue(data, part) != null) {
+				IPTable table = controller.getIPTable(part);
+				res.addAll(table.getAddresses());
+			}
 		}
 		
 		res.remove(sender.getId());
 		return res;
 	}
 	
-	public IPGossipClientStrategy(IPController controller) {
+	public IPGossipClientStrategy(Set<String> partitions, IPController controller) {
+		this.partitions = new ArrayList<String>(partitions);
 		this.controller = controller;
 	}
 }

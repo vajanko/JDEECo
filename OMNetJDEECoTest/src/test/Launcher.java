@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessor;
 import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessorException;
@@ -67,7 +68,11 @@ public class Launcher {
 		IPControllerImpl controller = new IPControllerImpl("destination", "C1");
 		host.addDataReceiver(controller.getDataReceiver());
 		
-		IPGossipClientStrategy strategy = new IPGossipClientStrategy(controller);
+		Set<String> partitions = new HashSet<String>();
+		for (EnsembleDefinition ens : model.getEnsembleDefinitions())
+			partitions.add(ens.getPartitionedBy());
+		
+		IPGossipClientStrategy strategy = new IPGossipClientStrategy(partitions, controller);
 		
 		RuntimeFramework runtime = builder.build(host, sim, null, model, strategy, null);
 		runtime.start();
@@ -99,10 +104,13 @@ public class Launcher {
 		omnetCfg.append(String.format("**.node[%d].mobility.initialZ = 0m %n", nodeId));
 		omnetCfg.append(String.format("**.node[%d].appl.id = \"%s\" %n%n", nodeId, component.id));
 		
+		Set<String> partitions = new HashSet<String>();
 		for (EnsembleDefinition ens : model.getEnsembleDefinitions())
-			queue.getPartitions().add(ens.getPartitionedBy());
+			partitions.add(ens.getPartitionedBy());
 		
-		IPGossipClientStrategy strategy = new IPGossipClientStrategy(controller);	
+		queue.getPartitions().addAll(partitions);
+		
+		IPGossipClientStrategy strategy = new IPGossipClientStrategy(partitions, controller);	
 		
 		RuntimeFramework runtime = builder.build(host, sim, null, model, strategy, null);
 		runtime.start();
