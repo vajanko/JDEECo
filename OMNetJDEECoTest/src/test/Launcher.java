@@ -8,7 +8,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -33,8 +35,23 @@ import cz.cuni.mff.d3s.deeco.simulation.SimulationRuntimeBuilder;
 import cz.cuni.mff.d3s.deeco.simulation.omnet.OMNetSimulation;
 import cz.cuni.mff.d3s.deeco.simulation.omnet.OMNetSimulationHost;
 
-public class Launcher {
+class ConnectorInfo {
+	public String id;
+	public Double xCoord;
+	public Double yCoord;
+	public Set<Object> range;
+	
+	public ConnectorInfo(String id, Double xCoord, Double yCoord, Collection<Object> range) {
+		this.id = id;
+		this.xCoord = xCoord;
+		this.yCoord = yCoord;
+		this.range = new HashSet<Object>(range);
+	}
+}
 
+
+public class Launcher {
+	
 	static String OMNET_CONFIG_TEMPLATE = "omnetpp.ini.templ";
 	static int SIMULATION_DURATION = 60; // in seconds
 
@@ -78,26 +95,23 @@ public class Launcher {
 		runtime.start();
 	}
 	public static void deployConnector(OMNetSimulation sim, SimulationRuntimeBuilder builder, StringBuilder omnetCfg,
-			ConnectorComponent component) throws AnnotationProcessorException {
+			ConnectorInfo component) throws AnnotationProcessorException {
+		
 		final int nodeId = getNextNodeId();
 		
 		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
 		
-		// provide list of initial IPs
-		IPControllerImpl controller = new IPControllerImpl("partition", Arrays.asList("C2", "C3"));	
+		IPControllerImpl controller = new IPControllerImpl("partition", Arrays.asList("C2", "C3"));		// provide list of initial IPs	
 		host.addDataReceiver(controller.getDataReceiver());
-		component.controller =  controller;
 		
-		KnowledgeQueue queue = new KnowledgeQueue();
-		host.addDataReceiver(queue.getDataReceiver());
-		component.knowledgeQueue = queue;
+		ConnectorComponent connector = new ConnectorComponent(component.id, component.range, controller);
 		
 		KnowledgeManagerFactory knowledgeManagerFactory = new CloningKnowledgeManagerFactory();
 		RuntimeMetadata model = RuntimeMetadataFactoryExt.eINSTANCE.createRuntimeMetadata();
 		AnnotationProcessor processor = new AnnotationProcessor(RuntimeMetadataFactoryExt.eINSTANCE, model,
 				knowledgeManagerFactory, new PartitionedByProcessor());
 		
-		processor.process(component, DataExchange.class, ConnectorEnsemble.class);
+		processor.process(connector, DataExchange.class, ConnectorEnsemble.class);
 		
 		omnetCfg.append(String.format("**.node[%d].mobility.initialX = %dm %n", nodeId, component.xCoord.longValue()));
 		omnetCfg.append(String.format("**.node[%d].mobility.initialY = %dm %n", nodeId, component.yCoord.longValue()));
@@ -108,7 +122,7 @@ public class Launcher {
 		for (EnsembleDefinition ens : model.getEnsembleDefinitions())
 			partitions.add(ens.getPartitionedBy());
 		
-		queue.getPartitions().addAll(partitions);
+		connector.partitions.addAll(partitions);
 		
 		IPGossipClientStrategy strategy = new IPGossipClientStrategy(partitions, controller);	
 		
@@ -135,10 +149,11 @@ public class Launcher {
 		deployVehicle(sim, builder, omnetConfig, new Vehicle("V4", 300.0, 600.0, "Drsden"), storage);
 		deployVehicle(sim, builder, omnetConfig, new Vehicle("V6", 300.0, 000.0, "Drsden"), storage);
 		deployVehicle(sim, builder, omnetConfig, new Vehicle("V8", 000.0, 300.0, "Drsden"), storage);
-		// Deploy connectors
-		deployConnector(sim, builder, omnetConfig, new ConnectorComponent("C1", 900.0, 900.0, Arrays.asList((Object)"Berlin")));
-		deployConnector(sim, builder, omnetConfig, new ConnectorComponent("C2", 900.0, 000.0, Arrays.asList((Object)"Prague")));//, "Drsden")));
-		deployConnector(sim, builder, omnetConfig, new ConnectorComponent("C3", 000.0, 900.0, Arrays.asList((Object)"Drsden")));
+		
+		// Deploy connectors		
+		deployConnector(sim, builder, omnetConfig, new ConnectorInfo("C1", 900.0, 900.0, Arrays.asList((Object)"Berlin")));
+		deployConnector(sim, builder, omnetConfig, new ConnectorInfo("C2", 900.0, 000.0, Arrays.asList((Object)"Prague")));//, "Drsden")));
+		deployConnector(sim, builder, omnetConfig, new ConnectorInfo("C3", 000.0, 900.0, Arrays.asList((Object)"Drsden")));
 		
 		// Preparing omnetpp config
 		String confName = "omnetpp";
