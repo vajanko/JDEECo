@@ -5,6 +5,7 @@ package cz.cuni.mff.d3s.deeco.network.ip;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import cz.cuni.mff.d3s.deeco.network.DataReceiver;
 
@@ -53,5 +54,17 @@ public class IPControllerImpl implements IPController, IPDataReceiver {
 	public IPControllerImpl() {
 		this.ipTables = new HashMap<Object, IPTable>();
 		this.receiver = new IPDataReceiverHandler(this);
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder str = new StringBuilder();
+		for (Entry<Object, IPTable> item : ipTables.entrySet()) {
+			str.append(item.getKey().toString() + "->" + item.getValue().toString() + "\n");
+		}
+		return str.toString();
 	}
 }

@@ -43,4 +43,12 @@ public class IPTable {
 	public IPTable(Collection<String> initialEntries) {
 		this.register = new HashSet<String>(initialEntries);
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return register.toString();
+	}
 }
