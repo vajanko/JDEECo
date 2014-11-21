@@ -3,8 +3,6 @@
  */
 package cz.cuni.mff.d3s.deeco.network.ip;
 
-import java.util.Collection;
-
 /**
  * Manages and provides collection of IP addresses known by current host.
  * 

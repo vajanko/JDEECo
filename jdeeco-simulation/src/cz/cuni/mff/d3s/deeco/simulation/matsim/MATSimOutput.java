@@ -1,7 +1,5 @@
 package cz.cuni.mff.d3s.deeco.simulation.matsim;
 
-import java.util.List;
-
 import org.matsim.api.core.v01.Id;
 import org.matsim.core.mobsim.framework.MobsimAgent.State;
 

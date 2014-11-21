@@ -16,8 +16,6 @@ import cz.cuni.mff.d3s.deeco.annotations.Local;
 import cz.cuni.mff.d3s.deeco.annotations.PeriodicScheduling;
 import cz.cuni.mff.d3s.deeco.annotations.Process;
 import cz.cuni.mff.d3s.deeco.annotations.TriggerOnChange;
-import cz.cuni.mff.d3s.deeco.knowledge.ValueSet;
-import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath;
 import cz.cuni.mff.d3s.deeco.network.DicEntry;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeHelper;
@@ -25,7 +23,6 @@ import cz.cuni.mff.d3s.deeco.network.ip.IPController;
 import cz.cuni.mff.d3s.deeco.network.ip.IPData;
 import cz.cuni.mff.d3s.deeco.network.ip.IPDataSender;
 import cz.cuni.mff.d3s.deeco.network.ip.IPTable;
-import cz.cuni.mff.d3s.deeco.network.ip.KnowledgeQueue;
 import cz.cuni.mff.d3s.deeco.task.ParamHolder;
 
 /**

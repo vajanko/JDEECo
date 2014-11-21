@@ -3,10 +3,7 @@
  */
 package cz.cuni.mff.d3s.deeco.network.ip;
 
-import java.util.List;
-
 import cz.cuni.mff.d3s.deeco.network.GenericDataReceiverHandler;
-import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 
 /**
  * An implementation of {@link DataReceiver} which correctly receives only 

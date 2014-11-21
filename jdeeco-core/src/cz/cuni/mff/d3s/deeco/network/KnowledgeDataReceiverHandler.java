@@ -3,7 +3,6 @@
  */
 package cz.cuni.mff.d3s.deeco.network;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

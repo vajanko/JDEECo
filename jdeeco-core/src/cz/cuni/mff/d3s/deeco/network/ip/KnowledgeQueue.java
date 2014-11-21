@@ -3,7 +3,6 @@
  */
 package cz.cuni.mff.d3s.deeco.network.ip;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;

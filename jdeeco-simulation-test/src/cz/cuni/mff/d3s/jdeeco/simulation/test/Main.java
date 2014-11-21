@@ -1,21 +1,7 @@
 package cz.cuni.mff.d3s.jdeeco.simulation.test;
 
-import java.util.Arrays;
-import java.util.Collection;
 
-import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessor;
 import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessorException;
-import cz.cuni.mff.d3s.deeco.model.runtime.api.RuntimeMetadata;
-import cz.cuni.mff.d3s.deeco.model.runtime.custom.RuntimeMetadataFactoryExt;
-import cz.cuni.mff.d3s.deeco.network.DirectRecipientSelector;
-import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
-import cz.cuni.mff.d3s.deeco.simulation.DirectKnowledgeDataHandler;
-import cz.cuni.mff.d3s.deeco.simulation.DirectSimulationHost;
-import cz.cuni.mff.d3s.deeco.simulation.JDEECoSimulation;
-import cz.cuni.mff.d3s.deeco.simulation.NetworkKnowledgeDataHandler;
-import cz.cuni.mff.d3s.deeco.simulation.SimulationRuntimeBuilder;
-import cz.cuni.mff.d3s.deeco.simulation.omnet.OMNetSimulation;
-import cz.cuni.mff.d3s.deeco.simulation.omnet.OMNetSimulationHost;
 
 public class Main {
 	

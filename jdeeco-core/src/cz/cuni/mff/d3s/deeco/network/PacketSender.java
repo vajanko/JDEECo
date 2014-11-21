@@ -3,7 +3,6 @@ package cz.cuni.mff.d3s.deeco.network;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-import java.util.List;
 
 import cz.cuni.mff.d3s.deeco.DeecoProperties;
 import cz.cuni.mff.d3s.deeco.logging.Log;
