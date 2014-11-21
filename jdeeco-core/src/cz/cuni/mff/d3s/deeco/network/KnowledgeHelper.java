@@ -16,7 +16,7 @@ public class KnowledgeHelper {
 		
 		ValueSet knowledge = data.getKnowledge();
 		for (KnowledgePath kp : knowledge.getKnowledgePaths()) {
-			if (kp.toString() == path)
+			if (kp.toString().equals(path))
 				return knowledge.getValue(kp);
 		}
 		
