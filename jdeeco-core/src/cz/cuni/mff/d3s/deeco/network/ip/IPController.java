@@ -10,6 +10,13 @@ package cz.cuni.mff.d3s.deeco.network.ip;
  */
 public interface IPController {
 	
-	IPTable getIPTable(String partitionId);
+	/**
+	 * Retrieves IP table for a particular ensemble partition group.
+	 *  
+	 * @param partitionValue Value of partitionBy field name
+	 * @return Instance of {@link IPTable} containing list of IP's which belongs to one ensemble
+	 * partition group.
+	 */
+	IPTable getIPTable(Object partitionValue);
 	
 }

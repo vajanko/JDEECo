@@ -38,8 +38,11 @@ public class IPGossipClientStrategy implements IPGossipStrategy {
 		ArrayList<String> res = new ArrayList<String>();
 		
 		for (String part : partitions) {
-			if (KnowledgeHelper.getValue(data, part) != null) {
-				IPTable table = controller.getIPTable(part);
+			// value of partitionBy field
+			Object val = KnowledgeHelper.getValue(data, part);
+			if (val != null) {
+				// example: get IP's of an ensemble partitioned by destination for "Berlin" group
+				IPTable table = controller.getIPTable(val);
 				res.addAll(table.getAddresses());
 			}
 		}

@@ -3,6 +3,7 @@
  */
 package cz.cuni.mff.d3s.deeco.network.ip;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,8 +21,8 @@ public class IPTable {
 	 * If IP address already exists in the collection it won't be affected. 
 	 * @param address IP address to be added.
 	 */
-	public void add(String address) {
-		register.add(address);
+	public void add(String ... addresses) {
+		addAll(Arrays.asList(addresses));
 	}
 	public void addAll(Collection<String> addresses) {
 		register.addAll(addresses);

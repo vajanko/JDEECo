@@ -19,19 +19,19 @@ import cz.cuni.mff.d3s.deeco.network.DataSender;
 public class IPControllerImpl implements IPController, IPDataReceiver {
 
 	private DataReceiver receiver;
-	// key: partitionId, value: partition IP table
-	private Map<String, IPTable> ipTables;
+	// key: partitionValue, value: partition IP table
+	private Map<Object, IPTable> ipTables;
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.network.ip.IPController#getIPTable(java.lang.String)
 	 */
 	@Override
-	public IPTable getIPTable(String partitionId) {
+	public IPTable getIPTable(Object partitionValue) {
 		
-		if (!ipTables.containsKey(partitionId))
-			ipTables.put(partitionId, new IPTable());
+		if (!ipTables.containsKey(partitionValue))
+			ipTables.put(partitionValue, new IPTable());
 		
-		return ipTables.get(partitionId);
+		return ipTables.get(partitionValue);
 	}
 	
 	/**
@@ -54,17 +54,8 @@ public class IPControllerImpl implements IPController, IPDataReceiver {
 		ipTable.addAll(data.getAddresses());
 	}
 	
-	public IPControllerImpl(String partitionId, String initialHost) {
-		this(partitionId, Arrays.asList(initialHost));
-	}
-	public IPControllerImpl(String partitionId, Collection<String> initialHosts) {
-		this();
-		
-		IPTable table = getIPTable(partitionId);
-		table.addAll(initialHosts);
-	}
 	public IPControllerImpl() {
-		this.ipTables = new HashMap<String, IPTable>();
+		this.ipTables = new HashMap<Object, IPTable>();
 		this.receiver = new IPDataReceiverHandler(this);
 	}
 }

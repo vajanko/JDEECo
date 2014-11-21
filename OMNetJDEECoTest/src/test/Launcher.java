@@ -82,7 +82,10 @@ public class Launcher {
 		omnetCfg.append(String.format("**.node[%d].appl.id = \"%s\" %n%n", nodeId, component.id));
 		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
 			
-		IPControllerImpl controller = new IPControllerImpl("destination", "C1");
+		IPControllerImpl controller = new IPControllerImpl();
+		// TODO: default IP should be added automatically based on current ensemble definition
+		controller.getIPTable(component.destination).add("C1");
+		
 		host.addDataReceiver(controller.getDataReceiver());
 		
 		Set<String> partitions = new HashSet<String>();
@@ -101,7 +104,10 @@ public class Launcher {
 		
 		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
 		
-		IPControllerImpl controller = new IPControllerImpl("partition", Arrays.asList("C2", "C3"));		// provide list of initial IPs	
+		IPControllerImpl controller = new IPControllerImpl();
+		// provide list of initial IPs
+		controller.getIPTable("destination").add("C2", "C3");
+		
 		host.addDataReceiver(controller.getDataReceiver());
 		
 		ConnectorComponent connector = new ConnectorComponent(component.id, component.range, controller);
