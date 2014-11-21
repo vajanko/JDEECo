@@ -3,6 +3,7 @@
  */
 package cz.cuni.mff.d3s.deeco.network.connector;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,16 +23,23 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeHelper;
 public class KnowledgeProvider implements KnowledgeDataReceiver {
 	
 	private KnowledgeDataReceiverHandler receiver;
-	private Set<String> partitions;
-	private Set<Object> range;
-	private Map<Object, KnowledgeData> data;
+	// component id - knowledge data
+	private Map<String, KnowledgeData> data;
 	
 	public DataReceiver getDataReceiver() { 
 		return receiver;
 	}
 
-	public Map<Object, KnowledgeData> getKnowledge() {
-		return data;
+	public Collection<KnowledgeData> getKnowledge() {
+		return data.values();
+	}
+	public void remove(KnowledgeData kd) {
+		data.remove(kd.getMetaData().componentId);
+	}
+	public void removeAll(Collection<KnowledgeData> kds) {
+		for (KnowledgeData kd : kds) {
+			data.remove(kd);
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -40,29 +48,15 @@ public class KnowledgeProvider implements KnowledgeDataReceiver {
 	@Override
 	public void receive(List<? extends KnowledgeData> obj) {
 		for (KnowledgeData kd : obj) {
-			for (String part : partitions) {
-				Object val = KnowledgeHelper.getValue(kd, part);
-				if (val != null && range.contains(val)) {
-					data.put(val, kd);
-					/*if (!data.containsKey(val)) {
-						data.put(val, kd);
-					}
-					else if (data.get(val).getMetaData().versionId < kd.getMetaData().versionId) {
-						data.put(val, kd);
-					}*/
-				}
-			}
+			data.put(kd.getMetaData().componentId, kd);
 		}
-		
 	}
 	
 	/**
 	 * 
 	 */
-	public KnowledgeProvider(Set<String> partitions, Set<Object> range) {
-		this.partitions = partitions;
-		this.range = range;
+	public KnowledgeProvider() {
 		this.receiver = new KnowledgeDataReceiverHandler(this);
-		this.data = new HashMap<Object, KnowledgeData>();
+		this.data = new HashMap<String, KnowledgeData>();
 	}
 }

@@ -51,7 +51,7 @@ public class ConnectorComponent {
 	public Set<DicEntry> inputEntries;
 	public Set<DicEntry> outputEntries;
 	
-	public ConnectorComponent(String id, Collection<Object> range, IPController controller, IPDataSender sender) {
+	public ConnectorComponent(String id, Collection<Object> range, IPController controller, IPDataSender sender, KnowledgeProvider provider) {
 		this.id = id;
 		this.range = new HashSet<Object>(range);
 		this.inputEntries = new HashSet<DicEntry>();
@@ -60,6 +60,7 @@ public class ConnectorComponent {
 		
 		this.controller = controller;
 		this.sender = sender;
+		this.provider = provider;
 	}
 	
 	@Process
@@ -111,28 +112,30 @@ public class ConnectorComponent {
 		
 		outputEntries.value.clear();
 		
-		for (Entry<Object, KnowledgeData> item : provider.getKnowledge().entrySet()) {
-			
-		}
+		ArrayList<KnowledgeData> remove = new ArrayList<KnowledgeData>();
 		
-		// TODO: get the knowledge
-		List<KnowledgeData> knowledge = new ArrayList<KnowledgeData>();
-		
-		for (KnowledgeData kd : knowledge) {
+		for (KnowledgeData kd : provider.getKnowledge()) {
 			String sender = kd.getMetaData().sender;
 			
 			for (String part : partitions) {
 				Object val = KnowledgeHelper.getValue(kd, part);
-				if (val != null && range.contains(val)) {
-					
-					// current connector is responsible for this value
-					controller.getIPTable(val).add(sender);
-				}
-				else {
-					// there is another connector responsible for this key
-					outputEntries.value.add(new DicEntry(val, sender));
+				if (val != null) {
+					if (range.contains(val)) {
+						// current connector is responsible for this value
+						controller.getIPTable(val).add(sender);
+					}
+					else {
+						// there is another connector responsible for this key
+						
+						// remove knowledge from the provider
+						remove.add(kd);
+						// send knowledge to other connector
+						outputEntries.value.add(new DicEntry(val, sender));
+					}
 				}
 			}
 		}
+		
+		provider.removeAll(remove);
 	}
 }

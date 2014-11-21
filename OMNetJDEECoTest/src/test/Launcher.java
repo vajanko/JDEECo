@@ -22,6 +22,7 @@ import cz.cuni.mff.d3s.deeco.model.runtime.custom.RuntimeMetadataFactoryExt;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorComponent;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorEnsemble;
 import cz.cuni.mff.d3s.deeco.network.connector.HashedIPGossipStorage;
+import cz.cuni.mff.d3s.deeco.network.connector.KnowledgeProvider;
 import cz.cuni.mff.d3s.deeco.network.ip.IPControllerImpl;
 import cz.cuni.mff.d3s.deeco.network.ip.IPDataSender;
 import cz.cuni.mff.d3s.deeco.network.ip.IPDataSenderWrapper;
@@ -102,11 +103,15 @@ public class Launcher {
 		
 		/* Create IPController */
 		IPControllerImpl controller = new IPControllerImpl();
-		host.addDataReceiver(controller.getDataReceiver());		
+		host.addDataReceiver(controller.getDataReceiver());	
+		
+		/* Create knowledge provider */
+		KnowledgeProvider provider = new KnowledgeProvider();
+		host.addDataReceiver(provider.getDataReceiver());
 		
 		/* Create Connector component */
 		IPDataSender ipSender = new IPDataSenderWrapper(host.getDataSender());
-		ConnectorComponent connector = new ConnectorComponent(component.id, component.range, controller, ipSender);
+		ConnectorComponent connector = new ConnectorComponent(component.id, component.range, controller, ipSender, provider);
 		// provide list of initial IPs
 		controller.getIPTable(connector.group).add("C2", "C3");
 		
