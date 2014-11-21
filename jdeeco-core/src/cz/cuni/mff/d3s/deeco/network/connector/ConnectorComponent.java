@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import cz.cuni.mff.d3s.deeco.annotations.Component;
@@ -45,6 +46,7 @@ public class ConnectorComponent {
 	
 	@Local public IPController controller;
 	@Local public IPDataSender sender;
+	@Local public KnowledgeProvider provider;
 	
 	public Set<DicEntry> inputEntries;
 	public Set<DicEntry> outputEntries;
@@ -101,12 +103,17 @@ public class ConnectorComponent {
 	public static void processKnowledge(
 			@In("id") String id,
 			@In("controller") IPController controller,
+			@In("provider") KnowledgeProvider provider,
 			@In("range") Set<Object> range,
 			@In("partitions") Set<String> partitions,
 			@InOut("outputEntries") ParamHolder<Set<DicEntry>> outputEntries
 			) {
 		
 		outputEntries.value.clear();
+		
+		for (Entry<Object, KnowledgeData> item : provider.getKnowledge().entrySet()) {
+			
+		}
 		
 		// TODO: get the knowledge
 		List<KnowledgeData> knowledge = new ArrayList<KnowledgeData>();
