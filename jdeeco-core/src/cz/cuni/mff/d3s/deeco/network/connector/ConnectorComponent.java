@@ -36,11 +36,6 @@ public class ConnectorComponent {
 	public Integer CONNECTOR_TAG = 0;
 	public String group = "destination";
 	
-	// Notice that in this storage are only values associated with values in the range set.
-	// Storage is updated by component process - entries coming from other connectors or by
-	// the IPService when knowledge is received from other nodes.
-	@Local public IPGossipStorage storage;
-	
 	// Key space range - current connector stores values for this collection of keys
 	// for now suppose that key space partitioning is given.
 	// In the future it can be updated by the IPService
@@ -56,7 +51,6 @@ public class ConnectorComponent {
 	
 	public ConnectorComponent(String id, Collection<Object> range, IPController controller, IPDataSender sender) {
 		this.id = id;
-		this.storage = new HashedIPGossipStorage();
 		this.range = new HashSet<Object>(range);
 		this.inputEntries = new HashSet<DicEntry>();
 		this.outputEntries = new HashSet<DicEntry>();
@@ -70,17 +64,15 @@ public class ConnectorComponent {
 	//@PeriodicScheduling(period = 2000)
 	public static void processEntries(
 			@In("id") String id,
-			@In("storage") IPGossipStorage storage,
+			@In("range") Set<Object> range,
 			@In("controller") IPController controller,
 			@TriggerOnChange @InOut("inputEntries") ParamHolder<Collection<DicEntry>> inputEntries) {
 		
 		// move these entries to my local storage
 		for (DicEntry entry : inputEntries.value) {
-			// TODO: filter only those in my current range			
-			Set<String> peers = storage.getAndUpdate(entry.getKey(), entry.getAddress());
-			// these entries were sent from another connector not responsible for given partition key
-			// notify back to given address of knowledge sender about all its peers
-			// This should also contain current connector address
+			if (range.contains(entry.getKey())) {
+				controller.getIPTable(entry.getKey()).add(entry.getAddress());
+			}
 		}
 		inputEntries.value.clear();
 	}
