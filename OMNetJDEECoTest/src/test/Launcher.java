@@ -104,14 +104,17 @@ public class Launcher {
 		
 		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
 		
+		/* Create IPController */
 		IPControllerImpl controller = new IPControllerImpl();
+		host.addDataReceiver(controller.getDataReceiver());		
+		
+		/* Create Connector component */
+		IPDataSender ipSender = new IPDataSenderWrapper(host.getDataSender());
+		ConnectorComponent connector = new ConnectorComponent(component.id, component.range, controller, ipSender);
 		// provide list of initial IPs
-		controller.getIPTable("destination").add("C2", "C3");
+		controller.getIPTable(connector.group).add("C2", "C3");
 		
-		host.addDataReceiver(controller.getDataReceiver());
-		
-		ConnectorComponent connector = new ConnectorComponent(component.id, component.range, controller);
-		
+		/* Model */
 		KnowledgeManagerFactory knowledgeManagerFactory = new CloningKnowledgeManagerFactory();
 		RuntimeMetadata model = RuntimeMetadataFactoryExt.eINSTANCE.createRuntimeMetadata();
 		AnnotationProcessor processor = new AnnotationProcessor(RuntimeMetadataFactoryExt.eINSTANCE, model,
@@ -119,11 +122,13 @@ public class Launcher {
 		
 		processor.process(connector, DataExchange.class, ConnectorEnsemble.class);
 		
+		/* OmNET configuration */
 		omnetCfg.append(String.format("**.node[%d].mobility.initialX = %dm %n", nodeId, component.xCoord.longValue()));
 		omnetCfg.append(String.format("**.node[%d].mobility.initialY = %dm %n", nodeId, component.yCoord.longValue()));
 		omnetCfg.append(String.format("**.node[%d].mobility.initialZ = 0m %n", nodeId));
 		omnetCfg.append(String.format("**.node[%d].appl.id = \"%s\" %n%n", nodeId, component.id));
 		
+		/* Available partitions */
 		Set<String> partitions = new HashSet<String>();
 		for (EnsembleDefinition ens : model.getEnsembleDefinitions())
 			partitions.add(ens.getPartitionedBy());
@@ -132,6 +137,7 @@ public class Launcher {
 		
 		IPGossipClientStrategy strategy = new IPGossipClientStrategy(partitions, controller);	
 		
+		/* Runtime framework */
 		RuntimeFramework runtime = builder.build(host, sim, null, model, strategy, null);
 		runtime.start();
 	}

@@ -22,6 +22,8 @@ import cz.cuni.mff.d3s.deeco.network.DicEntry;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeHelper;
 import cz.cuni.mff.d3s.deeco.network.ip.IPController;
+import cz.cuni.mff.d3s.deeco.network.ip.IPData;
+import cz.cuni.mff.d3s.deeco.network.ip.IPDataSender;
 import cz.cuni.mff.d3s.deeco.network.ip.IPTable;
 import cz.cuni.mff.d3s.deeco.network.ip.KnowledgeQueue;
 import cz.cuni.mff.d3s.deeco.task.ParamHolder;
@@ -35,7 +37,7 @@ public class ConnectorComponent {
 
 	public String id;
 	public Integer CONNECTOR_TAG = 0;
-	public String partition = "destination";
+	public String group = "destination";
 	
 	// Notice that in this storage are only values associated with values in the range set.
 	// Storage is updated by component process - entries coming from other connectors or by
@@ -50,11 +52,12 @@ public class ConnectorComponent {
 	@Local public Set<String> partitions;
 	
 	@Local public IPController controller;
+	@Local public IPDataSender sender;
 	
 	public Set<DicEntry> inputEntries;
 	public Set<DicEntry> outputEntries;
 	
-	public ConnectorComponent(String id, Collection<Object> range, IPController controller) {
+	public ConnectorComponent(String id, Collection<Object> range, IPController controller, IPDataSender sender) {
 		this.id = id;
 		this.storage = new HashedIPGossipStorage();
 		this.range = new HashSet<Object>(range);
@@ -63,6 +66,7 @@ public class ConnectorComponent {
 		this.partitions = new HashSet<String>();
 		
 		this.controller = controller;
+		this.sender = sender;
 	}
 	
 	@Process
@@ -87,13 +91,18 @@ public class ConnectorComponent {
 	@Process
 	@PeriodicScheduling(period = 5000)
 	public static void notifyNodes(
+			@In("sender") IPDataSender sender,
 			@In("controller") IPController controller,
-			@In("partitinos") Set<String> partitions) {
+			@In("range") Set<Object> range) {
 		
-		for (String part : partitions) {
-			IPTable tab = controller.getIPTable(part);
+		// FIXME: ? send by parts, not all at once ?
+		for (Object partVal : range) {
+			IPTable tab = controller.getIPTable(partVal);
 			if (tab != null) {
-				// TODO: send notifications to all members in this table
+				IPData data = new IPData(partVal, tab.getAddresses());
+				for (String recipient : tab.getAddresses()) {
+					sender.sendData(data, recipient);
+				}
 			}
 		}
 	}
@@ -104,8 +113,7 @@ public class ConnectorComponent {
 			@In("id") String id,
 			@In("controller") IPController controller,
 			@In("range") Set<Object> range,
-			@In("partitinos") Set<String> partitions,
-			@In("storage") IPGossipStorage storage,
+			@In("partitions") Set<String> partitions,
 			@InOut("outputEntries") ParamHolder<Set<DicEntry>> outputEntries
 			) {
 		
@@ -122,13 +130,7 @@ public class ConnectorComponent {
 				if (val != null && range.contains(val)) {
 					
 					// current connector is responsible for this value
-					// TODO: add these to the local tables
-					Set<String> peers = storage.getAndUpdate(val, sender);
-					
-					// this is knowledge sent to the right connector because it is responsible for
-					// partition key contained in this knowledge
-					// should be performed a knowledge exchange??? (in another process) - for each pair
-					// should this knowledge be kept here forever
+					controller.getIPTable(val).add(sender);
 				}
 				else {
 					// there is another connector responsible for this key

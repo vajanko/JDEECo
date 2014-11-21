@@ -3,14 +3,10 @@
  */
 package cz.cuni.mff.d3s.deeco.network.ip;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import cz.cuni.mff.d3s.deeco.logging.Log;
 import cz.cuni.mff.d3s.deeco.network.DataReceiver;
-import cz.cuni.mff.d3s.deeco.network.DataSender;
 
 /**
  * 
@@ -49,7 +45,7 @@ public class IPControllerImpl implements IPController, IPDataReceiver {
 	 */
 	@Override
 	public void receive(IPData data) {
-		IPTable ipTable = getIPTable(data.getPartition());
+		IPTable ipTable = getIPTable(data.getPartitionValue());
 		
 		ipTable.addAll(data.getAddresses());
 	}
