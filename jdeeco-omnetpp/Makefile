@@ -1,7 +1,7 @@
 # JAVA_HOME = C:/Progra~2/Java/jdk8
-JAVA_HOME=C:/Program/java/jdk8_x86
+JAVA_HOME=C:/ProgramFiles/java/jdk8_x86
 
-INET_DIR ?= ${OMNETPP_ROOT}/../inet1
+INET_DIR ?= ${OMNETPP_ROOT}/../inet
 MIXIM_DIR ?= ${OMNETPP_ROOT}/../mixim
 
 CONFIGFILE = $(shell opp_configfilepath)
