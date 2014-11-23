@@ -1,0 +1,489 @@
+version 2
+run omnetpp-0-20141022-09:52:31-3344
+attr configname omnetpp
+attr datetime 20141022-09:52:31
+attr experiment omnetpp
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=0
+attr measurement ""
+attr network manet.MANET
+attr processid 3344
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+scalar MANET.node[0].udp 	droppedPkBadChecksum:count 	0
+attr interpolationmode  none
+attr title  "packets dropped (checksum error), count"
+scalar MANET.node[0].udp 	droppedPkWrongPort:count 	0
+attr interpolationmode  none
+attr title  "packets dropped (wrong port), count"
+scalar MANET.node[0].udp 	passedUpPk:count 	0
+attr interpolationmode  none
+attr title  "packets passed up, count"
+scalar MANET.node[0].udp 	rcvdPk:count 	0
+attr interpolationmode  none
+attr source  rcvdPk
+attr title  "packets received, count"
+scalar MANET.node[0].udp 	rcvdPk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  rcvdPk
+attr title  "packets received, sum(packetBytes)"
+scalar MANET.node[0].udp 	sentPk:count 	0
+attr interpolationmode  none
+attr source  sentPk
+attr title  "packets sent, count"
+scalar MANET.node[0].udp 	sentPk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  sentPk
+attr title  "packets sent, sum(packetBytes)"
+scalar MANET.node[0].networkLayer.arp 	failedResolution:count 	0
+attr title  "ARP failed resolutions, count"
+scalar MANET.node[0].networkLayer.arp 	initiatedResolution:count 	0
+attr title  "ARP initiated resolutions, count"
+scalar MANET.node[0].networkLayer.arp 	sentReplies:count 	0
+attr title  "ARP replies sent, count"
+scalar MANET.node[0].networkLayer.arp 	sentReq:count 	0
+attr title  "ARP request sent, count"
+scalar MANET.node[0].nic802154.mac 	nbTxFrames 	0
+scalar MANET.node[0].nic802154.mac 	nbRxFrames 	0
+scalar MANET.node[0].nic802154.mac 	nbDroppedFrames 	0
+scalar MANET.node[0].nic802154.mac 	nbMissedAcks 	0
+scalar MANET.node[0].nic802154.mac 	nbRecvdAcks 	0
+scalar MANET.node[0].nic802154.mac 	nbTxAcks 	0
+scalar MANET.node[0].nic802154.mac 	nbDuplicates 	0
+scalar MANET.node[0].nic802154.mac 	meanBackoff 	0
+scalar MANET.node[0].nic802154.mac 	nbBackoffs 	0
+scalar MANET.node[0].nic802154.mac 	backoffDurations 	0
+scalar MANET.node[0].nic802154.phy 	nbFramesWithInterference 	0
+scalar MANET.node[0].nic802154.phy 	nbFramesWithoutInterference 	0
+scalar MANET.node[0].nic802154.phy 	nbFramesWithInterferencePartial 	0
+scalar MANET.node[0].nic802154.phy 	nbFramesWithoutInterferencePartial 	0
+scalar MANET.node[0].nic802154.phy 	nbFramesWithInterferenceDropped 	0
+scalar MANET.node[0].nic802154.phy 	nbFramesWithoutInterferenceDropped 	0
+scalar MANET.node[0].eth.mac 	"simulated time" 	1000
+scalar MANET.node[0].eth.mac 	full-duplex 	1
+scalar MANET.node[0].eth.mac 	"frames/sec sent" 	0
+scalar MANET.node[0].eth.mac 	"frames/sec rcvd" 	0
+scalar MANET.node[0].eth.mac 	"bits/sec sent" 	0
+scalar MANET.node[0].eth.mac 	"bits/sec rcvd" 	0
+scalar MANET.node[0].eth.mac 	"rx channel idle (%)" 	100
+scalar MANET.node[0].eth.mac 	"rx channel utilization (%)" 	0
+scalar MANET.node[0].eth.mac 	droppedPkNotForUs:count 	0
+attr interpolationmode  none
+attr source  dropPkNotForUs
+attr title  "packets dropped/not for us, count"
+scalar MANET.node[0].eth.mac 	droppedPkNotForUs:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  dropPkNotForUs
+attr title  "packets dropped/not for us, sum(packetBytes)"
+scalar MANET.node[0].eth.mac 	droppedPkBitError:count 	0
+attr interpolationmode  none
+attr source  dropPkBitError
+attr title  "packets dropped/bit error, count"
+scalar MANET.node[0].eth.mac 	droppedPkBitError:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  dropPkBitError
+attr title  "packets dropped/bit error, sum(packetBytes)"
+scalar MANET.node[0].eth.mac 	droppedPkIfaceDown:count 	0
+attr interpolationmode  none
+attr source  dropPkIfaceDown
+attr title  "packets dropped/interface down, count"
+scalar MANET.node[0].eth.mac 	droppedPkIfaceDown:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  dropPkIfaceDown
+attr title  "packets dropped/interface down, sum(packetBytes)"
+scalar MANET.node[0].eth.mac 	rxPkFromHL:count 	0
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, count"
+scalar MANET.node[0].eth.mac 	rxPkFromHL:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, sum(packetBytes)"
+scalar MANET.node[0].eth.mac 	rxPausePkUnits:count 	0
+attr interpolationmode  none
+attr title  "pause units received, count"
+scalar MANET.node[0].eth.mac 	rxPausePkUnits:sum 	0
+attr interpolationmode  none
+attr title  "pause units received, sum"
+scalar MANET.node[0].eth.mac 	txPausePkUnits:count 	0
+attr interpolationmode  none
+attr title  "pause units sent, count"
+scalar MANET.node[0].eth.mac 	txPausePkUnits:sum 	0
+attr interpolationmode  none
+attr title  "pause units sent, sum"
+scalar MANET.node[0].eth.mac 	passedUpPk:count 	0
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, count"
+scalar MANET.node[0].eth.mac 	passedUpPk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, sum(packetBytes)"
+scalar MANET.node[0].eth.mac 	rxPkOk:count 	0
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, count"
+scalar MANET.node[0].eth.mac 	rxPkOk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, sum(packetBytes)"
+scalar MANET.node[0].eth.mac 	txPk:count 	0
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, count"
+scalar MANET.node[0].eth.mac 	txPk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, sum(packetBytes)"
+scalar MANET.node[0].eth.encap 	pauseSent:count 	0
+attr title  "pause sent, count"
+scalar MANET.node[0].eth.encap 	pauseSent:sum 	0
+attr title  "pause sent, sum"
+scalar MANET.node[0].eth.encap 	decapPk:count 	0
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, count"
+scalar MANET.node[0].eth.encap 	decapPk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, sum(packetBytes)"
+scalar MANET.node[0].eth.encap 	encapPk:count 	0
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, count"
+scalar MANET.node[0].eth.encap 	encapPk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, sum(packetBytes)"
+scalar MANET.node[0].batteryStats 	nominal 	1187988120
+attr unit  mW-s
+scalar MANET.node[0].batteryStats 	total 	62039.999961853
+attr unit  mW-s
+scalar MANET.node[0].batteryStats 	lifetime 	-1
+attr unit  s
+scalar MANET.node[0].batteryStats 	"Mean power consumption" 	62.039999961853
+attr unit  mW
+scalar MANET.node[1].udp 	droppedPkBadChecksum:count 	0
+attr interpolationmode  none
+attr title  "packets dropped (checksum error), count"
+scalar MANET.node[1].udp 	droppedPkWrongPort:count 	0
+attr interpolationmode  none
+attr title  "packets dropped (wrong port), count"
+scalar MANET.node[1].udp 	passedUpPk:count 	0
+attr interpolationmode  none
+attr title  "packets passed up, count"
+scalar MANET.node[1].udp 	rcvdPk:count 	0
+attr interpolationmode  none
+attr source  rcvdPk
+attr title  "packets received, count"
+scalar MANET.node[1].udp 	rcvdPk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  rcvdPk
+attr title  "packets received, sum(packetBytes)"
+scalar MANET.node[1].udp 	sentPk:count 	0
+attr interpolationmode  none
+attr source  sentPk
+attr title  "packets sent, count"
+scalar MANET.node[1].udp 	sentPk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  sentPk
+attr title  "packets sent, sum(packetBytes)"
+scalar MANET.node[1].networkLayer.arp 	failedResolution:count 	0
+attr title  "ARP failed resolutions, count"
+scalar MANET.node[1].networkLayer.arp 	initiatedResolution:count 	0
+attr title  "ARP initiated resolutions, count"
+scalar MANET.node[1].networkLayer.arp 	sentReplies:count 	0
+attr title  "ARP replies sent, count"
+scalar MANET.node[1].networkLayer.arp 	sentReq:count 	0
+attr title  "ARP request sent, count"
+scalar MANET.node[1].nic802154.mac 	nbTxFrames 	0
+scalar MANET.node[1].nic802154.mac 	nbRxFrames 	0
+scalar MANET.node[1].nic802154.mac 	nbDroppedFrames 	0
+scalar MANET.node[1].nic802154.mac 	nbMissedAcks 	0
+scalar MANET.node[1].nic802154.mac 	nbRecvdAcks 	0
+scalar MANET.node[1].nic802154.mac 	nbTxAcks 	0
+scalar MANET.node[1].nic802154.mac 	nbDuplicates 	0
+scalar MANET.node[1].nic802154.mac 	meanBackoff 	0
+scalar MANET.node[1].nic802154.mac 	nbBackoffs 	0
+scalar MANET.node[1].nic802154.mac 	backoffDurations 	0
+scalar MANET.node[1].nic802154.phy 	nbFramesWithInterference 	0
+scalar MANET.node[1].nic802154.phy 	nbFramesWithoutInterference 	0
+scalar MANET.node[1].nic802154.phy 	nbFramesWithInterferencePartial 	0
+scalar MANET.node[1].nic802154.phy 	nbFramesWithoutInterferencePartial 	0
+scalar MANET.node[1].nic802154.phy 	nbFramesWithInterferenceDropped 	0
+scalar MANET.node[1].nic802154.phy 	nbFramesWithoutInterferenceDropped 	0
+scalar MANET.node[1].eth.mac 	"simulated time" 	1000
+scalar MANET.node[1].eth.mac 	full-duplex 	1
+scalar MANET.node[1].eth.mac 	"frames/sec sent" 	0
+scalar MANET.node[1].eth.mac 	"frames/sec rcvd" 	0
+scalar MANET.node[1].eth.mac 	"bits/sec sent" 	0
+scalar MANET.node[1].eth.mac 	"bits/sec rcvd" 	0
+scalar MANET.node[1].eth.mac 	"rx channel idle (%)" 	100
+scalar MANET.node[1].eth.mac 	"rx channel utilization (%)" 	0
+scalar MANET.node[1].eth.mac 	droppedPkNotForUs:count 	0
+attr interpolationmode  none
+attr source  dropPkNotForUs
+attr title  "packets dropped/not for us, count"
+scalar MANET.node[1].eth.mac 	droppedPkNotForUs:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  dropPkNotForUs
+attr title  "packets dropped/not for us, sum(packetBytes)"
+scalar MANET.node[1].eth.mac 	droppedPkBitError:count 	0
+attr interpolationmode  none
+attr source  dropPkBitError
+attr title  "packets dropped/bit error, count"
+scalar MANET.node[1].eth.mac 	droppedPkBitError:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  dropPkBitError
+attr title  "packets dropped/bit error, sum(packetBytes)"
+scalar MANET.node[1].eth.mac 	droppedPkIfaceDown:count 	0
+attr interpolationmode  none
+attr source  dropPkIfaceDown
+attr title  "packets dropped/interface down, count"
+scalar MANET.node[1].eth.mac 	droppedPkIfaceDown:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  dropPkIfaceDown
+attr title  "packets dropped/interface down, sum(packetBytes)"
+scalar MANET.node[1].eth.mac 	rxPkFromHL:count 	0
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, count"
+scalar MANET.node[1].eth.mac 	rxPkFromHL:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, sum(packetBytes)"
+scalar MANET.node[1].eth.mac 	rxPausePkUnits:count 	0
+attr interpolationmode  none
+attr title  "pause units received, count"
+scalar MANET.node[1].eth.mac 	rxPausePkUnits:sum 	0
+attr interpolationmode  none
+attr title  "pause units received, sum"
+scalar MANET.node[1].eth.mac 	txPausePkUnits:count 	0
+attr interpolationmode  none
+attr title  "pause units sent, count"
+scalar MANET.node[1].eth.mac 	txPausePkUnits:sum 	0
+attr interpolationmode  none
+attr title  "pause units sent, sum"
+scalar MANET.node[1].eth.mac 	passedUpPk:count 	0
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, count"
+scalar MANET.node[1].eth.mac 	passedUpPk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, sum(packetBytes)"
+scalar MANET.node[1].eth.mac 	rxPkOk:count 	0
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, count"
+scalar MANET.node[1].eth.mac 	rxPkOk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, sum(packetBytes)"
+scalar MANET.node[1].eth.mac 	txPk:count 	0
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, count"
+scalar MANET.node[1].eth.mac 	txPk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, sum(packetBytes)"
+scalar MANET.node[1].eth.encap 	pauseSent:count 	0
+attr title  "pause sent, count"
+scalar MANET.node[1].eth.encap 	pauseSent:sum 	0
+attr title  "pause sent, sum"
+scalar MANET.node[1].eth.encap 	decapPk:count 	0
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, count"
+scalar MANET.node[1].eth.encap 	decapPk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, sum(packetBytes)"
+scalar MANET.node[1].eth.encap 	encapPk:count 	0
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, count"
+scalar MANET.node[1].eth.encap 	encapPk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, sum(packetBytes)"
+scalar MANET.node[1].batteryStats 	nominal 	1187988120
+attr unit  mW-s
+scalar MANET.node[1].batteryStats 	total 	62039.999961853
+attr unit  mW-s
+scalar MANET.node[1].batteryStats 	lifetime 	-1
+attr unit  s
+scalar MANET.node[1].batteryStats 	"Mean power consumption" 	62.039999961853
+attr unit  mW
+scalar MANET.switch.relayUnit 	"processed frames" 	0
+scalar MANET.switch.relayUnit 	"dropped frames" 	0
+scalar MANET.switch.relayUnit 	droppedBytes:count 	0
+attr title  "Dropped bytes, count"
+scalar MANET.switch.relayUnit 	droppedBytes:sum 	0
+attr title  "Dropped bytes, sum"
+scalar MANET.switch.relayUnit 	processedBytes:count 	0
+attr title  "Processed bytes, count"
+scalar MANET.switch.relayUnit 	processedBytes:sum 	0
+attr title  "Processed bytes, sum"
+scalar MANET.switch.relayUnit 	usedBufferBytes:max 	-1.#IND
+attr title  "Used buffer bytes, max"
+scalar MANET.switch.relayUnit 	usedBufferBytes:timeavg 	-1.#IND
+attr title  "Used buffer bytes, timeavg"
+scalar MANET.switch.eth[0].mac 	"simulated time" 	1000
+scalar MANET.switch.eth[0].mac 	full-duplex 	1
+scalar MANET.switch.eth[0].mac 	"frames/sec sent" 	0
+scalar MANET.switch.eth[0].mac 	"frames/sec rcvd" 	0
+scalar MANET.switch.eth[0].mac 	"bits/sec sent" 	0
+scalar MANET.switch.eth[0].mac 	"bits/sec rcvd" 	0
+scalar MANET.switch.eth[0].mac 	"rx channel idle (%)" 	100
+scalar MANET.switch.eth[0].mac 	"rx channel utilization (%)" 	0
+scalar MANET.switch.eth[0].mac 	droppedPkNotForUs:count 	0
+attr interpolationmode  none
+attr source  dropPkNotForUs
+attr title  "packets dropped/not for us, count"
+scalar MANET.switch.eth[0].mac 	droppedPkNotForUs:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  dropPkNotForUs
+attr title  "packets dropped/not for us, sum(packetBytes)"
+scalar MANET.switch.eth[0].mac 	droppedPkBitError:count 	0
+attr interpolationmode  none
+attr source  dropPkBitError
+attr title  "packets dropped/bit error, count"
+scalar MANET.switch.eth[0].mac 	droppedPkBitError:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  dropPkBitError
+attr title  "packets dropped/bit error, sum(packetBytes)"
+scalar MANET.switch.eth[0].mac 	droppedPkIfaceDown:count 	0
+attr interpolationmode  none
+attr source  dropPkIfaceDown
+attr title  "packets dropped/interface down, count"
+scalar MANET.switch.eth[0].mac 	droppedPkIfaceDown:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  dropPkIfaceDown
+attr title  "packets dropped/interface down, sum(packetBytes)"
+scalar MANET.switch.eth[0].mac 	rxPkFromHL:count 	0
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, count"
+scalar MANET.switch.eth[0].mac 	rxPkFromHL:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, sum(packetBytes)"
+scalar MANET.switch.eth[0].mac 	rxPausePkUnits:count 	0
+attr interpolationmode  none
+attr title  "pause units received, count"
+scalar MANET.switch.eth[0].mac 	rxPausePkUnits:sum 	0
+attr interpolationmode  none
+attr title  "pause units received, sum"
+scalar MANET.switch.eth[0].mac 	txPausePkUnits:count 	0
+attr interpolationmode  none
+attr title  "pause units sent, count"
+scalar MANET.switch.eth[0].mac 	txPausePkUnits:sum 	0
+attr interpolationmode  none
+attr title  "pause units sent, sum"
+scalar MANET.switch.eth[0].mac 	passedUpPk:count 	0
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, count"
+scalar MANET.switch.eth[0].mac 	passedUpPk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, sum(packetBytes)"
+scalar MANET.switch.eth[0].mac 	rxPkOk:count 	0
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, count"
+scalar MANET.switch.eth[0].mac 	rxPkOk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, sum(packetBytes)"
+scalar MANET.switch.eth[0].mac 	txPk:count 	0
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, count"
+scalar MANET.switch.eth[0].mac 	txPk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, sum(packetBytes)"
+scalar MANET.switch.eth[1].mac 	"simulated time" 	1000
+scalar MANET.switch.eth[1].mac 	full-duplex 	1
+scalar MANET.switch.eth[1].mac 	"frames/sec sent" 	0
+scalar MANET.switch.eth[1].mac 	"frames/sec rcvd" 	0
+scalar MANET.switch.eth[1].mac 	"bits/sec sent" 	0
+scalar MANET.switch.eth[1].mac 	"bits/sec rcvd" 	0
+scalar MANET.switch.eth[1].mac 	"rx channel idle (%)" 	100
+scalar MANET.switch.eth[1].mac 	"rx channel utilization (%)" 	0
+scalar MANET.switch.eth[1].mac 	droppedPkNotForUs:count 	0
+attr interpolationmode  none
+attr source  dropPkNotForUs
+attr title  "packets dropped/not for us, count"
+scalar MANET.switch.eth[1].mac 	droppedPkNotForUs:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  dropPkNotForUs
+attr title  "packets dropped/not for us, sum(packetBytes)"
+scalar MANET.switch.eth[1].mac 	droppedPkBitError:count 	0
+attr interpolationmode  none
+attr source  dropPkBitError
+attr title  "packets dropped/bit error, count"
+scalar MANET.switch.eth[1].mac 	droppedPkBitError:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  dropPkBitError
+attr title  "packets dropped/bit error, sum(packetBytes)"
+scalar MANET.switch.eth[1].mac 	droppedPkIfaceDown:count 	0
+attr interpolationmode  none
+attr source  dropPkIfaceDown
+attr title  "packets dropped/interface down, count"
+scalar MANET.switch.eth[1].mac 	droppedPkIfaceDown:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  dropPkIfaceDown
+attr title  "packets dropped/interface down, sum(packetBytes)"
+scalar MANET.switch.eth[1].mac 	rxPkFromHL:count 	0
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, count"
+scalar MANET.switch.eth[1].mac 	rxPkFromHL:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, sum(packetBytes)"
+scalar MANET.switch.eth[1].mac 	rxPausePkUnits:count 	0
+attr interpolationmode  none
+attr title  "pause units received, count"
+scalar MANET.switch.eth[1].mac 	rxPausePkUnits:sum 	0
+attr interpolationmode  none
+attr title  "pause units received, sum"
+scalar MANET.switch.eth[1].mac 	txPausePkUnits:count 	0
+attr interpolationmode  none
+attr title  "pause units sent, count"
+scalar MANET.switch.eth[1].mac 	txPausePkUnits:sum 	0
+attr interpolationmode  none
+attr title  "pause units sent, sum"
+scalar MANET.switch.eth[1].mac 	passedUpPk:count 	0
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, count"
+scalar MANET.switch.eth[1].mac 	passedUpPk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, sum(packetBytes)"
+scalar MANET.switch.eth[1].mac 	rxPkOk:count 	0
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, count"
+scalar MANET.switch.eth[1].mac 	rxPkOk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, sum(packetBytes)"
+scalar MANET.switch.eth[1].mac 	txPk:count 	0
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, count"
+scalar MANET.switch.eth[1].mac 	txPk:sum(packetBytes) 	0
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, sum(packetBytes)"
