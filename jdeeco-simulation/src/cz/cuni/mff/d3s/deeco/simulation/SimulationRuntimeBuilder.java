@@ -33,11 +33,12 @@ public class SimulationRuntimeBuilder {
 		Executor executor = new SameThreadExecutor();
 
 		// Set up the simulation scheduler
-		SimulationScheduler scheduler = new SimulationScheduler(host,
-				callbackProvider);
+		SimulationScheduler scheduler = new SimulationScheduler(host, callbackProvider);
 		scheduler.setExecutor(executor);
-		((SimulationTimeEventListenerHolder) host)
-				.setSimulationTimeEventListener(scheduler);
+		
+		// kovaco
+		if (host instanceof SimulationTimeEventListenerHolder)
+			((SimulationTimeEventListenerHolder) host).setSimulationTimeEventListener(scheduler);
 
 		// Set up the host container
 		KnowledgeManagerContainer container = new KnowledgeManagerContainer();

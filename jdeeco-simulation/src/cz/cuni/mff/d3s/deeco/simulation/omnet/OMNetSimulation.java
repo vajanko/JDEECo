@@ -92,6 +92,8 @@ public class OMNetSimulation extends Simulation implements NetworkProvider {
 		if (networkProvider == null) {
 			this.networkProvider = this;
 			networkAddressesToHosts = new HashMap<String, OMNetSimulationHost>();
+		} else {
+			networkAddressesToHosts = new HashMap<String, OMNetSimulationHost>();
 		}
 		System.loadLibrary("libjdeeco-omnetpp");
 	}
@@ -174,11 +176,7 @@ public class OMNetSimulation extends Simulation implements NetworkProvider {
 	}
 
 	public void callAt(long absoluteTime, String nodeId) {
-		long callAtTime = absoluteTime;
-		if (callAtTime == 0) {
-			callAtTime++;
-		}
-		nativeCallAt(millisecondsToSeconds(callAtTime), nodeId);
+		nativeCallAt(millisecondsToSeconds(absoluteTime), nodeId);
 	}
 
 	public boolean isPositionSensorAvailable(Host host) {
