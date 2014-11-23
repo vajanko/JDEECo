@@ -25,6 +25,8 @@ Define_Module(JDEECoApplication);
 
 void JDEECoApplication::initialize(int stage) {
     if (stage == 1) {
+    	std::cout << "JDEECoApplication::initialize " << stage << std::endl;
+
         id = par("id").stringValue();
         lowerLayerIn = findGate("lowerLayerIn");
         lowerLayerOut = findGate("lowerLayerOut");
@@ -33,16 +35,21 @@ void JDEECoApplication::initialize(int stage) {
         lower802154LayerOut = findGate("lower802154LayerOut");
 
         //UDP conf
+        std::cout << "JDEECoApplication::initialize UDP conf ... ";
         port = par("port");
         socket.setOutputGate(gate("lowerLayerOut"));
         socket.bind(port);
         socket.setBroadcast(true);
-        socket.joinLocalMulticastGroups();
+        //socket.joinLocalMulticastGroups();
+
+        std::cout << "done" << std::endl;
 
         packet80211ByteLength = par("packet80211ByteLength");
         packet802154ByteLength = par("packet802154ByteLength");
 
         JDEECoModule::initialize();
+
+        std::cout << "JDEECoApplication::initialize done" << std::endl;
     }
 }
 
