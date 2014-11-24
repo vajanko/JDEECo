@@ -61,6 +61,10 @@ public class ConnectorComponent {
 		this.controller = controller;
 		this.sender = sender;
 		this.provider = provider;
+		
+		// initialise IP tables and add current connector
+		for (Object key : range)
+			controller.getIPTable(key).add(id);
 	}
 	
 	@Process
@@ -83,6 +87,7 @@ public class ConnectorComponent {
 	@Process
 	@PeriodicScheduling(period = 5000)
 	public static void notifyNodes(
+			@In("id") String id,
 			@In("sender") IPDataSender sender,
 			@In("controller") IPController controller,
 			@In("range") Set<Object> range) {
@@ -93,7 +98,8 @@ public class ConnectorComponent {
 			if (tab != null) {
 				IPData data = new IPData(partVal, tab.getAddresses());
 				for (String recipient : tab.getAddresses()) {
-					sender.sendData(data, recipient);
+					if (!recipient.equals(id))
+						sender.sendData(data, recipient);
 				}
 			}
 		}
@@ -131,6 +137,9 @@ public class ConnectorComponent {
 						remove.add(kd);
 						// send knowledge to other connector
 						outputEntries.value.add(new DicEntry(val, sender));
+						
+						
+						// why don't we send DicEntry directly to the controller responsible for that key
 					}
 				}
 			}
