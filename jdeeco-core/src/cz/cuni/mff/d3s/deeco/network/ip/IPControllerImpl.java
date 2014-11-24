@@ -48,7 +48,9 @@ public class IPControllerImpl implements IPController, IPDataReceiver {
 	public void receive(IPData data) {
 		IPTable ipTable = getIPTable(data.getPartitionValue());
 		
+		ipTable.clear();
 		ipTable.addAll(data.getAddresses());
+		System.out.println(this.toString());
 	}
 	
 	public IPControllerImpl() {

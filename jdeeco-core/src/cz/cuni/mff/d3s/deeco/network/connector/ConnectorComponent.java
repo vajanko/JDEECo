@@ -51,7 +51,7 @@ public class ConnectorComponent {
 	public Set<DicEntry> inputEntries;
 	public Set<DicEntry> outputEntries;
 	
-	public ConnectorComponent(String id, Collection<Object> range, IPController controller, IPDataSender sender) {
+	public ConnectorComponent(String id, Collection<Object> range, IPController controller, IPDataSender sender, KnowledgeProvider provider) {
 		this.id = id;
 		this.range = new HashSet<Object>(range);
 		this.inputEntries = new HashSet<DicEntry>();
@@ -60,6 +60,11 @@ public class ConnectorComponent {
 		
 		this.controller = controller;
 		this.sender = sender;
+		this.provider = provider;
+		
+		// initialise IP tables and add current connector
+		for (Object key : range)
+			controller.getIPTable(key).add(id);
 	}
 	
 	@Process
@@ -82,6 +87,7 @@ public class ConnectorComponent {
 	@Process
 	@PeriodicScheduling(period = 5000)
 	public static void notifyNodes(
+			@In("id") String id,
 			@In("sender") IPDataSender sender,
 			@In("controller") IPController controller,
 			@In("range") Set<Object> range) {
@@ -92,7 +98,8 @@ public class ConnectorComponent {
 			if (tab != null) {
 				IPData data = new IPData(partVal, tab.getAddresses());
 				for (String recipient : tab.getAddresses()) {
-					sender.sendData(data, recipient);
+					if (!recipient.equals(id))
+						sender.sendData(data, recipient);
 				}
 			}
 		}
@@ -111,28 +118,33 @@ public class ConnectorComponent {
 		
 		outputEntries.value.clear();
 		
-		for (Entry<Object, KnowledgeData> item : provider.getKnowledge().entrySet()) {
-			
-		}
+		ArrayList<KnowledgeData> remove = new ArrayList<KnowledgeData>();
 		
-		// TODO: get the knowledge
-		List<KnowledgeData> knowledge = new ArrayList<KnowledgeData>();
-		
-		for (KnowledgeData kd : knowledge) {
+		for (KnowledgeData kd : provider.getKnowledge()) {
 			String sender = kd.getMetaData().sender;
 			
 			for (String part : partitions) {
 				Object val = KnowledgeHelper.getValue(kd, part);
-				if (val != null && range.contains(val)) {
-					
-					// current connector is responsible for this value
-					controller.getIPTable(val).add(sender);
-				}
-				else {
-					// there is another connector responsible for this key
-					outputEntries.value.add(new DicEntry(val, sender));
+				if (val != null) {
+					if (range.contains(val)) {
+						// current connector is responsible for this value
+						controller.getIPTable(val).add(sender);
+					}
+					else {
+						// there is another connector responsible for this key
+						
+						// remove knowledge from the provider
+						remove.add(kd);
+						// send knowledge to other connector
+						outputEntries.value.add(new DicEntry(val, sender));
+						
+						
+						// why don't we send DicEntry directly to the controller responsible for that key
+					}
 				}
 			}
 		}
+		
+		provider.removeAll(remove);
 	}
 }
