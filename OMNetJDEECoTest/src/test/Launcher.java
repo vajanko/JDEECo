@@ -164,9 +164,11 @@ public class Launcher {
 		deployVehicle(sim, builder, omnetConfig, new Vehicle("V8", 000.0, 300.0, "Drsden"), storage);
 		
 		// Deploy connectors		
-		deployConnector(sim, builder, omnetConfig, new ConnectorInfo("C1", 900.0, 900.0, Arrays.asList((Object)"Berlin")));
-		deployConnector(sim, builder, omnetConfig, new ConnectorInfo("C2", 900.0, 000.0, Arrays.asList((Object)"Prague")));//, "Drsden")));
-		deployConnector(sim, builder, omnetConfig, new ConnectorInfo("C3", 000.0, 900.0, Arrays.asList((Object)"Drsden")));
+		deployConnector(sim, builder, omnetConfig, 
+				new ConnectorInfo("C1", 900.0, 900.0, Arrays.asList((Object)"Berlin", "destination")));
+		deployConnector(sim, builder, omnetConfig, 
+				new ConnectorInfo("C2", 900.0, 000.0, Arrays.asList((Object)"Prague", "Drsden")));//, "Drsden")));
+		deployConnector(sim, builder, omnetConfig, new ConnectorInfo("C3", 000.0, 900.0, Arrays.asList((Object)"Brno")));
 		
 		// Preparing omnetpp config
 		String confName = "omnetpp";
