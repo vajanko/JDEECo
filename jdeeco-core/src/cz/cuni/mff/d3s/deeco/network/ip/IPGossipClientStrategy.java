@@ -14,7 +14,7 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeHelper;
  * 
  * @author Ondrej Kováč <info@vajanko.me>
  */
-public class IPGossipClientStrategy implements IPGossipStrategy {
+public class IPGossipClientStrategy extends IPGossipBaseStrategy {
 	
 	private IPController controller;
 	private Collection<String> partitions;
@@ -42,7 +42,6 @@ public class IPGossipClientStrategy implements IPGossipStrategy {
 	}
 	
 	public IPGossipClientStrategy(Set<String> partitions, IPController controller) {
-		this.partitions = new ArrayList<String>(partitions);
-		this.controller = controller;
+		super(partitions, controller);
 	}
 }
