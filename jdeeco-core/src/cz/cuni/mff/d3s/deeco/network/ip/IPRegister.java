@@ -13,7 +13,7 @@ import java.util.Set;
  * 
  * @author Ondrej Kováč <info@vajanko.me>
  */
-public class IPTable {
+public class IPRegister {
 	private Set<String> register;
 	
 	/**
@@ -37,10 +37,10 @@ public class IPTable {
 		register.clear();
 	}
 	
-	public IPTable() {
+	public IPRegister() {
 		this.register = new HashSet<String>();
 	}
-	public IPTable(Collection<String> initialEntries) {
+	public IPRegister(Collection<String> initialEntries) {
 		this.register = new HashSet<String>(initialEntries);
 	}
 	

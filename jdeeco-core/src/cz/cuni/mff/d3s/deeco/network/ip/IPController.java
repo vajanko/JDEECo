@@ -14,8 +14,8 @@ public interface IPController {
 	 * Retrieves IP table for a particular ensemble partition group.
 	 *  
 	 * @param partitionValue Value of partitionBy field name
-	 * @return Instance of {@link IPTable} containing list of IP's which belongs to one ensemble
+	 * @return Instance of {@link IPRegister} containing list of IP's which belongs to one ensemble
 	 * partition group.
 	 */
-	IPTable getIPTable(Object partitionValue);
+	IPRegister getIPTable(Object partitionValue);
 }

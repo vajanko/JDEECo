@@ -17,16 +17,16 @@ public class IPControllerImpl implements IPController, IPDataReceiver {
 
 	private DataReceiver receiver;
 	// key: partitionValue, value: partition IP table
-	private Map<Object, IPTable> ipTables;
+	private Map<Object, IPRegister> ipTables;
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.network.ip.IPController#getIPTable(java.lang.String)
 	 */
 	@Override
-	public IPTable getIPTable(Object partitionValue) {
+	public IPRegister getIPTable(Object partitionValue) {
 		
 		if (!ipTables.containsKey(partitionValue))
-			ipTables.put(partitionValue, new IPTable());
+			ipTables.put(partitionValue, new IPRegister());
 		
 		return ipTables.get(partitionValue);
 	}
@@ -46,7 +46,7 @@ public class IPControllerImpl implements IPController, IPDataReceiver {
 	 */
 	@Override
 	public void receive(IPData data) {
-		IPTable ipTable = getIPTable(data.getPartitionValue());
+		IPRegister ipTable = getIPTable(data.getPartitionValue());
 		
 		ipTable.clear();
 		ipTable.addAll(data.getAddresses());
@@ -54,7 +54,7 @@ public class IPControllerImpl implements IPController, IPDataReceiver {
 	}
 	
 	public IPControllerImpl() {
-		this.ipTables = new HashMap<Object, IPTable>();
+		this.ipTables = new HashMap<Object, IPRegister>();
 		this.receiver = new IPDataReceiverHandler(this);
 	}
 	
@@ -64,7 +64,7 @@ public class IPControllerImpl implements IPController, IPDataReceiver {
 	@Override
 	public String toString() {
 		StringBuilder str = new StringBuilder();
-		for (Entry<Object, IPTable> item : ipTables.entrySet()) {
+		for (Entry<Object, IPRegister> item : ipTables.entrySet()) {
 			str.append(item.getKey().toString() + "->" + item.getValue().toString() + "\n");
 		}
 		return str.toString();
