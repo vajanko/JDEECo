@@ -165,7 +165,7 @@ public class Launcher {
 		
 		// Deploy connectors		
 		deployConnector(sim, builder, omnetConfig, 
-				new ConnectorInfo("C1", 900.0, 900.0, Arrays.asList((Object)"Berlin", "destination")));
+				new ConnectorInfo("C1", 900.0, 900.0, Arrays.asList((Object)"Berlin")));
 		deployConnector(sim, builder, omnetConfig, 
 				new ConnectorInfo("C2", 900.0, 000.0, Arrays.asList((Object)"Prague", "Drsden")));//, "Drsden")));
 		deployConnector(sim, builder, omnetConfig, new ConnectorInfo("C3", 000.0, 900.0, Arrays.asList((Object)"Brno")));

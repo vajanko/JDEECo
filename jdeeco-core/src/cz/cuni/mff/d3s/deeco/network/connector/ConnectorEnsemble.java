@@ -23,7 +23,7 @@ import cz.cuni.mff.d3s.deeco.task.ParamHolder;
  */
 @Ensemble
 //@PeriodicScheduling(period = 2000)
-@PartitionedBy("group")
+@PartitionedBy("destination")
 public class ConnectorEnsemble {
 	
 	@Membership
