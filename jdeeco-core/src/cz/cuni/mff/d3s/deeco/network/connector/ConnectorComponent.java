@@ -35,7 +35,7 @@ public class ConnectorComponent {
 
 	public String id;
 	public Integer CONNECTOR_TAG = 0;
-	public String group = "destination";
+	public String connector_group = "destination";
 	
 	// Key space range - current connector stores values for this collection of keys
 	// for now suppose that key space partitioning is given.
@@ -68,20 +68,27 @@ public class ConnectorComponent {
 	}
 	
 	@Process
-	//@PeriodicScheduling(period = 2000)
+	@PeriodicScheduling(period = 2000)
 	public static void processEntries(
 			@In("id") String id,
 			@In("range") Set<Object> range,
 			@In("controller") IPController controller,
-			@TriggerOnChange @InOut("inputEntries") ParamHolder<Collection<DicEntry>> inputEntries) {
+			@InOut("outputEntries") ParamHolder<Collection<DicEntry>> outputEntries,
+			@InOut("inputEntries") ParamHolder<Collection<DicEntry>> inputEntries) {
 		
 		// move these entries to my local storage
 		for (DicEntry entry : inputEntries.value) {
-			if (range.contains(entry.getKey())) {
+			//if (range.contains(entry.getKey())) {
 				controller.getIPTable(entry.getKey()).add(entry.getAddress());
-			}
+			//}
 		}
 		inputEntries.value.clear();
+		outputEntries.value.clear();
+		for (Object key : range)
+			outputEntries.value.add(new DicEntry(key, id));
+		
+//		System.out.println(id + ": ");
+//		System.out.println(controller.toString());
 	}
 	
 	@Process
@@ -116,19 +123,20 @@ public class ConnectorComponent {
 			@InOut("outputEntries") ParamHolder<Set<DicEntry>> outputEntries
 			) {
 		
-		outputEntries.value.clear();
+		//outputEntries.value.clear();
 		
+		// list of knowledge data to remove from local KnowledgeProvider
 		ArrayList<KnowledgeData> remove = new ArrayList<KnowledgeData>();
 		
 		for (KnowledgeData kd : provider.getKnowledge()) {
-			String sender = kd.getMetaData().sender;
+			String owner = kd.getMetaData().componentId; 	//.sender;
 			
 			for (String part : partitions) {
 				Object val = KnowledgeHelper.getValue(kd, part);
 				if (val != null) {
 					if (range.contains(val)) {
 						// current connector is responsible for this value
-						controller.getIPTable(val).add(sender);
+						controller.getIPTable(val).add(owner);
 					}
 					else {
 						// there is another connector responsible for this key
@@ -136,7 +144,7 @@ public class ConnectorComponent {
 						// remove knowledge from the provider
 						remove.add(kd);
 						// send knowledge to other connector
-						outputEntries.value.add(new DicEntry(val, sender));
+						//outputEntries.value.add(new DicEntry(val, sender));
 						
 						
 						// why don't we send DicEntry directly to the controller responsible for that key

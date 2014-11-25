@@ -19,9 +19,11 @@ import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManagerFactory;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.EnsembleDefinition;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.RuntimeMetadata;
 import cz.cuni.mff.d3s.deeco.model.runtime.custom.RuntimeMetadataFactoryExt;
+import cz.cuni.mff.d3s.deeco.network.IPGossipStrategy;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorComponent;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorEnsemble;
 import cz.cuni.mff.d3s.deeco.network.connector.HashedIPGossipStorage;
+import cz.cuni.mff.d3s.deeco.network.connector.IPGossipConnectorStrategy;
 import cz.cuni.mff.d3s.deeco.network.connector.KnowledgeProvider;
 import cz.cuni.mff.d3s.deeco.network.ip.IPControllerImpl;
 import cz.cuni.mff.d3s.deeco.network.ip.IPDataSender;
@@ -89,7 +91,7 @@ public class Launcher {
 		for (EnsembleDefinition ens : model.getEnsembleDefinitions())
 			partitions.add(ens.getPartitionedBy());
 		
-		IPGossipClientStrategy strategy = new IPGossipClientStrategy(partitions, controller);
+		IPGossipStrategy strategy = new IPGossipClientStrategy(partitions, controller);
 		
 		RuntimeFramework runtime = builder.build(host, sim, null, model, strategy, null);
 		runtime.start();
@@ -113,7 +115,7 @@ public class Launcher {
 		IPDataSender ipSender = new IPDataSenderWrapper(host.getDataSender());
 		ConnectorComponent connector = new ConnectorComponent(component.id, component.range, controller, ipSender, provider);
 		// provide list of initial IPs
-		controller.getIPTable(connector.group).add("C2", "C3");
+		controller.getIPTable(connector.connector_group).add("C2", "C3");
 		
 		/* Model */
 		KnowledgeManagerFactory knowledgeManagerFactory = new CloningKnowledgeManagerFactory();
@@ -136,7 +138,7 @@ public class Launcher {
 		
 		connector.partitions.addAll(partitions);
 		
-		IPGossipClientStrategy strategy = new IPGossipClientStrategy(partitions, controller);	
+		IPGossipStrategy strategy = new IPGossipConnectorStrategy(partitions, controller);	
 		
 		/* Runtime framework */
 		RuntimeFramework runtime = builder.build(host, sim, null, model, strategy, null);
@@ -165,7 +167,7 @@ public class Launcher {
 		
 		// Deploy connectors		
 		deployConnector(sim, builder, omnetConfig, 
-				new ConnectorInfo("C1", 900.0, 900.0, Arrays.asList((Object)"Berlin")));
+				new ConnectorInfo("C1", 900.0, 900.0, Arrays.asList((Object)"Berlin", "destination")));
 		deployConnector(sim, builder, omnetConfig, 
 				new ConnectorInfo("C2", 900.0, 000.0, Arrays.asList((Object)"Prague", "Drsden")));//, "Drsden")));
 		deployConnector(sim, builder, omnetConfig, new ConnectorInfo("C3", 000.0, 900.0, Arrays.asList((Object)"Brno")));

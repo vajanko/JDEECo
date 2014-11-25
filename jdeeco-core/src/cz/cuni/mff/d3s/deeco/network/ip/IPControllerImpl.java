@@ -50,7 +50,6 @@ public class IPControllerImpl implements IPController, IPDataReceiver {
 		
 		ipTable.clear();
 		ipTable.addAll(data.getAddresses());
-		System.out.println(this.toString());
 	}
 	
 	public IPControllerImpl() {

@@ -23,7 +23,7 @@ import cz.cuni.mff.d3s.deeco.task.ParamHolder;
  */
 @Ensemble
 //@PeriodicScheduling(period = 2000)
-@PartitionedBy("destination")
+@PartitionedBy("connector_group")
 public class ConnectorEnsemble {
 	
 	@Membership
@@ -44,15 +44,16 @@ public class ConnectorEnsemble {
 			@In("coord.range") Set<Object> mRange
 			) {
 		
-		cInput.value.clear();
+		//cInput.value.clear();
 		
 		Iterator<DicEntry> it = mOutput.value.iterator();
 		while (it.hasNext()) {
 			DicEntry entry = it.next();
-			if (mRange.contains(entry.getKey())) {
-				cInput.value.add(entry);
-				it.remove();
-			}
+			//if (mRange.contains(entry.getKey())) {
+				if (!cInput.value.contains(entry))
+					cInput.value.add(entry);
+				//it.remove();
+			//}
 		}
 	}
 }
