@@ -64,7 +64,7 @@ public class ConnectorComponent {
 		
 		// initialise IP tables and add current connector
 		for (Object key : range)
-			controller.getIPTable(key).add(id);
+			controller.getRegister(key).add(id);
 	}
 	
 	@Process
@@ -79,7 +79,7 @@ public class ConnectorComponent {
 		// move these entries to my local storage
 		for (DicEntry entry : inputEntries.value) {
 			//if (range.contains(entry.getKey())) {
-				controller.getIPTable(entry.getKey()).add(entry.getAddress());
+				controller.getRegister(entry.getKey()).add(entry.getAddress());
 			//}
 		}
 		inputEntries.value.clear();
@@ -101,7 +101,7 @@ public class ConnectorComponent {
 		
 		// FIXME: ? send by parts, not all at once ?
 		for (Object partVal : range) {
-			IPRegister tab = controller.getIPTable(partVal);
+			IPRegister tab = controller.getRegister(partVal);
 			if (tab != null) {
 				IPData data = new IPData(partVal, tab.getAddresses());
 				for (String recipient : tab.getAddresses()) {
@@ -136,7 +136,7 @@ public class ConnectorComponent {
 				if (val != null) {
 					if (range.contains(val)) {
 						// current connector is responsible for this value
-						controller.getIPTable(val).add(owner);
+						controller.getRegister(val).add(owner);
 					}
 					else {
 						// there is another connector responsible for this key

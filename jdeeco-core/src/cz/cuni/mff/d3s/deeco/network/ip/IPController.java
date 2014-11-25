@@ -17,5 +17,5 @@ public interface IPController {
 	 * @return Instance of {@link IPRegister} containing list of IP's which belongs to one ensemble
 	 * partition group.
 	 */
-	IPRegister getIPTable(Object partitionValue);
+	IPRegister getRegister(Object partitionValue);
 }

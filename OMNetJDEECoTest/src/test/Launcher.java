@@ -83,7 +83,7 @@ public class Launcher {
 			
 		IPControllerImpl controller = new IPControllerImpl();
 		// TODO: default IP should be added automatically based on current ensemble definition
-		controller.getIPTable(component.destination).add("C1");
+		controller.getRegister(component.destination).add("C1");
 		
 		host.addDataReceiver(controller.getDataReceiver());
 		
@@ -115,7 +115,7 @@ public class Launcher {
 		IPDataSender ipSender = new IPDataSenderWrapper(host.getDataSender());
 		ConnectorComponent connector = new ConnectorComponent(component.id, component.range, controller, ipSender, provider);
 		// provide list of initial IPs
-		controller.getIPTable(connector.connector_group).add("C2", "C3");
+		controller.getRegister(connector.connector_group).add("C2", "C3");
 		
 		/* Model */
 		KnowledgeManagerFactory knowledgeManagerFactory = new CloningKnowledgeManagerFactory();

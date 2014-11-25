@@ -23,7 +23,7 @@ public class IPControllerImpl implements IPController, IPDataReceiver {
 	 * @see cz.cuni.mff.d3s.deeco.network.ip.IPController#getIPTable(java.lang.String)
 	 */
 	@Override
-	public IPRegister getIPTable(Object partitionValue) {
+	public IPRegister getRegister(Object partitionValue) {
 		
 		if (!ipTables.containsKey(partitionValue))
 			ipTables.put(partitionValue, new IPRegister());
@@ -46,7 +46,7 @@ public class IPControllerImpl implements IPController, IPDataReceiver {
 	 */
 	@Override
 	public void receive(IPData data) {
-		IPRegister ipTable = getIPTable(data.getPartitionValue());
+		IPRegister ipTable = getRegister(data.getPartitionValue());
 		
 		ipTable.clear();
 		ipTable.addAll(data.getAddresses());

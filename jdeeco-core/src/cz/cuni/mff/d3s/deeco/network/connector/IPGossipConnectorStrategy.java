@@ -35,7 +35,7 @@ public class IPGossipConnectorStrategy implements IPGossipStrategy {
 			Object val = KnowledgeHelper.getValue(data, part);
 			if (val != null) {
 				// example: get IP's of an ensemble partitioned by destination for "Berlin" group
-				IPRegister table = controller.getIPTable(val);
+				IPRegister table = controller.getRegister(val);
 				res.addAll(table.getAddresses());
 			}
 		}
