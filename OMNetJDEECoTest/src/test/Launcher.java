@@ -115,7 +115,7 @@ public class Launcher {
 		IPDataSender ipSender = new IPDataSenderWrapper(host.getDataSender());
 		ConnectorComponent connector = new ConnectorComponent(component.id, component.range, controller, ipSender, provider);
 		// provide list of initial IPs
-		controller.getRegister(connector.connector_group).add("C2", "C3");
+		controller.getRegister(connector.connector_group).add("C1"); //.add("C2", "C3");
 		
 		/* Model */
 		KnowledgeManagerFactory knowledgeManagerFactory = new CloningKnowledgeManagerFactory();
