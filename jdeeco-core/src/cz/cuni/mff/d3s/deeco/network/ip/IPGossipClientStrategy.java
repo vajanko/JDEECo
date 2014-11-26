@@ -16,9 +16,6 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeHelper;
  */
 public class IPGossipClientStrategy extends IPGossipBaseStrategy {
 	
-	private IPController controller;
-	private Collection<String> partitions;
-	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.network.IPGossipStrategy#getRecipients(cz.cuni.mff.d3s.deeco.network.KnowledgeData, cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager)
 	 */
