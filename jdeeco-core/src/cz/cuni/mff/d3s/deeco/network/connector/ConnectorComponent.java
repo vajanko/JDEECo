@@ -51,13 +51,13 @@ public class ConnectorComponent {
 	public Set<DicEntry> inputEntries;
 	public Set<DicEntry> outputEntries;
 	
-	public ConnectorComponent(String id, Collection<Object> range, IPController controller, IPDataSender sender, KnowledgeProvider provider) {
+	public ConnectorComponent(String id, Set<String> partitions, Collection<Object> range, IPController controller, IPDataSender sender, KnowledgeProvider provider) {
 		this.id = id;
 		this.range = new HashSet<Object>(range);
 		this.inputEntries = new HashSet<DicEntry>();
 		this.outputEntries = new HashSet<DicEntry>();
-		this.partitions = new HashSet<String>();
 		
+		this.partitions = partitions;
 		this.controller = controller;
 		this.sender = sender;
 		this.provider = provider;

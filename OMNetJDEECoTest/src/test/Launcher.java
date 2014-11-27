@@ -101,6 +101,19 @@ public class Launcher {
 		
 		final int nodeId = getNextNodeId();
 		
+		/* Model */
+		KnowledgeManagerFactory knowledgeManagerFactory = new CloningKnowledgeManagerFactory();
+		RuntimeMetadata model = RuntimeMetadataFactoryExt.eINSTANCE.createRuntimeMetadata();
+		AnnotationProcessor processor = new AnnotationProcessor(RuntimeMetadataFactoryExt.eINSTANCE, model,
+				knowledgeManagerFactory, new PartitionedByProcessor());
+		
+		processor.process(DataExchange.class, ConnectorEnsemble.class);
+		
+		/* Available partitions */
+		Set<String> partitions = new HashSet<String>();
+		for (EnsembleDefinition ens : model.getEnsembleDefinitions())
+			partitions.add(ens.getPartitionedBy());
+		
 		OMNetSimulationHost host = sim.getHost(component.id, String.format("node[%d]", nodeId));
 		
 		/* Create IPController */
@@ -113,17 +126,12 @@ public class Launcher {
 		
 		/* Create Connector component */
 		IPDataSender ipSender = new IPDataSenderWrapper(host.getDataSender());
-		ConnectorComponent connector = new ConnectorComponent(component.id, component.range, controller, ipSender, provider);
+		ConnectorComponent connector = new ConnectorComponent(component.id, partitions, component.range, 
+				controller, ipSender, provider);
+		processor.process(connector);
+		
 		// provide list of initial IPs
 		controller.getRegister(connector.connector_group).add("C1"); //.add("C2", "C3");
-		
-		/* Model */
-		KnowledgeManagerFactory knowledgeManagerFactory = new CloningKnowledgeManagerFactory();
-		RuntimeMetadata model = RuntimeMetadataFactoryExt.eINSTANCE.createRuntimeMetadata();
-		AnnotationProcessor processor = new AnnotationProcessor(RuntimeMetadataFactoryExt.eINSTANCE, model,
-				knowledgeManagerFactory, new PartitionedByProcessor());
-		
-		processor.process(connector, DataExchange.class, ConnectorEnsemble.class);
 		
 		/* OmNET configuration */
 		omnetCfg.append(String.format("**.node[%d].mobility.initialX = %dm %n", nodeId, component.xCoord.longValue()));
@@ -131,12 +139,6 @@ public class Launcher {
 		omnetCfg.append(String.format("**.node[%d].mobility.initialZ = 0m %n", nodeId));
 		omnetCfg.append(String.format("**.node[%d].appl.id = \"%s\" %n%n", nodeId, component.id));
 		
-		/* Available partitions */
-		Set<String> partitions = new HashSet<String>();
-		for (EnsembleDefinition ens : model.getEnsembleDefinitions())
-			partitions.add(ens.getPartitionedBy());
-		
-		connector.partitions.addAll(partitions);
 		
 		IPGossipStrategy strategy = new IPGossipConnectorStrategy(partitions, controller);	
 		
