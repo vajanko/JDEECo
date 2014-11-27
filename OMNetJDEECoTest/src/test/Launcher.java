@@ -22,7 +22,6 @@ import cz.cuni.mff.d3s.deeco.model.runtime.custom.RuntimeMetadataFactoryExt;
 import cz.cuni.mff.d3s.deeco.network.IPGossipStrategy;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorComponent;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorEnsemble;
-import cz.cuni.mff.d3s.deeco.network.connector.HashedIPGossipStorage;
 import cz.cuni.mff.d3s.deeco.network.connector.IPGossipConnectorStrategy;
 import cz.cuni.mff.d3s.deeco.network.connector.KnowledgeProvider;
 import cz.cuni.mff.d3s.deeco.network.ip.IPControllerImpl;
@@ -64,8 +63,7 @@ public class Launcher {
 		return nodeCounter;
 	}
 
-	public static void deployVehicle(OMNetSimulation sim, SimulationRuntimeBuilder builder, StringBuilder omnetCfg,
-			Vehicle component, HashedIPGossipStorage storage) throws AnnotationProcessorException {
+	public static void deployVehicle(OMNetSimulation sim, SimulationRuntimeBuilder builder, StringBuilder omnetCfg, Vehicle component) throws AnnotationProcessorException {
 		final int nodeId = getNextNodeId();
 
 		KnowledgeManagerFactory knowledgeManagerFactory = new CloningKnowledgeManagerFactory();
@@ -153,19 +151,16 @@ public class Launcher {
 
 		StringBuilder omnetConfig = new StringBuilder();
 
-		// IP gossip
-		HashedIPGossipStorage storage = new HashedIPGossipStorage();
-
 		// Deploy vehicles
-		deployVehicle(sim, builder, omnetConfig, new Vehicle("V0", 000.0, 000.0, "Berlin"), storage);
-		deployVehicle(sim, builder, omnetConfig, new Vehicle("V2", 300.0, 300.0, "Berlin"), storage);
-		deployVehicle(sim, builder, omnetConfig, new Vehicle("V1", 600.0, 600.0, "Prague"), storage);
-		deployVehicle(sim, builder, omnetConfig, new Vehicle("V3", 600.0, 300.0, "Prague"), storage);
-		deployVehicle(sim, builder, omnetConfig, new Vehicle("V5", 600.0, 000.0, "Prague"), storage);
-		deployVehicle(sim, builder, omnetConfig, new Vehicle("V7", 000.0, 600.0, "Prague"), storage);
-		deployVehicle(sim, builder, omnetConfig, new Vehicle("V4", 300.0, 600.0, "Drsden"), storage);
-		deployVehicle(sim, builder, omnetConfig, new Vehicle("V6", 300.0, 000.0, "Drsden"), storage);
-		deployVehicle(sim, builder, omnetConfig, new Vehicle("V8", 000.0, 300.0, "Drsden"), storage);
+		deployVehicle(sim, builder, omnetConfig, new Vehicle("V0", 000.0, 000.0, "Berlin"));
+		deployVehicle(sim, builder, omnetConfig, new Vehicle("V2", 300.0, 300.0, "Berlin"));
+		deployVehicle(sim, builder, omnetConfig, new Vehicle("V1", 600.0, 600.0, "Prague"));
+		deployVehicle(sim, builder, omnetConfig, new Vehicle("V3", 600.0, 300.0, "Prague"));
+		deployVehicle(sim, builder, omnetConfig, new Vehicle("V5", 600.0, 000.0, "Prague"));
+		deployVehicle(sim, builder, omnetConfig, new Vehicle("V7", 000.0, 600.0, "Prague"));
+		deployVehicle(sim, builder, omnetConfig, new Vehicle("V4", 300.0, 600.0, "Drsden"));
+		deployVehicle(sim, builder, omnetConfig, new Vehicle("V6", 300.0, 000.0, "Drsden"));
+		deployVehicle(sim, builder, omnetConfig, new Vehicle("V8", 000.0, 300.0, "Drsden"));
 		
 		// Deploy connectors		
 		deployConnector(sim, builder, omnetConfig, 
