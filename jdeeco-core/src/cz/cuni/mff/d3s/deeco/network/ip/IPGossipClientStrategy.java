@@ -14,7 +14,7 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeHelper;
  * 
  * @author Ondrej Kováč <info@vajanko.me>
  */
-public class IPGossipClientStrategy extends IPGossipBaseStrategy {
+public class IPGossipClientStrategy extends IPGossipPartitionBaseStrategy {
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.network.IPGossipStrategy#getRecipients(cz.cuni.mff.d3s.deeco.network.KnowledgeData, cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager)

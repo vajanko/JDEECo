@@ -11,12 +11,12 @@ import cz.cuni.mff.d3s.deeco.network.IPGossipStrategy;
  * 
  * @author Ondrej Kováč <info@vajanko.me>
  */
-public abstract class IPGossipBaseStrategy implements IPGossipStrategy {
+public abstract class IPGossipPartitionBaseStrategy implements IPGossipStrategy {
 
 	protected IPController controller;
 	protected Collection<String> partitions;
 
-	public IPGossipBaseStrategy(Set<String> partitions, IPController controller) {
+	public IPGossipPartitionBaseStrategy(Set<String> partitions, IPController controller) {
 		this.partitions = new ArrayList<String>(partitions);
 		this.controller = controller;
 	}
