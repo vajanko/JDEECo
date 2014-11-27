@@ -6,6 +6,11 @@ import java.util.Set;
 
 import cz.cuni.mff.d3s.deeco.network.IPGossipStrategy;
 
+/**
+ * Base class for {@link IPGossipStrategy} implementations using ensemble partitioning.
+ * 
+ * @author Ondrej Kováč <info@vajanko.me>
+ */
 public abstract class IPGossipBaseStrategy implements IPGossipStrategy {
 
 	protected IPController controller;
