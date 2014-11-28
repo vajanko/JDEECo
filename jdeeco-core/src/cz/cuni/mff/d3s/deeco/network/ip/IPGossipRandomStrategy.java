@@ -15,7 +15,7 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeHelper;
  * 
  * @author Ondrej Kováč <info@vajanko.me>
  */
-public class IPGossipRandomStrategy extends IPGossipPartitionBaseStrategy {
+public class IPGossipRandomStrategy extends IPGossipPartitionStrategy {
 	
 	private Random gen = new Random();
 	

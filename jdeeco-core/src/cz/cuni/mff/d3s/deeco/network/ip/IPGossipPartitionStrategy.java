@@ -5,16 +5,21 @@ import java.util.Collection;
 import java.util.Set;
 
 import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager;
+import cz.cuni.mff.d3s.deeco.network.IPGossipStrategy;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeHelper;
 
 /**
- * Provides list of recipient IP addresses for given knowledge data and sender
- * based on ensemble partitioning.
+ * Base class for {@link IPGossipStrategy} implementations using ensemble partitioning.
+ * This strategy selects addresses of all hosts in all partitions of given {@link KnowledgeData}.
+ * Sender address is excluded automatically.
  * 
  * @author Ondrej Kováč <info@vajanko.me>
  */
-public class IPGossipClientStrategy extends IPGossipPartitionStrategy {
+public class IPGossipPartitionStrategy implements IPGossipStrategy {
+
+	protected IPController controller;
+	protected Collection<String> partitions;
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.network.IPGossipStrategy#getRecipients(cz.cuni.mff.d3s.deeco.network.KnowledgeData, cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager)
@@ -34,11 +39,13 @@ public class IPGossipClientStrategy extends IPGossipPartitionStrategy {
 			}
 		}
 		
+		// remove sender address, it does not have a sense to send data to itself
 		res.remove(sender.getId());
 		return res;
 	}
-	
-	public IPGossipClientStrategy(Set<String> partitions, IPController controller) {
-		super(partitions, controller);
+
+	public IPGossipPartitionStrategy(Set<String> partitions, IPController controller) {
+		this.partitions = new ArrayList<String>(partitions);
+		this.controller = controller;
 	}
 }
