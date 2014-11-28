@@ -18,6 +18,7 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeHelper;
 public class IPGossipRandomStrategy extends IPGossipPartitionStrategy {
 	
 	private Random gen = new Random();
+	private int recipientCount;
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.network.IPGossipStrategy#getRecipients(cz.cuni.mff.d3s.deeco.network.KnowledgeData, cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager)
@@ -25,33 +26,29 @@ public class IPGossipRandomStrategy extends IPGossipPartitionStrategy {
 	@Override
 	public Collection<String> getRecipients(KnowledgeData data, KnowledgeManager sender) {
 		
-		ArrayList<String> ips = new ArrayList<String>();
+		// notice that sender is already excluded from the recipients
+		Collection<String> recipients = super.getRecipients(data, sender);
 		
-		for (String part : partitions) {
-			// value of partitionBy field
-			Object val = KnowledgeHelper.getValue(data, part);
-			if (val != null) {
-				// example: get IP's of an ensemble partitioned by destination for "Berlin" group
-				IPRegister table = controller.getRegister(val);
-				ips.addAll(table.getAddresses());
-			}
-		}
+		if (recipientCount >= recipients.size())
+			return recipients;
 		
-		ips.remove(sender.getId());
+		// randomly select at most recipientCount addresses
+		String[] rec = new String[recipients.size()];
+		recipients.toArray(rec);
+		ArrayList<String> res = new ArrayList<String>(recipients.size());
 		
-		ArrayList<String> res = new ArrayList<String>();
-		
-		for (int i = 0; i < 2; i++) {
-			int index = gen.nextInt(ips.size());
-			while (res.contains(ips.get(index)))
+		for (int i = 0; i < recipientCount; i++) {
+			int index = gen.nextInt(recipients.size());
+			while (res.contains(rec[index]))
 				index++;
-			res.add(ips.get(index));
+			res.add(rec[index]);
 		}
 		
 		return res;
 	}
 	
-	public IPGossipRandomStrategy(Set<String> partitions, IPController controller) {
+	public IPGossipRandomStrategy(int recipientCount, Set<String> partitions, IPController controller) {
 		super(partitions, controller);
+		this.recipientCount = recipientCount;
 	}
 }
