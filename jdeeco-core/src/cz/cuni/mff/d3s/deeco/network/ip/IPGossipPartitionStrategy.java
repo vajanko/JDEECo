@@ -2,6 +2,7 @@ package cz.cuni.mff.d3s.deeco.network.ip;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager;
@@ -27,8 +28,10 @@ public class IPGossipPartitionStrategy implements IPGossipStrategy {
 	@Override
 	public Collection<String> getRecipients(KnowledgeData data, KnowledgeManager sender) {
 		
-		ArrayList<String> res = new ArrayList<String>();
+		HashSet<String> res = new HashSet<String>();
 		
+		// get union of all partitions to which current KnowledgeData belongs
+		// nodes in these partitions are interested in this knowledge
 		for (String part : partitions) {
 			// value of partitionBy field
 			Object val = KnowledgeHelper.getValue(data, part);
