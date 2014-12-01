@@ -13,9 +13,8 @@ import cz.cuni.mff.d3s.deeco.network.DataReceiver;
  * 
  * @author Ondrej Kováč <info@vajanko.me>
  */
-public class IPControllerImpl implements IPController, IPDataReceiver {
+public class IPControllerImpl implements IPController, DataReceiver {
 
-	private DataReceiver receiver;
 	// key: partitionValue, value: partition IP table
 	private Map<Object, IPRegister> ipTables;
 	
@@ -30,31 +29,25 @@ public class IPControllerImpl implements IPController, IPDataReceiver {
 		
 		return ipTables.get(partitionValue);
 	}
-	
-	/**
-	 * Gets {@link DataReceiver} used by current {@link IPController} to receive
-	 * notifications about IP address changes from the network.
-	 * 
-	 * @return Instance of {@link DataReceiver}
-	 */
-	public DataReceiver getDataReceiver() {
-		return receiver;
-	}
 
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.network.KnowledgeDataReceiver#receive(java.util.List)
 	 */
 	@Override
-	public void receive(IPData data) {
-		IPRegister ipTable = getRegister(data.getPartitionValue());
+	public void receiveData(Object data) {
+		if (! (data instanceof IPData))
+			return;
+		
+		IPData ipdata = (IPData)data;
+		
+		IPRegister ipTable = getRegister(ipdata.getPartitionValue());
 		
 		ipTable.clear();
-		ipTable.addAll(data.getAddresses());
+		ipTable.addAll(ipdata.getAddresses());
 	}
 	
 	public IPControllerImpl() {
 		this.ipTables = new HashMap<Object, IPRegister>();
-		this.receiver = new IPDataReceiverHandler(this);
 	}
 	
 	/* (non-Javadoc)

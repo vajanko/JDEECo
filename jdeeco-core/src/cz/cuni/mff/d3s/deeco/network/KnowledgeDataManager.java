@@ -50,8 +50,7 @@ import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
  * @see KnowledgeDataSender
  * @see KnowledgeDataReceiver 
  */
-public class KnowledgeDataManager implements KnowledgeDataReceiver, DataReceiver,
-KnowledgeDataPublisher {
+public class KnowledgeDataManager implements DataReceiver, KnowledgeDataPublisher {
 	
 	// this rssi corresponds to roughly 20m distance
 	public static final double RSSI_20m = 5.52e-8; 
@@ -245,11 +244,6 @@ KnowledgeDataPublisher {
 		
 		List<? extends KnowledgeData> knowledgeData = (List<? extends KnowledgeData>)data;
 		
-		receive(knowledgeData);
-	}
-
-	@Override
-	public void receive(List<? extends KnowledgeData> knowledgeData) {
 		if (knowledgeData == null) 
 			Log.w("KnowledgeDataManager.receive: Received null KnowledgeData.");
 		
