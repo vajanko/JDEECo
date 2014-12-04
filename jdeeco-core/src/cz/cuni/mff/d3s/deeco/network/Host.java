@@ -9,6 +9,7 @@ import cz.cuni.mff.d3s.deeco.scheduler.CurrentTimeProvider;
  * @author Michal Kit <kit@d3s.mff.cuni.cz>
  * 
  */
+@SuppressWarnings("rawtypes")
 public class Host extends AbstractHost implements NetworkInterface {
 
 	private final PacketReceiver packetReceiver;
@@ -39,10 +40,9 @@ public class Host extends AbstractHost implements NetworkInterface {
 		packetReceiver.addDataReceiver(dataReceiver);
 	}
 	@Override
-	public KnowledgeDataSender getKnowledgeDataSender() {
-		KnowledgeDataSenderWrapper wrapper = new KnowledgeDataSenderWrapper(packetSender);
-		return wrapper;
-		//return packetSender;
+	@Override
+	public void addDataReceiver(DataReceiver dataReceiver) {
+		packetReceiver.addDataReceiver(dataReceiver);
 	}
 
 	// Method used by the simulation

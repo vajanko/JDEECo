@@ -8,9 +8,10 @@ import java.util.Collection;
 import java.util.Set;
 
 import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager;
+import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeNotFoundException;
 import cz.cuni.mff.d3s.deeco.network.IPGossipStrategy;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
-import cz.cuni.mff.d3s.deeco.network.KnowledgeHelper;
+import cz.cuni.mff.d3s.deeco.network.KnowledgeDataHelper;
 import cz.cuni.mff.d3s.deeco.network.ip.IPController;
 import cz.cuni.mff.d3s.deeco.network.ip.IPRegister;
 
@@ -27,21 +28,20 @@ public class IPGossipConnectorStrategy implements IPGossipStrategy {
 	 */
 	@Override
 	public Collection<String> getRecipients(KnowledgeData data, KnowledgeManager sender) {
-		
-		ArrayList<String> res = new ArrayList<String>();
-		
+		ArrayList<String> result = new ArrayList<String>();
 		for (String part : partitions) {
 			// value of partitionBy field
-			Object val = KnowledgeHelper.getValue(data, part);
-			if (val != null) {
-				// example: get IP's of an ensemble partitioned by destination for "Berlin" group
+			try {
+				Object val = KnowledgeDataHelper.getValue(data, part);
+				// example: get IP's of an ensemble partitioned by destination
+				// for "Berlin" group
 				IPRegister table = controller.getRegister(val);
-				res.addAll(table.getAddresses());
+				result.addAll(table.getAddresses());
+			} catch (KnowledgeNotFoundException e) {
 			}
 		}
-		
-		res.remove(sender.getId());
-		return res;
+		result.remove(sender.getId());
+		return result;
 	}
 
 	public IPGossipConnectorStrategy(Set<String> partitions, IPController controller) {

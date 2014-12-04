@@ -39,7 +39,7 @@ public class PacketReceiver {
 	private final int packetSize;
 	private final Map<Integer, Message> messages;
 
-	private List<DataReceiver> dataReceivers;
+	private List<DataReceiver<?>> dataReceivers;
 	
 	private CurrentTimeProvider timeProvider;
 	private long lastMessagesWipe = 0;
@@ -51,7 +51,7 @@ public class PacketReceiver {
 		this.packetSize = packetSize;
 		this.messages = new HashMap<Integer, Message>();
 		this.host = host;
-		this.dataReceivers = new ArrayList<DataReceiver>();
+		this.dataReceivers = new ArrayList<DataReceiver<?>>();
 		
 		maxMessageTime = Integer.getInteger(DeecoProperties.MESSAGE_CACHE_DEADLINE, DEFAULT_MAX_MESSAGE_TIME);
 		messageWipePeriod = Integer.getInteger(DeecoProperties.MESSAGE_CACHE_WIPE_PERIOD, DEFAULT_MESSAGE_WIPE_PERIOD);
@@ -65,12 +65,18 @@ public class PacketReceiver {
 		this(host, Integer.getInteger(DeecoProperties.PACKET_SIZE, PacketSender.DEFAULT_PACKET_SIZE));
 	}
 
-	public void addDataReceiver(DataReceiver dataReceiver) {
+	public void addDataReceiver(DataReceiver<?> dataReceiver) {
 		this.dataReceivers.add(dataReceiver);
 	}
 	private void receiveData(Object data) {
 		for (DataReceiver dataReceiver : dataReceivers) {
 			dataReceiver.receiveData(data);
+		}
+	}
+	
+	private void receiveData(Object data, double rssi) {
+		for (DataReceiver<?> dataReceiver : dataReceivers) {
+			dataReceiver.checkAndReceive(data, rssi);
 		}
 	}
 	
@@ -102,7 +108,7 @@ public class PacketReceiver {
 			Log.d(String.format("PacketReceiver: Message completed at %s with messageid %d with RSSI: %g", host, messageId, msg.lastRSSI));
 			
 			messages.remove(messageId);
-			receiveData(msg.getData());
+			receiveData(msg.getData(), msg.lastRSSI);
 		}
 		clearCachedMessagesIfNecessary();
 	}

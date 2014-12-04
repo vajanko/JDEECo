@@ -17,7 +17,7 @@ import cz.cuni.mff.d3s.deeco.logging.Log;
  * @see PacketReceiver
  * 
  */
-public class PacketSender implements /*KnowledgeDataSender,*/ DataSender {
+public class PacketSender implements DataSender {
 
 	public static int DEFAULT_PACKET_SIZE = 1000;
 	

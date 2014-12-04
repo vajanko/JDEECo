@@ -8,7 +8,7 @@ import java.util.Set;
 import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager;
 import cz.cuni.mff.d3s.deeco.network.IPGossipStrategy;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
-import cz.cuni.mff.d3s.deeco.network.KnowledgeHelper;
+import cz.cuni.mff.d3s.deeco.network.KnowledgeDataHelper;
 
 /**
  * Provides list of recipient IP addresses for given knowledge data and sender.

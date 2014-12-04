@@ -6,9 +6,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager;
+import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeNotFoundException;
 import cz.cuni.mff.d3s.deeco.network.IPGossipStrategy;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
-import cz.cuni.mff.d3s.deeco.network.KnowledgeHelper;
+import cz.cuni.mff.d3s.deeco.network.KnowledgeDataHelper;
 
 /**
  * Base class for {@link IPGossipStrategy} implementations using ensemble partitioning.
@@ -34,11 +35,13 @@ public class IPGossipPartitionStrategy implements IPGossipStrategy {
 		// nodes in these partitions are interested in this knowledge
 		for (String part : partitions) {
 			// value of partitionBy field
-			Object val = KnowledgeHelper.getValue(data, part);
-			if (val != null) {
-				// example: get IP's of an ensemble partitioned by destination for "Berlin" group
+			try {
+				Object val = KnowledgeDataHelper.getValue(data, part);
+				// example: get IP's of an ensemble partitioned by destination
+				// for "Berlin" group
 				IPRegister table = controller.getRegister(val);
 				res.addAll(table.getAddresses());
+			} catch (KnowledgeNotFoundException e) {
 			}
 		}
 		

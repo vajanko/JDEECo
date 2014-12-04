@@ -15,10 +15,10 @@ import java.util.Set;
 public class IPData implements Serializable {
 	
 	private Set<String> addresses; 
-	private Object partitionValue;
+	private Object metaData;
 	
-	public Object getPartitionValue() {
-		return partitionValue;
+	public Object getMetaData() {
+		return metaData;
 	}
 	public Collection<String> getAddresses() {
 		return addresses;
@@ -27,12 +27,12 @@ public class IPData implements Serializable {
 		addresses.add(address);
 	}
 	
-	public IPData(Object partitionValue) {
-		this.partitionValue = partitionValue;
+	public IPData(Object metaData) {
+		this.metaData = metaData;
 		this.addresses = new HashSet<String>();
 	}
-	public IPData(Object partitionValue, Collection<String> addresses) {
-		this.partitionValue = partitionValue;
+	public IPData(Object metaData, Collection<String> addresses) {
+		this.metaData = metaData;
 		this.addresses = new HashSet<String>(addresses);
 	}
 }

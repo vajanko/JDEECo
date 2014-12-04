@@ -6,8 +6,6 @@ package cz.cuni.mff.d3s.deeco.network.connector;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import cz.cuni.mff.d3s.deeco.annotations.Component;
@@ -16,10 +14,9 @@ import cz.cuni.mff.d3s.deeco.annotations.InOut;
 import cz.cuni.mff.d3s.deeco.annotations.Local;
 import cz.cuni.mff.d3s.deeco.annotations.PeriodicScheduling;
 import cz.cuni.mff.d3s.deeco.annotations.Process;
-import cz.cuni.mff.d3s.deeco.annotations.TriggerOnChange;
-import cz.cuni.mff.d3s.deeco.network.DicEntry;
+import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeNotFoundException;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
-import cz.cuni.mff.d3s.deeco.network.KnowledgeHelper;
+import cz.cuni.mff.d3s.deeco.network.KnowledgeDataHelper;
 import cz.cuni.mff.d3s.deeco.network.ip.IPController;
 import cz.cuni.mff.d3s.deeco.network.ip.IPData;
 import cz.cuni.mff.d3s.deeco.network.ip.IPDataSender;
@@ -46,12 +43,12 @@ public class ConnectorComponent {
 	
 	@Local public IPController controller;
 	@Local public IPDataSender sender;
-	@Local public KnowledgeProvider provider;
+	@Local public KnowledgeDataStore knowledgeDataStore;
 	
 	public Set<DicEntry> inputEntries;
 	public Set<DicEntry> outputEntries;
 	
-	public ConnectorComponent(String id, Set<String> partitions, Collection<Object> range, IPController controller, IPDataSender sender, KnowledgeProvider provider) {
+	public ConnectorComponent(String id, Set<String> partitions, Collection<Object> range, IPController controller, IPDataSender sender, KnowledgeDataStore knowledgeDataStore) {
 		this.id = id;
 		this.range = new HashSet<Object>(range);
 		this.inputEntries = new HashSet<DicEntry>();
@@ -60,7 +57,7 @@ public class ConnectorComponent {
 		this.partitions = partitions;
 		this.controller = controller;
 		this.sender = sender;
-		this.provider = provider;
+		this.knowledgeDataStore = knowledgeDataStore;
 		
 		// initialise IP tables and add current connector
 		for (Object key : range)
@@ -117,7 +114,7 @@ public class ConnectorComponent {
 	public static void processKnowledge(
 			@In("id") String id,
 			@In("controller") IPController controller,
-			@In("provider") KnowledgeProvider provider,
+			@In("knowledgeDataStore") KnowledgeDataStore knowledgeDataStore,
 			@In("range") Set<Object> range,
 			@In("partitions") Set<String> partitions,
 			@InOut("outputEntries") ParamHolder<Set<DicEntry>> outputEntries
@@ -128,31 +125,30 @@ public class ConnectorComponent {
 		// list of knowledge data to remove from local KnowledgeProvider
 		ArrayList<KnowledgeData> remove = new ArrayList<KnowledgeData>();
 		
-		for (KnowledgeData kd : provider.getKnowledge()) {
+		for (KnowledgeData kd : knowledgeDataStore.getAllKnowledgeData()) {
 			String owner = kd.getMetaData().componentId; 	//.sender;
 			
 			for (String part : partitions) {
-				Object val = KnowledgeHelper.getValue(kd, part);
-				if (val != null) {
+				try {
+					Object val = KnowledgeDataHelper.getValue(kd, part);
 					if (range.contains(val)) {
 						// current connector is responsible for this value
 						controller.getRegister(val).add(owner);
-					}
-					else {
+					} else {
 						// there is another connector responsible for this key
-						
+
 						// remove knowledge from the provider
 						remove.add(kd);
 						// send knowledge to other connector
-						//outputEntries.value.add(new DicEntry(val, sender));
-						
-						
-						// why don't we send DicEntry directly to the controller responsible for that key
+						// outputEntries.value.add(new DicEntry(val, sender));
+
+						// why don't we send DicEntry directly to the controller
+						// responsible for that key
 					}
+				} catch (KnowledgeNotFoundException e) {
 				}
 			}
 		}
-		
-		provider.removeAll(remove);
+		knowledgeDataStore.removeAll(remove);
 	}
 }

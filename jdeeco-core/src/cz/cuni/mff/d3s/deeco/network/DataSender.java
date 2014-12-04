@@ -17,10 +17,10 @@ public interface DataSender {
 	 * reference.
 	 * @param recipient String identification of the recipient
 	 */
-	void sendData(Object data, String recipient);
+	public void sendData(Object data, String recipient);
 	
 	/**
 	 * @param data
 	 */
-	void broadcastData(Object data);
+	public void broadcastData(Object data);
 }
