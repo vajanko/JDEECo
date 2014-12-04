@@ -15,6 +15,7 @@ import cz.cuni.mff.d3s.deeco.annotations.Local;
 import cz.cuni.mff.d3s.deeco.annotations.PeriodicScheduling;
 import cz.cuni.mff.d3s.deeco.annotations.Process;
 import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeNotFoundException;
+import cz.cuni.mff.d3s.deeco.network.DataSender;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeDataHelper;
 import cz.cuni.mff.d3s.deeco.network.ip.IPController;
@@ -42,13 +43,13 @@ public class ConnectorComponent {
 	@Local public Set<String> partitions;
 	
 	@Local public IPController controller;
-	@Local public IPDataSender sender;
+	@Local public DataSender sender;
 	@Local public KnowledgeDataStore knowledgeDataStore;
 	
 	public Set<DicEntry> inputEntries;
 	public Set<DicEntry> outputEntries;
 	
-	public ConnectorComponent(String id, Set<String> partitions, Collection<Object> range, IPController controller, IPDataSender sender, KnowledgeDataStore knowledgeDataStore) {
+	public ConnectorComponent(String id, Set<String> partitions, Collection<Object> range, IPController controller, DataSender sender, KnowledgeDataStore knowledgeDataStore) {
 		this.id = id;
 		this.range = new HashSet<Object>(range);
 		this.inputEntries = new HashSet<DicEntry>();

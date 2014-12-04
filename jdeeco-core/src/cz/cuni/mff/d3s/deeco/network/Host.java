@@ -39,11 +39,6 @@ public class Host extends AbstractHost implements NetworkInterface {
 	public void addDataReceiver(DataReceiver dataReceiver) {
 		packetReceiver.addDataReceiver(dataReceiver);
 	}
-	@Override
-	@Override
-	public void addDataReceiver(DataReceiver dataReceiver) {
-		packetReceiver.addDataReceiver(dataReceiver);
-	}
 
 	// Method used by the simulation
 	public void packetReceived(byte[] packet, double rssi) {

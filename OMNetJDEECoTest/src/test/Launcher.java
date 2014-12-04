@@ -19,10 +19,13 @@ import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManagerFactory;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.EnsembleDefinition;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.RuntimeMetadata;
 import cz.cuni.mff.d3s.deeco.model.runtime.custom.RuntimeMetadataFactoryExt;
+import cz.cuni.mff.d3s.deeco.network.DefaultKnowledgeDataManager;
 import cz.cuni.mff.d3s.deeco.network.IPGossipStrategy;
+import cz.cuni.mff.d3s.deeco.network.KnowledgeDataManager;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorComponent;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorEnsemble;
 import cz.cuni.mff.d3s.deeco.network.connector.IPGossipConnectorStrategy;
+import cz.cuni.mff.d3s.deeco.network.connector.KnowledgeDataStore;
 import cz.cuni.mff.d3s.deeco.network.connector.KnowledgeProvider;
 import cz.cuni.mff.d3s.deeco.network.ip.IPControllerImpl;
 import cz.cuni.mff.d3s.deeco.network.ip.IPDataSender;
@@ -83,15 +86,17 @@ public class Launcher {
 		// TODO: default IP should be added automatically based on current ensemble definition
 		controller.getRegister(component.destination).add("C1");
 		
-		host.addDataReceiver(controller.getDataReceiver());
+		host.addDataReceiver(controller);
 		
 		Set<String> partitions = new HashSet<String>();
 		for (EnsembleDefinition ens : model.getEnsembleDefinitions())
 			partitions.add(ens.getPartitionedBy());
 		
 		IPGossipStrategy strategy = new IPGossipClientStrategy(partitions, controller);
+		KnowledgeDataManager kdm = new DefaultKnowledgeDataManager(model.getEnsembleDefinitions(), strategy);
 		
-		RuntimeFramework runtime = builder.build(host, sim, null, model, strategy, null);
+		/* Runtime framework */
+		RuntimeFramework runtime = builder.build(host, sim, null, model, kdm, new CloningKnowledgeManagerFactory());
 		runtime.start();
 	}
 	public static void deployConnector(OMNetSimulation sim, SimulationRuntimeBuilder builder, StringBuilder omnetCfg,
@@ -116,16 +121,15 @@ public class Launcher {
 		
 		/* Create IPController */
 		IPControllerImpl controller = new IPControllerImpl();
-		host.addDataReceiver(controller.getDataReceiver());	
+		host.addDataReceiver(controller);	
 		
 		/* Create knowledge provider */
 		KnowledgeProvider provider = new KnowledgeProvider();
-		host.addDataReceiver(provider.getDataReceiver());
+		host.addDataReceiver(provider);
 		
 		/* Create Connector component */
-		IPDataSender ipSender = new IPDataSenderWrapper(host.getDataSender());
 		ConnectorComponent connector = new ConnectorComponent(component.id, partitions, component.range, 
-				controller, ipSender, provider);
+				controller, host.getDataSender(), provider);
 		processor.process(connector);
 		
 		// provide list of initial IPs
@@ -138,10 +142,11 @@ public class Launcher {
 		omnetCfg.append(String.format("**.node[%d].appl.id = \"%s\" %n%n", nodeId, component.id));
 		
 		
-		IPGossipStrategy strategy = new IPGossipConnectorStrategy(partitions, controller);	
+		IPGossipStrategy strategy = new IPGossipConnectorStrategy(partitions, controller);
+		KnowledgeDataManager kdm = new DefaultKnowledgeDataManager(model.getEnsembleDefinitions(), strategy);
 		
 		/* Runtime framework */
-		RuntimeFramework runtime = builder.build(host, sim, null, model, strategy, null);
+		RuntimeFramework runtime = builder.build(host, sim, null, model, kdm, new CloningKnowledgeManagerFactory());
 		runtime.start();
 	}
 

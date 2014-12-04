@@ -7,30 +7,24 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import cz.cuni.mff.d3s.deeco.knowledge.ValueSet;
 import cz.cuni.mff.d3s.deeco.network.DataReceiver;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
-import cz.cuni.mff.d3s.deeco.network.KnowledgeDataReceiver;
-import cz.cuni.mff.d3s.deeco.network.KnowledgeDataReceiverHandler;
-import cz.cuni.mff.d3s.deeco.network.KnowledgeHelper;
 
 /**
  * 
  * @author Ondrej Kováč <info@vajanko.me>
  */
-public class KnowledgeProvider implements KnowledgeDataReceiver {
+public class KnowledgeProvider extends DataReceiver<List<? extends KnowledgeData>> implements KnowledgeDataStore {
 	
-	private KnowledgeDataReceiverHandler receiver;
 	// component id - knowledge data
 	private Map<String, KnowledgeData> data;
 	
-	public DataReceiver getDataReceiver() { 
-		return receiver;
-	}
-
-	public Collection<KnowledgeData> getKnowledge() {
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.network.connector.KnowledgeDataStore#getAllKnowledgeData()
+	 */
+	@Override
+	public Collection<KnowledgeData> getAllKnowledgeData() {
 		return data.values();
 	}
 	public void remove(KnowledgeData kd) {
@@ -42,21 +36,23 @@ public class KnowledgeProvider implements KnowledgeDataReceiver {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see cz.cuni.mff.d3s.deeco.network.GenericDataReceiver#receive(java.lang.Object)
-	 */
-	@Override
-	public void receive(List<? extends KnowledgeData> obj) {
-		for (KnowledgeData kd : obj) {
-			data.put(kd.getMetaData().componentId, kd);
-		}
-	}
-	
 	/**
 	 * 
 	 */
+	@SuppressWarnings("unchecked")
 	public KnowledgeProvider() {
-		this.receiver = new KnowledgeDataReceiverHandler(this);
+		super((Class<List<? extends KnowledgeData>>)(Class<?>)List.class);
+		 
 		this.data = new HashMap<String, KnowledgeData>();
 	}
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.network.DataReceiver#receive(java.lang.Object, double)
+	 */
+	@Override
+	protected void receive(List<? extends KnowledgeData> data, double rssi) {
+		for (KnowledgeData kd : data) {
+			this.data.put(kd.getMetaData().componentId, kd);
+		}
+	}
+	
 }

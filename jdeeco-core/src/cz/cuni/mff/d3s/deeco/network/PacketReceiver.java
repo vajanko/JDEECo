@@ -68,11 +68,6 @@ public class PacketReceiver {
 	public void addDataReceiver(DataReceiver<?> dataReceiver) {
 		this.dataReceivers.add(dataReceiver);
 	}
-	private void receiveData(Object data) {
-		for (DataReceiver dataReceiver : dataReceivers) {
-			dataReceiver.receiveData(data);
-		}
-	}
 	
 	private void receiveData(Object data, double rssi) {
 		for (DataReceiver<?> dataReceiver : dataReceivers) {
