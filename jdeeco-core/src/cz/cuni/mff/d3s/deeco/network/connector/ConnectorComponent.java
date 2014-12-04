@@ -93,7 +93,7 @@ public class ConnectorComponent {
 	@PeriodicScheduling(period = 5000)
 	public static void notifyNodes(
 			@In("id") String id,
-			@In("sender") IPDataSender sender,
+			@In("sender") DataSender sender,
 			@In("controller") IPController controller,
 			@In("range") Set<Object> range) {
 		
