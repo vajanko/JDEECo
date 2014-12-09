@@ -14,6 +14,8 @@ import java.util.Set;
  */
 public class IPData implements Serializable {
 	
+	private static final long serialVersionUID = -614144091214370996L;
+	
 	private Set<String> addresses; 
 	private Object metaData;
 	

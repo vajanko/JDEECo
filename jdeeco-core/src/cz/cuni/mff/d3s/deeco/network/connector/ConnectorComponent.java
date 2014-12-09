@@ -49,6 +49,8 @@ public class ConnectorComponent {
 	public Set<DicEntry> inputEntries;
 	public Set<DicEntry> outputEntries;
 	
+	public Set<IPRegister> connectorRegisters;
+	
 	public ConnectorComponent(String id, Set<String> partitions, Collection<Object> range, IPController controller, DataSender sender, KnowledgeDataStore knowledgeDataStore) {
 		this.id = id;
 		this.range = new HashSet<Object>(range);
@@ -60,9 +62,13 @@ public class ConnectorComponent {
 		this.sender = sender;
 		this.knowledgeDataStore = knowledgeDataStore;
 		
+		this.connectorRegisters = new HashSet<IPRegister>();
+		
 		// initialise IP tables and add current connector
-		for (Object key : range)
-			controller.getRegister(key).add(id);
+		for (Object key : range) {
+			IPRegister reg = this.controller.getRegister(key); 
+			reg.add(id);
+		}
 	}
 	
 	@Process

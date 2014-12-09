@@ -17,6 +17,7 @@ import cz.cuni.mff.d3s.deeco.network.DataSender;
 import cz.cuni.mff.d3s.deeco.network.DefaultKnowledgeDataManager;
 import cz.cuni.mff.d3s.deeco.network.IPGossipStrategy;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeDataManager;
+import cz.cuni.mff.d3s.deeco.network.connector.ConnectorAwareKnowledgeDataManager;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorComponent;
 import cz.cuni.mff.d3s.deeco.network.connector.ConnectorEnsemble;
 import cz.cuni.mff.d3s.deeco.network.connector.IPGossipConnectorStrategy;
@@ -99,7 +100,8 @@ public class Launcher {
 		controller.getRegister(connector.connector_group).add("C1"); //.add("C2", "C3");
 		
 		IPGossipStrategy strategy = new IPGossipConnectorStrategy(partitions, controller);	
-		KnowledgeDataManager kdm = new DefaultKnowledgeDataManager(model.getEnsembleDefinitions(), strategy);
+		KnowledgeDataManager kdm = new ConnectorAwareKnowledgeDataManager(model.getEnsembleDefinitions(), strategy); 
+				//new DefaultKnowledgeDataManager(model.getEnsembleDefinitions(), strategy);
 		RuntimeFramework runtime = builder.build(host, simulation, null, model, kdm, new CloningKnowledgeManagerFactory());
 		runtime.start();
 	}
