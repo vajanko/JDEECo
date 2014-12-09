@@ -83,7 +83,7 @@ public class Launcher {
 		// TODO: default IP should be added automatically based on current ensemble definition
 		controller.getRegister(component.destination).add("C1");
 		
-		host.addDataReceiver(controller.getDataReceiver());
+		host.addDataReceiver(controller);
 		
 		Set<String> partitions = new HashSet<String>();
 		for (EnsembleDefinition ens : model.getEnsembleDefinitions())
@@ -116,7 +116,7 @@ public class Launcher {
 		
 		/* Create IPController */
 		IPControllerImpl controller = new IPControllerImpl();
-		host.addDataReceiver(controller.getDataReceiver());	
+		host.addDataReceiver(controller);	
 		
 		/* Create knowledge provider */
 		KnowledgeProvider provider = new KnowledgeProvider();
