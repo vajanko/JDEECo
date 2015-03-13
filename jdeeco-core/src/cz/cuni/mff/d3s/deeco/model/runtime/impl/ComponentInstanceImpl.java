@@ -4,28 +4,23 @@ package cz.cuni.mff.d3s.deeco.model.runtime.impl;
 
 import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager;
 import cz.cuni.mff.d3s.deeco.knowledge.ShadowKnowledgeManagerRegistry;
-
 import cz.cuni.mff.d3s.deeco.model.runtime.api.ComponentInstance;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.ComponentProcess;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.EnsembleController;
-
+import cz.cuni.mff.d3s.deeco.model.runtime.api.RatingsProcess;
+import cz.cuni.mff.d3s.deeco.model.runtime.api.SecurityRole;
 import cz.cuni.mff.d3s.deeco.model.runtime.meta.RuntimeMetadataPackage;
-
 import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -44,6 +39,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link cz.cuni.mff.d3s.deeco.model.runtime.impl.ComponentInstanceImpl#getEnsembleControllers <em>Ensemble Controllers</em>}</li>
  *   <li>{@link cz.cuni.mff.d3s.deeco.model.runtime.impl.ComponentInstanceImpl#getInternalData <em>Internal Data</em>}</li>
  *   <li>{@link cz.cuni.mff.d3s.deeco.model.runtime.impl.ComponentInstanceImpl#isSystemComponent <em>System Component</em>}</li>
+ *   <li>{@link cz.cuni.mff.d3s.deeco.model.runtime.impl.ComponentInstanceImpl#getSecurityRoles <em>Security Roles</em>}</li>
+ *   <li>{@link cz.cuni.mff.d3s.deeco.model.runtime.impl.ComponentInstanceImpl#getRatingsProcess <em>Ratings Process</em>}</li>
  * </ul>
  * </p>
  *
@@ -159,6 +156,26 @@ public class ComponentInstanceImpl extends MinimalEObjectImpl.Container implemen
 	 * @ordered
 	 */
 	protected boolean systemComponent = SYSTEM_COMPONENT_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getSecurityRoles() <em>Security Roles</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSecurityRoles()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<SecurityRole> securityRoles;
+
+	/**
+	 * The cached value of the '{@link #getRatingsProcess() <em>Ratings Process</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getRatingsProcess()
+	 * @generated
+	 * @ordered
+	 */
+	protected RatingsProcess ratingsProcess;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -304,6 +321,61 @@ public class ComponentInstanceImpl extends MinimalEObjectImpl.Container implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<SecurityRole> getSecurityRoles() {
+		if (securityRoles == null) {
+			securityRoles = new EObjectContainmentEList<SecurityRole>(SecurityRole.class, this, RuntimeMetadataPackage.COMPONENT_INSTANCE__SECURITY_ROLES);
+		}
+		return securityRoles;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public RatingsProcess getRatingsProcess() {
+		return ratingsProcess;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetRatingsProcess(RatingsProcess newRatingsProcess, NotificationChain msgs) {
+		RatingsProcess oldRatingsProcess = ratingsProcess;
+		ratingsProcess = newRatingsProcess;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, RuntimeMetadataPackage.COMPONENT_INSTANCE__RATINGS_PROCESS, oldRatingsProcess, newRatingsProcess);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setRatingsProcess(RatingsProcess newRatingsProcess) {
+		if (newRatingsProcess != ratingsProcess) {
+			NotificationChain msgs = null;
+			if (ratingsProcess != null)
+				msgs = ((InternalEObject)ratingsProcess).eInverseRemove(this, RuntimeMetadataPackage.RATINGS_PROCESS__COMPONENT_INSTANCE, RatingsProcess.class, msgs);
+			if (newRatingsProcess != null)
+				msgs = ((InternalEObject)newRatingsProcess).eInverseAdd(this, RuntimeMetadataPackage.RATINGS_PROCESS__COMPONENT_INSTANCE, RatingsProcess.class, msgs);
+			msgs = basicSetRatingsProcess(newRatingsProcess, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RuntimeMetadataPackage.COMPONENT_INSTANCE__RATINGS_PROCESS, newRatingsProcess, newRatingsProcess));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -312,6 +384,10 @@ public class ComponentInstanceImpl extends MinimalEObjectImpl.Container implemen
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getComponentProcesses()).basicAdd(otherEnd, msgs);
 			case RuntimeMetadataPackage.COMPONENT_INSTANCE__ENSEMBLE_CONTROLLERS:
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getEnsembleControllers()).basicAdd(otherEnd, msgs);
+			case RuntimeMetadataPackage.COMPONENT_INSTANCE__RATINGS_PROCESS:
+				if (ratingsProcess != null)
+					msgs = ((InternalEObject)ratingsProcess).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - RuntimeMetadataPackage.COMPONENT_INSTANCE__RATINGS_PROCESS, null, msgs);
+				return basicSetRatingsProcess((RatingsProcess)otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -330,6 +406,10 @@ public class ComponentInstanceImpl extends MinimalEObjectImpl.Container implemen
 				return ((InternalEList<?>)getEnsembleControllers()).basicRemove(otherEnd, msgs);
 			case RuntimeMetadataPackage.COMPONENT_INSTANCE__INTERNAL_DATA:
 				return ((InternalEList<?>)getInternalData()).basicRemove(otherEnd, msgs);
+			case RuntimeMetadataPackage.COMPONENT_INSTANCE__SECURITY_ROLES:
+				return ((InternalEList<?>)getSecurityRoles()).basicRemove(otherEnd, msgs);
+			case RuntimeMetadataPackage.COMPONENT_INSTANCE__RATINGS_PROCESS:
+				return basicSetRatingsProcess(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -357,6 +437,10 @@ public class ComponentInstanceImpl extends MinimalEObjectImpl.Container implemen
 				else return getInternalData().map();
 			case RuntimeMetadataPackage.COMPONENT_INSTANCE__SYSTEM_COMPONENT:
 				return isSystemComponent();
+			case RuntimeMetadataPackage.COMPONENT_INSTANCE__SECURITY_ROLES:
+				return getSecurityRoles();
+			case RuntimeMetadataPackage.COMPONENT_INSTANCE__RATINGS_PROCESS:
+				return getRatingsProcess();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -393,6 +477,13 @@ public class ComponentInstanceImpl extends MinimalEObjectImpl.Container implemen
 			case RuntimeMetadataPackage.COMPONENT_INSTANCE__SYSTEM_COMPONENT:
 				setSystemComponent((Boolean)newValue);
 				return;
+			case RuntimeMetadataPackage.COMPONENT_INSTANCE__SECURITY_ROLES:
+				getSecurityRoles().clear();
+				getSecurityRoles().addAll((Collection<? extends SecurityRole>)newValue);
+				return;
+			case RuntimeMetadataPackage.COMPONENT_INSTANCE__RATINGS_PROCESS:
+				setRatingsProcess((RatingsProcess)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -426,6 +517,12 @@ public class ComponentInstanceImpl extends MinimalEObjectImpl.Container implemen
 			case RuntimeMetadataPackage.COMPONENT_INSTANCE__SYSTEM_COMPONENT:
 				setSystemComponent(SYSTEM_COMPONENT_EDEFAULT);
 				return;
+			case RuntimeMetadataPackage.COMPONENT_INSTANCE__SECURITY_ROLES:
+				getSecurityRoles().clear();
+				return;
+			case RuntimeMetadataPackage.COMPONENT_INSTANCE__RATINGS_PROCESS:
+				setRatingsProcess((RatingsProcess)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -452,6 +549,10 @@ public class ComponentInstanceImpl extends MinimalEObjectImpl.Container implemen
 				return internalData != null && !internalData.isEmpty();
 			case RuntimeMetadataPackage.COMPONENT_INSTANCE__SYSTEM_COMPONENT:
 				return systemComponent != SYSTEM_COMPONENT_EDEFAULT;
+			case RuntimeMetadataPackage.COMPONENT_INSTANCE__SECURITY_ROLES:
+				return securityRoles != null && !securityRoles.isEmpty();
+			case RuntimeMetadataPackage.COMPONENT_INSTANCE__RATINGS_PROCESS:
+				return ratingsProcess != null;
 		}
 		return super.eIsSet(featureID);
 	}

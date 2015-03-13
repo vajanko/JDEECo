@@ -1,8 +1,14 @@
 package cz.cuni.mff.d3s.deeco.knowledge;
 
 import java.util.Collection;
+import java.util.List;
 
+import cz.cuni.mff.d3s.deeco.annotations.Local;
+import cz.cuni.mff.d3s.deeco.model.runtime.api.ComponentInstance;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath;
+import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgeSecurityTag;
+import cz.cuni.mff.d3s.deeco.model.runtime.api.PathNodeField;
+import cz.cuni.mff.d3s.deeco.model.runtime.api.SecurityTag;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.Trigger;
 
 /**
@@ -13,6 +19,7 @@ import cz.cuni.mff.d3s.deeco.model.runtime.api.Trigger;
  * absolute, meaning that they are fully evaluated.
  * 
  * @author Rima Al Ali <alali@d3s.mff.cuni.cz>
+ * @author Ondřej Štumpf
  * 
  */
 public interface ReadOnlyKnowledgeManager {
@@ -58,6 +65,52 @@ public interface ReadOnlyKnowledgeManager {
 	 */
 	public String getId();
 	
+	/**
+	 * Checks if the knowledge path has been decorated with the {@link Local} annotation.
+	 * @param knowledgePath
+	 * @return true if the knowledge is local
+	 */
 	public boolean isLocal(KnowledgePath knowledgePath);
+	
+	/**
+	 * Gets the knowledge paths that were decorated with the {@link Local} annotation
+	 * @return the list of knowledge paths
+	 */
 	public Collection<KnowledgePath> getLocalPaths();
+	
+	/**
+	 * Local knowledge managers are associated with their local components; replica knowledge managers
+	 * are associated with such local component that was used to decrypt the knowledge.
+	 * @return component
+	 */
+	public ComponentInstance getComponent();
+
+	/**
+	 * Gets security annotations associated with given field (setup during annotation processing)
+	 * @param pathNodeField
+	 * @return list of knowledge security tags (without local tags)
+	 */
+	List<KnowledgeSecurityTag> getKnowledgeSecurityTags(PathNodeField pathNodeField);
+	
+	/**
+	 * Gets security annotations associated with given field (setup during annotation processing)
+	 * @param pathNodeField
+	 * @return list of security tags (including local tags)
+	 */
+	List<SecurityTag> getSecurityTags(PathNodeField pathNodeField);
+	
+	/**
+	 * Returns the ID of the component from which this knowledge path comes.
+	 * @param knowledgePath
+	 * @return the ID of the component
+	 */
+	String getAuthor(KnowledgePath knowledgePath);
+	
+	/**
+	 * Returns true if given knowledge path is a parameter of some security role and therefore its value cannot be modified
+	 * @param knowledgePath
+	 * @return true if the knowledge value cannot be modified
+	 */
+	boolean isLocked(KnowledgePath knowledgePath);
+	
 }

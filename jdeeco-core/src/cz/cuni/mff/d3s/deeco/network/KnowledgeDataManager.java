@@ -3,10 +3,12 @@ package cz.cuni.mff.d3s.deeco.network;
 
 import java.util.List;
 
+import cz.cuni.mff.d3s.deeco.integrity.RatingsManager;
 import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManagerContainer;
 import cz.cuni.mff.d3s.deeco.logging.Log;
 import cz.cuni.mff.d3s.deeco.scheduler.CurrentTimeProvider;
 import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
+import cz.cuni.mff.d3s.deeco.security.SecurityKeyManager;
 
 
 /**
@@ -52,7 +54,11 @@ KnowledgeDataPublisher {
 	protected KnowledgeManagerContainer kmContainer;	
 	/** Object used for sending {@link dataSender} over the network. */
 	protected DataSender dataSender;		
-
+	/** handles public keys for security roles */
+	protected SecurityKeyManager keyManager;
+	/** Handles rating data*/
+	protected RatingsManager ratingsManager;
+	
 	/**
 	 * Initializes instance.
 	 * 
@@ -65,27 +71,45 @@ KnowledgeDataPublisher {
 			KnowledgeManagerContainer kmContainer,
 			DataSender dataSender,
 			String host,
-			Scheduler scheduler) {
+			Scheduler scheduler,
+			SecurityKeyManager keyManager,
+			RatingsManager ratingsManager) {
 		this.host = host;		
 		this.scheduler = scheduler;
 		this.timeProvider = scheduler;
 		this.kmContainer = kmContainer;
 		this.dataSender = dataSender;
+		this.keyManager = keyManager;
+		this.ratingsManager = ratingsManager;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void receive(List data, double rssi) {
 		if (data == null) {
-			Log.w("KnowledgeDataManager.receive: Received null KnowledgeData.");
+			Log.w("KnowledgeDataManager.receive: Received null data.");
+		} else if (data.isEmpty()) {
+			Log.w("KnowledgeDataManager.receive: Received empty data.");
 		} else {
-			List<KnowledgeData> knowledgeData = (List<KnowledgeData> ) data;
-			for (KnowledgeData kd: knowledgeData) {
-				kd.getMetaData().rssi = rssi;
+			Object firstElement = data.get(0);
+			if (firstElement.getClass().isAssignableFrom(KnowledgeData.class)) {
+				List<KnowledgeData> knowledgeData = (List<KnowledgeData> ) data;
+				for (KnowledgeData kd: knowledgeData) {
+					kd.getMetaData().rssi = rssi;
+				}
+				receiveKnowledge(knowledgeData);
+			} else if (firstElement.getClass().isAssignableFrom(RatingsData.class)) {
+				List<RatingsData> ratingsData = (List<RatingsData> ) data;
+				for (RatingsData rd : ratingsData) {
+					rd.getRatingsMetaData().rssi = rssi;
+				}
+				receiveRatings(ratingsData);
+			} else {
+				Log.e("Unkown data received: " + firstElement.getClass());
 			}
-			receiveKnowledge(knowledgeData);
 		}
 	}
-	
+		
 	public abstract void receiveKnowledge(List<KnowledgeData> data);
+	public abstract void receiveRatings(List<RatingsData> ratingsData);
 }

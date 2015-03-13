@@ -2,6 +2,7 @@ package cz.cuni.mff.d3s.deeco.runtime;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -9,6 +10,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 
 import cz.cuni.mff.d3s.deeco.executor.Executor;
+import cz.cuni.mff.d3s.deeco.integrity.RatingsManager;
 import cz.cuni.mff.d3s.deeco.knowledge.ChangeSet;
 import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager;
 import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManagerContainer;
@@ -28,6 +30,7 @@ import cz.cuni.mff.d3s.deeco.model.runtime.api.EnsembleController;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.EnsembleDefinition;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.RuntimeMetadata;
+import cz.cuni.mff.d3s.deeco.model.runtime.api.SecurityTag;
 import cz.cuni.mff.d3s.deeco.model.runtime.custom.RuntimeMetadataFactoryExt;
 import cz.cuni.mff.d3s.deeco.model.runtime.meta.RuntimeMetadataPackage;
 import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
@@ -93,6 +96,11 @@ public class RuntimeFrameworkImpl implements RuntimeFramework, ArchitectureObser
 	protected final KnowledgeManagerContainer kmContainer;
 	
 	/**
+	 * The manager of knowledge ratings
+	 */
+	protected final RatingsManager ratingsManager;
+	
+	/**
 	 * Keeps track of each instance's tasks.
 	 */
 	protected Map<ComponentInstance, ComponentInstanceRecord> componentRecords = new HashMap<>();
@@ -142,8 +150,8 @@ public class RuntimeFrameworkImpl implements RuntimeFramework, ArchitectureObser
 	 * @throws IllegalArgumentException if either of the arguments is null.
 	 */
 	public RuntimeFrameworkImpl(RuntimeMetadata model, Scheduler scheduler,
-			Executor executor, KnowledgeManagerContainer kmContainer) {
-		this(model, scheduler, executor, kmContainer, true);
+			Executor executor, KnowledgeManagerContainer kmContainer, RatingsManager ratingsManager) {
+		this(model, scheduler, executor, kmContainer, ratingsManager, true);
 	}
 	
 	/**
@@ -154,7 +162,7 @@ public class RuntimeFrameworkImpl implements RuntimeFramework, ArchitectureObser
 	 * @see RuntimeFrameworkImpl#init()
 	 */
 	RuntimeFrameworkImpl(RuntimeMetadata model, Scheduler scheduler,
-			Executor executor, KnowledgeManagerContainer kmContainer, boolean autoInit) {
+			Executor executor, KnowledgeManagerContainer kmContainer, RatingsManager ratingsManager, boolean autoInit) {
 		if (model == null)
 			throw new IllegalArgumentException("Model cannot be null");
 		if (scheduler == null)
@@ -164,6 +172,7 @@ public class RuntimeFrameworkImpl implements RuntimeFramework, ArchitectureObser
 		if (kmContainer == null)
 			throw new IllegalArgumentException("KnowledgeManagerContainer cannot be null");
 		
+		this.ratingsManager = ratingsManager;
 		this.scheduler = scheduler;
 		this.model = model;
 		this.executor = executor;
@@ -260,7 +269,7 @@ public class RuntimeFrameworkImpl implements RuntimeFramework, ArchitectureObser
 		// create a new task for each ensemble controller
 		// register ecore adapters to listen to change in EnsembleController.isActive 
 		for (final EnsembleController ec: instance.getEnsembleControllers()) {
-			Task task = new EnsembleTask(ec, scheduler, (ArchitectureObserver) this);
+			Task task = new EnsembleTask(ec, scheduler, (ArchitectureObserver) this, kmContainer, ratingsManager);
 			ciRecord.getEnsembleTasks().put(ec, task);
 			scheduler.addTask(task);	
 			
@@ -320,8 +329,20 @@ public class RuntimeFrameworkImpl implements RuntimeFramework, ArchitectureObser
 		}
 		
 		// create a new KM with the same id and knowledge values
-		KnowledgeManager km = kmContainer.createLocal(ci.getKnowledgeManager().getId());
+		KnowledgeManager km = kmContainer.createLocal(ci.getKnowledgeManager().getId(), ci);
 		km.markAsLocal(ci.getKnowledgeManager().getLocalPaths());
+		
+		if (initialKnowledge != null) {
+			try {
+				for (KnowledgePath kp : initialKnowledge.getKnowledgePaths()) {
+					List<SecurityTag> tags = ci.getKnowledgeManager().getSecurityTags((PathNodeField)kp.getNodes().get(0));
+					km.setSecurityTags(kp, tags);
+				}	
+			} catch (IllegalArgumentException e) {
+				Log.e("Error while securing knowledge for component " + ci.getKnowledgeManager().getId());
+			}
+		}
+		
 		try {
 			km.update(cs);
 		} catch (KnowledgeUpdateException e) {
@@ -365,7 +386,7 @@ public class RuntimeFrameworkImpl implements RuntimeFramework, ArchitectureObser
 			return;
 		}
 		
-		final Task newTask = new ProcessTask(process, scheduler, architecture);
+		final Task newTask = new ProcessTask(process, scheduler, architecture, ratingsManager);
 		cir.getProcessTasks().put(process, newTask);
 		
 		componentProcessActiveChanged(instance, process, process.isActive());
@@ -615,7 +636,7 @@ public class RuntimeFrameworkImpl implements RuntimeFramework, ArchitectureObser
 			if (remoteComponentInstance == null) {
 				remoteComponentInstance = ArchitectureFactory.eINSTANCE.createRemoteComponentInstance();
 				remoteComponentInstance.setId(id);
-				remoteComponentInstance.setKnowledgeManager(kmContainer.getReplica(id));
+				remoteComponentInstance.setKnowledgeManager(kmContainer.getReplica(c, id));
 				architecture.getComponentInstances().add(remoteComponentInstance);
 				remoteComponentInstances.put(id, remoteComponentInstance);
 			}
@@ -632,5 +653,10 @@ public class RuntimeFrameworkImpl implements RuntimeFramework, ArchitectureObser
 	@Override
 	public KnowledgeManagerContainer getContainer() {
 		return kmContainer;
+	}
+
+	@Override
+	public RatingsManager getRatingsManager() {
+		return ratingsManager;
 	}
 }

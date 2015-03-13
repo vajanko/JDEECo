@@ -4,24 +4,16 @@ package cz.cuni.mff.d3s.deeco.model.runtime.impl;
 
 import cz.cuni.mff.d3s.deeco.model.runtime.api.Invocable;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.Parameter;
-
 import cz.cuni.mff.d3s.deeco.model.runtime.meta.RuntimeMetadataPackage;
-
 import java.lang.reflect.Method;
-
 import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -34,6 +26,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <ul>
  *   <li>{@link cz.cuni.mff.d3s.deeco.model.runtime.impl.InvocableImpl#getParameters <em>Parameters</em>}</li>
  *   <li>{@link cz.cuni.mff.d3s.deeco.model.runtime.impl.InvocableImpl#getMethod <em>Method</em>}</li>
+ *   <li>{@link cz.cuni.mff.d3s.deeco.model.runtime.impl.InvocableImpl#isIgnoreKnowledgeCompromise <em>Ignore Knowledge Compromise</em>}</li>
  * </ul>
  * </p>
  *
@@ -69,6 +62,26 @@ public class InvocableImpl extends MinimalEObjectImpl.Container implements Invoc
 	 * @ordered
 	 */
 	protected Method method = METHOD_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isIgnoreKnowledgeCompromise() <em>Ignore Knowledge Compromise</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isIgnoreKnowledgeCompromise()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean IGNORE_KNOWLEDGE_COMPROMISE_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isIgnoreKnowledgeCompromise() <em>Ignore Knowledge Compromise</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isIgnoreKnowledgeCompromise()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean ignoreKnowledgeCompromise = IGNORE_KNOWLEDGE_COMPROMISE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -127,6 +140,27 @@ public class InvocableImpl extends MinimalEObjectImpl.Container implements Invoc
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isIgnoreKnowledgeCompromise() {
+		return ignoreKnowledgeCompromise;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setIgnoreKnowledgeCompromise(boolean newIgnoreKnowledgeCompromise) {
+		boolean oldIgnoreKnowledgeCompromise = ignoreKnowledgeCompromise;
+		ignoreKnowledgeCompromise = newIgnoreKnowledgeCompromise;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RuntimeMetadataPackage.INVOCABLE__IGNORE_KNOWLEDGE_COMPROMISE, oldIgnoreKnowledgeCompromise, ignoreKnowledgeCompromise));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -148,6 +182,8 @@ public class InvocableImpl extends MinimalEObjectImpl.Container implements Invoc
 				return getParameters();
 			case RuntimeMetadataPackage.INVOCABLE__METHOD:
 				return getMethod();
+			case RuntimeMetadataPackage.INVOCABLE__IGNORE_KNOWLEDGE_COMPROMISE:
+				return isIgnoreKnowledgeCompromise();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -168,6 +204,9 @@ public class InvocableImpl extends MinimalEObjectImpl.Container implements Invoc
 			case RuntimeMetadataPackage.INVOCABLE__METHOD:
 				setMethod((Method)newValue);
 				return;
+			case RuntimeMetadataPackage.INVOCABLE__IGNORE_KNOWLEDGE_COMPROMISE:
+				setIgnoreKnowledgeCompromise((Boolean)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -186,6 +225,9 @@ public class InvocableImpl extends MinimalEObjectImpl.Container implements Invoc
 			case RuntimeMetadataPackage.INVOCABLE__METHOD:
 				setMethod(METHOD_EDEFAULT);
 				return;
+			case RuntimeMetadataPackage.INVOCABLE__IGNORE_KNOWLEDGE_COMPROMISE:
+				setIgnoreKnowledgeCompromise(IGNORE_KNOWLEDGE_COMPROMISE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -202,6 +244,8 @@ public class InvocableImpl extends MinimalEObjectImpl.Container implements Invoc
 				return parameters != null && !parameters.isEmpty();
 			case RuntimeMetadataPackage.INVOCABLE__METHOD:
 				return METHOD_EDEFAULT == null ? method != null : !METHOD_EDEFAULT.equals(method);
+			case RuntimeMetadataPackage.INVOCABLE__IGNORE_KNOWLEDGE_COMPROMISE:
+				return ignoreKnowledgeCompromise != IGNORE_KNOWLEDGE_COMPROMISE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -218,6 +262,8 @@ public class InvocableImpl extends MinimalEObjectImpl.Container implements Invoc
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (method: ");
 		result.append(method);
+		result.append(", ignoreKnowledgeCompromise: ");
+		result.append(ignoreKnowledgeCompromise);
 		result.append(')');
 		return result.toString();
 	}

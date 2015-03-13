@@ -1,20 +1,31 @@
 package cz.cuni.mff.d3s.deeco.knowledge;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import cz.cuni.mff.d3s.deeco.model.runtime.api.ComponentInstance;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgeChangeTrigger;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath;
+import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgeSecurityTag;
+import cz.cuni.mff.d3s.deeco.model.runtime.api.LocalKnowledgeTag;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.PathNode;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.PathNodeComponentId;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.PathNodeField;
+import cz.cuni.mff.d3s.deeco.model.runtime.api.SecurityTag;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.Trigger;
+import cz.cuni.mff.d3s.deeco.model.runtime.meta.RuntimeMetadataFactory;
+import cz.cuni.mff.d3s.deeco.task.KnowledgePathHelper;
 
 // TB: XXX - This would really benefit from being re-implemented using trie datastructure
 
@@ -25,29 +36,69 @@ import cz.cuni.mff.d3s.deeco.model.runtime.api.Trigger;
  * 
  * @author Rima Al Ali <alali@d3s.mff.cuni.cz>
  * @author Michal Kit <kit@d3s.mff.cuni.cz>
+ * @author Ondřej Štumpf
  * 
  */
 @SuppressWarnings("unchecked")
 public class BaseKnowledgeManager implements KnowledgeManager {
 
 	private final Map<KnowledgePath, Object> knowledge;
+	private final Map<KnowledgePath, String> knowledgeAuthors;
+	private final Map<PathNodeField, List<SecurityTag>> securityTags;
 	private final Map<KnowledgeChangeTrigger, List<TriggerListener>> knowledgeChangeListeners;
 	private final Collection<KnowledgePath> localKnowledgePaths;
-
+	private final Set<KnowledgePath> lockedKnowledgePaths;
+	
+	private final ComponentInstance component;
 	private final String id;
 
-	public BaseKnowledgeManager(String id) {
+	public BaseKnowledgeManager(String id, ComponentInstance component) {
 		this.id = id;
+		this.component = component;
 		this.knowledge = new HashMap<>();
 		this.knowledgeChangeListeners = new HashMap<>();
 		this.localKnowledgePaths = new LinkedList<>();
+		this.securityTags = new HashMap<>();
+		this.knowledgeAuthors = new HashMap<>();
+		this.lockedKnowledgePaths = new HashSet<>();
 	}
 
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.knowledge.ReadOnlyKnowledgeManager#getId()
+	 */
 	@Override
 	public String getId() {
 		return this.id;
 	}
 
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.knowledge.ReadOnlyKnowledgeManager#getComponent()
+	 */
+	@Override
+	public ComponentInstance getComponent() {
+		return component;
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.knowledge.ReadOnlyKnowledgeManager#getAuthor(cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath)
+	 */
+	@Override
+	public String getAuthor(KnowledgePath knowledgePath) {
+		if (!KnowledgePathHelper.isAbsolutePath(knowledgePath)) {
+			throw new IllegalArgumentException("Knowledge path " + knowledgePath.toString() + " is not absolute.");
+		}
+		
+		String author = null;
+		KnowledgePath modifiablePath = KnowledgePathHelper.cloneKnowledgePath(knowledgePath);
+		
+		while ((author = knowledgeAuthors.get(modifiablePath)) == null && modifiablePath.getNodes().size() > 0) {
+			modifiablePath.getNodes().remove(modifiablePath.getNodes().size() - 1);
+		}
+		
+		return author;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -118,6 +169,14 @@ public class BaseKnowledgeManager implements KnowledgeManager {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager#update(cz.cuni.mff.d3s.deeco.knowledge.ChangeSet)
+	 */
+	@Override
+	public void update(final ChangeSet changeSet) throws KnowledgeUpdateException {
+		update(changeSet, getId());
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -126,10 +185,13 @@ public class BaseKnowledgeManager implements KnowledgeManager {
 	 * .deeco.knowledge.ChangeSet)
 	 */
 	@Override
-	public void update(final ChangeSet changeSet) throws KnowledgeUpdateException {
+	public void update(final ChangeSet changeSet, String authorId) throws KnowledgeUpdateException {
 		final Map<KnowledgePath, Object> updated = new HashMap<>();
 		final List<KnowledgePath> added = new LinkedList<>();
+		final Map<KnowledgePath, String> updatedAuthors = new HashMap<>();
+		
 		Object original = null;
+		String originalAuthor = null;
 		try {
 			boolean exists;
 			for (final KnowledgePath updateKP : changeSet
@@ -137,12 +199,15 @@ public class BaseKnowledgeManager implements KnowledgeManager {
 				exists = true;
 				try {
 					original = getKnowledge(updateKP.getNodes());
+					originalAuthor = getAuthor(updateKP);
 				} catch (KnowledgeNotFoundException e) {
 					// This means that our update will try to add a new entry to
 					// the knowledge
 					exists = false;
 				}
 				updateKnowledge(updateKP, changeSet.getValue(updateKP));
+				updateAuthors(updateKP, authorId, updatedAuthors);
+				
 				// We need to preserve the state of the knowledge, in order to
 				// revert it back in case of problems
 				if (exists) {
@@ -150,10 +215,11 @@ public class BaseKnowledgeManager implements KnowledgeManager {
 				} else {
 					added.add(updateKP);
 				}
+				updatedAuthors.put(updateKP, originalAuthor);
 			}
 		} catch (KnowledgeUpdateException e) {
 			// Revert changes
-			revert(updated, added);
+			revert(updated, added,updatedAuthors);
 			// Throw the exception
 			throw e;
 		}
@@ -170,10 +236,11 @@ public class BaseKnowledgeManager implements KnowledgeManager {
 		// If so, then we delete all the relevant entries from the knowledge
 		if (invalidDelete == null) {
 			deleteKnowledge(changeSet.getDeletedReferences());
+			deleteAuthors(changeSet.getDeletedReferences());
 		} else {
 			// Otherwise, we need to:
 			// Revert changes
-			revert(updated, added);
+			revert(updated, added, updatedAuthors);
 			// Notify about invalid update
 			throw new KnowledgeUpdateException(
 					"Update exception - Failed to delete " + invalidDelete);
@@ -184,6 +251,50 @@ public class BaseKnowledgeManager implements KnowledgeManager {
 				.getUpdatedReferences()) {
 			notifyKnowledgeChangeListeners(knowledgePath);
 		}
+	}
+
+	/**
+	 * Removes authors of the given knowledge paths.
+	 * @param knowledgePaths
+	 */
+	private void deleteAuthors(Collection<KnowledgePath> knowledgePaths) {
+		List<KnowledgePath> listToRemove = new LinkedList<>();
+		
+		for (KnowledgePath deleteKP : knowledgePaths) {
+			knowledgeAuthors.remove(deleteKP);
+			// if a parent knowledge was updated, delete obsolete child-entries
+			for (KnowledgePath kp : knowledgeAuthors.keySet()) {
+				if (startsWith(kp.getNodes(), deleteKP.getNodes()) && !kp.equals(deleteKP)) {
+					listToRemove.add(kp);					
+				}
+			}
+		}
+		
+		knowledgeAuthors.keySet().removeAll(listToRemove);
+	}	
+	
+	/**
+	 * Sets the author fot the given knowlege path.
+	 * @param updateKP
+	 * @param authorId
+	 * @param updatedAuthors
+	 */
+	private void updateAuthors(KnowledgePath updateKP, String authorId, Map<KnowledgePath, String> updatedAuthors) {
+		knowledgeAuthors.put(updateKP, authorId);
+		updatedAuthors.put(updateKP, authorId);
+		
+		List<KnowledgePath> listToRemove = new LinkedList<>();
+		
+		// if a parent knowledge was updated, delete obsolete child-entries
+		// TODO this really needs trie
+		for (KnowledgePath kp : knowledgeAuthors.keySet()) {
+			if (startsWith(kp.getNodes(), updateKP.getNodes()) && !kp.equals(updateKP)) {
+				listToRemove.add(kp);
+				updatedAuthors.put(kp, knowledgeAuthors.get(kp));
+			}
+		}
+		
+		knowledgeAuthors.keySet().removeAll(listToRemove);
 	}
 
 	/*
@@ -564,31 +675,139 @@ public class BaseKnowledgeManager implements KnowledgeManager {
 	 *            changed values
 	 * @param added
 	 *            newly added entries
+	 * @param updatedAuthors 
 	 * @throws KnowledgeUpdateException
 	 *             It should not be thrown.
 	 */
 	private void revert(Map<KnowledgePath, Object> updated,
-			List<KnowledgePath> added) throws KnowledgeUpdateException {
+			List<KnowledgePath> added, Map<KnowledgePath, String> updatedAuthors) throws KnowledgeUpdateException {
 		// Revert updates of the values
 		for (final KnowledgePath revertKP : updated.keySet()) {
 			updateKnowledge(revertKP, updated.get(revertKP));
 		}
 		// Revert adding new nodes to the knowledge
 		deleteKnowledge(added);
+		for (final KnowledgePath revertKP : updatedAuthors.keySet()) {
+			knowledgeAuthors.put(revertKP, updatedAuthors.get(revertKP));			
+		}
 	}
 
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager#markAsLocal(java.util.Collection)
+	 */
 	@Override
 	public void markAsLocal(Collection<KnowledgePath> knowledgePaths) {
+		for (KnowledgePath path : knowledgePaths) {
+			//Add blank security tags to the local knowledge, denotating it therefore as "infinitely secure"
+			if (!isLocal(path)) {
+				LocalKnowledgeTag tag = RuntimeMetadataFactory.eINSTANCE.createLocalKnowledgeTag();
+				setSecurityTags(path, Arrays.asList(tag));
+			}
+		}
 		localKnowledgePaths.addAll(knowledgePaths);
 	}
 
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.knowledge.ReadOnlyKnowledgeManager#isLocal(cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath)
+	 */
 	@Override
 	public boolean isLocal(KnowledgePath knowledgePath) {
 		return localKnowledgePaths.contains(knowledgePath);
 	}
 
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.knowledge.ReadOnlyKnowledgeManager#getLocalPaths()
+	 */
 	@Override
 	public Collection<KnowledgePath> getLocalPaths() {
 		return localKnowledgePaths;
 	}
+
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager#addSecurityTag(cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath, cz.cuni.mff.d3s.deeco.model.runtime.api.SecurityTag)
+	 */
+	@Override
+	public void addSecurityTag(KnowledgePath knowledgePath, SecurityTag newSecurityTag) {
+		if (knowledgePath.getNodes().size() != 1) {
+			throw new IllegalArgumentException("Illegal use of method - only single-noded knowledge path can be secured.");
+		}
+		if (!(knowledgePath.getNodes().get(0) instanceof PathNodeField)) {
+			throw new IllegalArgumentException("Illegal use of method - the node must refer to a field within the component.");
+		}
+		
+		PathNodeField pathNode = (PathNodeField)knowledgePath.getNodes().get(0);
+		
+		if (!securityTags.containsKey(pathNode)) {
+			securityTags.put(pathNode, new ArrayList<>());
+		}
+		
+		securityTags.get(pathNode).add(newSecurityTag);	
+	}
+	
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager#setSecurityTags(cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath, java.util.Collection)
+	 */
+	@Override
+	public void setSecurityTags(KnowledgePath knowledgePath, Collection<SecurityTag> newSecurityTags) {	
+		if (knowledgePath.getNodes().size() != 1) {
+			throw new IllegalArgumentException("Illegal use of method - only single-noded knowledge path can be secured.");
+		}
+		if (!(knowledgePath.getNodes().get(0) instanceof PathNodeField)) {
+			throw new IllegalArgumentException("Illegal use of method - the node must refer to a field within the component.");
+		}
+		
+		PathNodeField pathNode = (PathNodeField)knowledgePath.getNodes().get(0);
+		
+		securityTags.put(pathNode, new ArrayList<>());
+		securityTags.get(pathNode).addAll(newSecurityTags);	
+	}
+	
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.knowledge.ReadOnlyKnowledgeManager#getKnowledgeSecurityTags(cz.cuni.mff.d3s.deeco.model.runtime.api.PathNodeField)
+	 */
+	@Override
+	public List<KnowledgeSecurityTag> getKnowledgeSecurityTags(PathNodeField pathNodeField) {		
+		List<SecurityTag> result = securityTags.get(pathNodeField);
+		if (result == null) {
+			return Collections.emptyList();
+		} else {
+			return result.stream().filter(tag -> tag instanceof KnowledgeSecurityTag).map(tag -> (KnowledgeSecurityTag)tag).collect(Collectors.toList());
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.knowledge.ReadOnlyKnowledgeManager#getSecurityTags(cz.cuni.mff.d3s.deeco.model.runtime.api.PathNodeField)
+	 */
+	@Override
+	public List<SecurityTag> getSecurityTags(PathNodeField pathNodeField) {		
+		List<SecurityTag> result = securityTags.get(pathNodeField);
+		if (result == null) {
+			return Collections.emptyList();
+		} else {
+			return result;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.knowledge.ReadOnlyKnowledgeManager#isLocked(cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath)
+	 */
+	@Override
+	public boolean isLocked(KnowledgePath knowledgePath) {
+		if (!KnowledgePathHelper.isAbsolutePath(knowledgePath)) {
+			throw new IllegalArgumentException("Only absolute knowledge paths can be checked for locking.");
+		}
+		return this.lockedKnowledgePaths.contains(knowledgePath);
+	}
+
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager#lockKnowledgePath(cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath)
+	 */
+	@Override
+	public void lockKnowledgePath(KnowledgePath knowledgePath) {
+		if (!KnowledgePathHelper.isAbsolutePath(knowledgePath)) {
+			throw new IllegalArgumentException("Only absolute knowledge paths can be locked.");
+		}
+		this.lockedKnowledgePaths.add(knowledgePath);
+	}
+
 }

@@ -2,20 +2,16 @@ package cz.cuni.mff.d3s.deeco.task;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyCollectionOf;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -24,13 +20,19 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import cz.cuni.mff.d3s.deeco.integrity.PathRating;
+import cz.cuni.mff.d3s.deeco.integrity.RatingsChangeSet;
+import cz.cuni.mff.d3s.deeco.integrity.RatingsManagerImpl;
+import cz.cuni.mff.d3s.deeco.integrity.ReadonlyRatingsHolder;
 import cz.cuni.mff.d3s.deeco.knowledge.ChangeSet;
 import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager;
+import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManagerContainer;
 import cz.cuni.mff.d3s.deeco.knowledge.ShadowKnowledgeManagerRegistry;
 import cz.cuni.mff.d3s.deeco.knowledge.ReadOnlyKnowledgeManager;
 import cz.cuni.mff.d3s.deeco.knowledge.ShadowsTriggerListener;
 import cz.cuni.mff.d3s.deeco.knowledge.TriggerListener;
 import cz.cuni.mff.d3s.deeco.knowledge.ValueSet;
+import cz.cuni.mff.d3s.deeco.model.runtime.RuntimeModelHelper;
 import cz.cuni.mff.d3s.deeco.model.runtime.SampleRuntimeModel;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgeChangeTrigger;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath;
@@ -66,7 +68,10 @@ public class EnsembleTaskTest {
 	private Scheduler scheduler;
 	@Mock
 	private ArchitectureObserver architectureObserver;
+	@Mock
+	private KnowledgeManagerContainer kmContainer;
 	
+	private RatingsManagerImpl ratingsManager;
 	private Task task;
 
 	private Integer localInValue;
@@ -79,6 +84,8 @@ public class EnsembleTaskTest {
 	private ParamHolder<Integer> expectedLocalInOutValue;
 	private ParamHolder<Integer> expectedLocalOutValue;
 
+	private ReadonlyRatingsHolder exchangeCoordHolder, exchangeMemberHolder;
+	
 	private KnowledgePath getStrippedPath(KnowledgePath path) {
 		return KnowledgePathHelper.getStrippedPath(path).knowledgePath;
 	}
@@ -88,6 +95,15 @@ public class EnsembleTaskTest {
 		initMocks(this);
 		
 		model = new SampleRuntimeModel();
+		ratingsManager = RatingsManagerImpl.getInstance();
+		
+		List<RatingsChangeSet> initialChangeSets = new ArrayList<>();
+		initialChangeSets.add(new RatingsChangeSet("author1", "KM1", RuntimeModelHelper.createKnowledgePath("level1", "rating"), PathRating.OK));
+		initialChangeSets.add(new RatingsChangeSet("author2", "KM1", RuntimeModelHelper.createKnowledgePath("level1", "rating"), PathRating.OK));
+		initialChangeSets.add(new RatingsChangeSet("author3", "KM_shadow2", RuntimeModelHelper.createKnowledgePath("level1", "rating"), PathRating.OK));
+		initialChangeSets.add(new RatingsChangeSet("author4", "KM_shadow2", RuntimeModelHelper.createKnowledgePath("level1", "rating"), PathRating.UNUSUAL));
+		initialChangeSets.add(new RatingsChangeSet("author3", "KM_shadow1", RuntimeModelHelper.createKnowledgePath("level1", "rating"), PathRating.OK));
+		ratingsManager.update(initialChangeSets);
 		
 		localInValue = 15;
 		localInOutValue = 4;
@@ -99,9 +115,14 @@ public class EnsembleTaskTest {
 		expectedLocalOutValue = new ParamHolder<Integer>(0);		
 		ParamHolder<Integer> dummyShadowInOutValue = new ParamHolder<Integer>(localInOutValue);
 		ParamHolder<Integer> dummyShadowOutValue = new ParamHolder<Integer>(0);		
+		
+		exchangeCoordHolder = ratingsManager.createReadonlyRatingsHolder("KM1", RuntimeModelHelper.createKnowledgePath("level1", "new_rating"));
+		exchangeMemberHolder = ratingsManager.createReadonlyRatingsHolder("KM1", RuntimeModelHelper.createKnowledgePath("level1", "rating"));
+		
 		// Note that the exchange will call the method twice - once with (local, shadow) and once with (shadow, local). This is because the ensemble can be established
 		// with the local component both as a member and as a coordinator. The exchangeMethod is symetrical, thus this does not cause problems.
-		SampleRuntimeModel.exchangeMethod(localInValue, expectedLocalOutValue, expectedLocalInOutValue, shadow1InValue, dummyShadowOutValue, dummyShadowInOutValue);
+		SampleRuntimeModel.exchangeMethod(localInValue, expectedLocalOutValue, expectedLocalInOutValue, shadow1InValue, dummyShadowOutValue, dummyShadowInOutValue,
+				exchangeCoordHolder, exchangeMemberHolder);
 		
 		doNothing().when(knowledgeManager).register(any(Trigger.class), knowledgeManagerTriggerListenerCaptor.capture());
 		doNothing().when(shadowReplicasAccess).register(any(Trigger.class), shadowReplicasTriggerListenerCaptor.capture());
@@ -162,10 +183,21 @@ public class EnsembleTaskTest {
 			}
 		});
 
+		when(knowledgeManager.getAuthor(eq(RuntimeModelHelper.createKnowledgePath("level1", "rating")))).thenReturn("KM1");
+		when(shadowKnowledgeManager1.getAuthor(eq(RuntimeModelHelper.createKnowledgePath("level1", "rating")))).thenReturn("KM_shadow1");
+		when(shadowKnowledgeManager2.getAuthor(eq(RuntimeModelHelper.createKnowledgePath("level1", "rating")))).thenReturn("KM_shadow2");
+		
 		model.setKnowledgeManager(knowledgeManager);
 		model.setOtherKnowledgeManagersAccess(shadowReplicasAccess);
 
-		this.task = new EnsembleTask(model.ensembleController, scheduler, architectureObserver);
+		when(kmContainer.hasReplica(anyString())).thenReturn(true);
+		
+		this.task = new EnsembleTask(model.ensembleController, scheduler, architectureObserver, kmContainer, ratingsManager);
+	}
+	
+	@After
+	public void tearDown() {
+		RatingsManagerImpl.resetSingleton();
 	}
 	
 	@Test
@@ -227,13 +259,18 @@ public class EnsembleTaskTest {
 		
 		// WHEN invoke (with periodic trigger) is called on the task
 		task.invoke(model.ensemblePeriodicTrigger);
+		
+		// THEN membership rating parameters get correct data
+		assertEquals(3, model.getMembershipRatingSum());
+		// THEN exchange rating parameters get correct data
+		assertEquals(2, model.getExchangeRatingSum());
 		// THEN it gets the needed local knowledge
-		// 6x = 2x membership (COORD), 2x membership (MEMBER), 1x exchange (COORD), 1x exchange (MEMBER)
-		verify(knowledgeManager, times(6)).get(anyCollectionOf(KnowledgePath.class));
+		// 7x = 2x membership (COORD), 2x membership (MEMBER), 1x exchange (COORD), 1x exchange (MEMBER), 1x rating process, 4x knowledge presence checks
+		verify(knowledgeManager, times(11)).get(anyCollectionOf(KnowledgePath.class));
 		// AND it retrieves the other knowledge managers
 		verify(shadowReplicasAccess).getShadowKnowledgeManagers();
 		// AND it gets knowledge from them
-		verify(shadowKnowledgeManager1, times(4)).get(anyCollectionOf(KnowledgePath.class));
+		verify(shadowKnowledgeManager1, times(8)).get(anyCollectionOf(KnowledgePath.class));
 		verify(shadowKnowledgeManager2, times(2)).get(anyCollectionOf(KnowledgePath.class));		
 		// AND it executes the membership (there are four different combinations for an ensemble with the local component acting as coordinator or as a member)
 		assertTrue(model.getMembershipMethodCallCounter() == 4);
@@ -242,12 +279,29 @@ public class EnsembleTaskTest {
 		assertTrue(model.getExchangeMethodCallCounter() == 2);
 		// AND it updates the instance knowledge with outputs of the knowledge exchange
 		ArgumentCaptor<ChangeSet> changeSetCaptor = ArgumentCaptor.forClass(ChangeSet.class);
-		verify(knowledgeManager, times(2)).update(changeSetCaptor.capture());
+		verify(knowledgeManager, times(2)).update(changeSetCaptor.capture(), anyString());
 		ChangeSet cs = changeSetCaptor.getValue();
 		assertEquals(cs.getValue(getStrippedPath(model.exchangeParamCoordInOut.getKnowledgePath())), expectedLocalInOutValue.value);
 		assertEquals(cs.getValue(getStrippedPath(model.exchangeParamCoordOut.getKnowledgePath())), expectedLocalOutValue.value);
 		assertTrue(cs.getDeletedReferences().isEmpty());
 		assertTrue(cs.getUpdatedReferences().size() == 2);
+		
+		assertEquals(1, ratingsManager.getPendingChangeSets().size());
+		RatingsChangeSet changeSet = ratingsManager.getPendingChangeSets().get(0);
+		assertEquals(knowledgeManager.getId(), changeSet.getAuthorComponentId());
+		assertEquals("KM1", changeSet.getTargetComponentId());
+		assertEquals(RuntimeModelHelper.createKnowledgePath("level1", "rating"), changeSet.getKnowledgePath());
+		assertEquals(PathRating.OUT_OF_RANGE, changeSet.getPathRating());
+	}
+	
+	@Test(expected = TaskInvocationException.class)
+	public void testEnsembleTaskLockedPath() throws TaskInvocationException {
+		// GIVEN inout path is locked
+		when(knowledgeManager.isLocked(eq(RuntimeModelHelper.createKnowledgePath("level1", "trigger")))).thenReturn(true);		
+		
+		task.invoke(model.ensemblePeriodicTrigger);
+		
+		// THEN exception is thrown
 	}
 }
 

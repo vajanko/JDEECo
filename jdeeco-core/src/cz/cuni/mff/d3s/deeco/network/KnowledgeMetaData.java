@@ -1,6 +1,8 @@
 package cz.cuni.mff.d3s.deeco.network;
 
 import java.io.Serializable;
+import java.util.Arrays;
+
 
 /**
  * @author Michal Kit <kit@d3s.mff.cuni.cz>
@@ -16,22 +18,33 @@ public class KnowledgeMetaData implements Serializable {
 	public long createdAt; 
 	public int hopCount;
 	
+	public byte[] encryptedKey;
+	public String encryptedKeyAlgorithm;
+	public Integer targetRoleHash;
+	public byte[] signature;
+	
 	public KnowledgeMetaData(String componentId, long versionId, String sender, long createdAt, int hopCount) {
+		this(componentId, versionId, sender, createdAt, hopCount, null, null, null, null);
+	}
+
+	public KnowledgeMetaData(String componentId, long versionId, String sender, long createdAt, int hopCount, 
+			byte[] encryptedKey, String encryptedKeyAlgorithm, Integer targetRoleHash, byte[] signature) {
 		super();
 		this.componentId = componentId;
 		this.versionId = versionId;
 		this.sender = sender;
 		this.createdAt = createdAt;
 		this.hopCount = hopCount;
+		this.encryptedKey = encryptedKey;
+		this.encryptedKeyAlgorithm = encryptedKeyAlgorithm;
+		this.targetRoleHash = targetRoleHash;
+		this.signature = signature;
 	}
-
 	
 	public KnowledgeMetaData clone() {
-		return new KnowledgeMetaData(componentId, versionId, sender, createdAt, hopCount);
+		return new KnowledgeMetaData(componentId, versionId, sender, createdAt, hopCount, encryptedKey, encryptedKeyAlgorithm, targetRoleHash, signature);
 	}
-	
-	
-	
+		
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -77,12 +90,40 @@ public class KnowledgeMetaData implements Serializable {
 			return false;
 		if (versionId != other.versionId)
 			return false;
+		if (encryptedKeyAlgorithm == null) {
+			if (other.encryptedKeyAlgorithm != null)
+				return false;
+		} else {
+			if (!encryptedKeyAlgorithm.equals(other.encryptedKeyAlgorithm)) 
+				return false;
+		}
+		if (encryptedKey == null) {
+			if (other.encryptedKey != null)
+				return false;
+		} else {
+			if (!Arrays.equals(encryptedKey, other.encryptedKey)) 
+				return false;
+		}
+		if (targetRoleHash == null) {
+			if (other.targetRoleHash != null)
+				return false;
+		} else {
+			if (!targetRoleHash.equals(other.targetRoleHash)) 
+				return false;
+		}
 		return true;
 	}
 
 
-	public String getSignature() {
-//		return String.format("%sv%d", componentId, versionId);
-		return componentId + "v" + versionId;
+	public String getSignatureWithRole() {
+		if (targetRoleHash != null) {
+			return componentId + "v" + versionId + "_" + targetRoleHash;
+		} else {
+			return getSignature();
+		}
 	}
+	
+	public String getSignature() {
+		return componentId + "v" + versionId;
+	}	
 }

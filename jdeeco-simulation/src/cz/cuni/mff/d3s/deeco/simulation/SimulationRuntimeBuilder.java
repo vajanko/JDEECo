@@ -6,6 +6,7 @@ import java.util.Random;
 import cz.cuni.mff.d3s.deeco.DeecoProperties;
 import cz.cuni.mff.d3s.deeco.executor.Executor;
 import cz.cuni.mff.d3s.deeco.executor.SameThreadExecutor;
+import cz.cuni.mff.d3s.deeco.integrity.RatingsManager;
 import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManagerContainer;
 import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManagerFactory;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.RuntimeMetadata;
@@ -15,14 +16,16 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeDataManager;
 import cz.cuni.mff.d3s.deeco.network.PublisherTask;
 import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
 import cz.cuni.mff.d3s.deeco.runtime.RuntimeFrameworkImpl;
+import cz.cuni.mff.d3s.deeco.security.SecurityKeyManager;
 import cz.cuni.mff.d3s.deeco.simulation.scheduler.SimulationScheduler;
-import cz.cuni.mff.d3s.deeco.simulation.task.TimerTask;
+import cz.cuni.mff.d3s.deeco.task.TimerTask;
+import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
 
 public class SimulationRuntimeBuilder {
 
 	public RuntimeFramework build(AbstractHost host,
 			CallbackProvider callbackProvider, Collection<? extends TimerTaskListener> listeners, RuntimeMetadata model,
-			KnowledgeDataManager knowledgeDataManager, KnowledgeManagerFactory knowledgeManagerFactory) {
+			KnowledgeDataManager knowledgeDataManager, KnowledgeManagerFactory knowledgeManagerFactory, SecurityKeyManager keyManager, RatingsManager ratingsManager) {
 		if (model == null) {
 			throw new IllegalArgumentException("Model must not be null");
 		}
@@ -38,8 +41,8 @@ public class SimulationRuntimeBuilder {
 				.setSimulationTimeEventListener(scheduler);
 
 		// Set up the host container
-		KnowledgeManagerContainer container = new KnowledgeManagerContainer(knowledgeManagerFactory);
-		knowledgeDataManager.initialize(container, host.getDataSender(), host.getHostId(), scheduler);
+		KnowledgeManagerContainer container = new KnowledgeManagerContainer(knowledgeManagerFactory, model);
+		knowledgeDataManager.initialize(container, host.getDataSender(), host.getHostId(), scheduler, keyManager, ratingsManager);
 		host.addDataReceiver(knowledgeDataManager);
 		// Set up the publisher task
 		TimeTriggerExt publisherTrigger = new TimeTriggerExt();
@@ -67,7 +70,7 @@ public class SimulationRuntimeBuilder {
 				}
 			}
 		}
-		return new RuntimeFrameworkImpl(model, scheduler, executor, container);
+		return new RuntimeFrameworkImpl(model, scheduler, executor, container, ratingsManager);
 	}
 
 }
