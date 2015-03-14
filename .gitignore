@@ -14,3 +14,6 @@ doc.zip
 *.ispace
 
 jdeeco-core/.pmd
+/.metadata
+/.JETEmitters
+/.recommenders
