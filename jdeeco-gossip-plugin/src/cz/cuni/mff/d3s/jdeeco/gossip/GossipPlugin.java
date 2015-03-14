@@ -40,15 +40,25 @@ public class GossipPlugin implements DEECoPlugin {
 		// plugin dependencies
 		this.network = container.getPluginInstance(Network.class);
 		this.runtime = container.getRuntimeFramework();
-	
-		// run publishing task
+		
 		Scheduler scheduler = runtime.getScheduler();
+		
+		// insert strategy for collecting component IDs
+		IdCollectorStrategy idCollector = new IdCollectorStrategy(scheduler.getTimer());
+		network.getL2().registerL2Strategy(idCollector);
+		
+		// TODO: load setup parameters such a the probabilities and periods of tasks
+		// these parameters can be then changed at runtime by the adaptable protocol
+	
+		// run PUSH gossip task
 		String nodeId = String.valueOf(container.getId());
 		PushGossipTaskListener taskListener = new PushGossipTaskListener(nodeId, runtime, network);
+		Task publishTask = new CustomStepTask(scheduler, taskListener);
+		scheduler.addTask(publishTask);
 		
-		Task task = new CustomStepTask(scheduler, taskListener);
+		// TODO: run message headers gossipping task
 		
-		scheduler.addTask(task);
+		// TODO: run PULL gossip task
 	}
 
 }
