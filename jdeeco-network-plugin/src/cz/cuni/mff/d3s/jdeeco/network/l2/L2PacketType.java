@@ -65,4 +65,8 @@ public class L2PacketType {
 	public static L2PacketType KNOWLEDGE = new L2PacketType((byte) 0);
 	public static L2PacketType GROUPER = new L2PacketType((byte) 1);
 	public static L2PacketType ENSEMBLE_DEFINITION = new L2PacketType((byte) 2);
+	/**
+	 * Request for knowledge rebroadcast.
+	 */
+	public static L2PacketType PULL_REQUEST = new L2PacketType((byte)3);
 }
