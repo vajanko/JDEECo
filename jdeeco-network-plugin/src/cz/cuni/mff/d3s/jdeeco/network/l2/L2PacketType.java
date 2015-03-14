@@ -69,4 +69,13 @@ public class L2PacketType {
 	 * Request for knowledge rebroadcast.
 	 */
 	public static L2PacketType PULL_REQUEST = new L2PacketType((byte)3);
+	/**
+	 * Packet containing headers of messages carrying knowledge data which
+	 * has been sent by components in the network. These headers are required
+	 * for the PULL gossip mechanism so that any node will be able to realize
+	 * that some message(s) is(are) missing.
+	 * In our case a message header is considered only the component ID which sent
+	 * the message (with knowledge data). 
+	 */
+	public static L2PacketType MESSAGE_HEADERS = new L2PacketType((byte)4);
 }
