@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cz.cuni.mff.d3s.jdeeco.gossip;
+package cz.cuni.mff.d3s.jdeeco.gossip.strategy;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +18,8 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy;
  */
 public class IdCollectorStrategy implements L2Strategy {
 
+	// this collection must be provided from outside as it is necessary in other 
+	// objects as well
 	private Map<String, Long> ids = new HashMap<String, Long>();
 	private CurrentTimeProvider timeProvider;
 	
@@ -37,7 +39,7 @@ public class IdCollectorStrategy implements L2Strategy {
 		if (packet.header.type.equals(L2PacketType.KNOWLEDGE)) {
 			KnowledgeData kd = (KnowledgeData)packet.getObject();
 			
-			// Collect all ids of component which are coming from the network.
+			// Collect all IDs of component which are coming from the network.
 			// Remember also the time so that we can recognise when some component
 			// is lost and does not participate in the communication any more.
 			String id = kd.getMetaData().componentId;
@@ -46,7 +48,10 @@ public class IdCollectorStrategy implements L2Strategy {
 			ids.put(id, time);
 		}
 		else if (packet.header.type.equals(L2PacketType.MESSAGE_HEADERS)) {
+			// Message headers from other nodes are not re-broadcasted but they
+			// are combined with headers known by this node and then gossipped together.
 			
+			// TODO: process message headers data
 		}
 	}
 

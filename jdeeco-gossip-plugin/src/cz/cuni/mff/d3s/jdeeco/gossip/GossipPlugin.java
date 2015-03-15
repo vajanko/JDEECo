@@ -13,6 +13,7 @@ import cz.cuni.mff.d3s.deeco.runtime.RuntimeFrameworkImpl;
 import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
 import cz.cuni.mff.d3s.deeco.task.CustomStepTask;
 import cz.cuni.mff.d3s.deeco.task.Task;
+import cz.cuni.mff.d3s.jdeeco.gossip.strategy.IdCollectorStrategy;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 
 /**
@@ -52,7 +53,7 @@ public class GossipPlugin implements DEECoPlugin {
 	
 		// run PUSH gossip task
 		String nodeId = String.valueOf(container.getId());
-		PushGossipTaskListener taskListener = new PushGossipTaskListener(nodeId, runtime, network);
+		PushKnowledgeTaskListener taskListener = new PushKnowledgeTaskListener(nodeId, runtime, network);
 		Task publishTask = new CustomStepTask(scheduler, taskListener);
 		scheduler.addTask(publishTask);
 		

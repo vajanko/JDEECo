@@ -13,6 +13,8 @@ import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeNotFoundException;
 import cz.cuni.mff.d3s.deeco.knowledge.ValueSet;
 import cz.cuni.mff.d3s.deeco.logging.Log;
 import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath;
+import cz.cuni.mff.d3s.deeco.model.runtime.custom.RuntimeMetadataFactoryExt;
+import cz.cuni.mff.d3s.deeco.model.runtime.meta.RuntimeMetadataFactory;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
 import cz.cuni.mff.d3s.deeco.network.PublisherTask;
@@ -30,34 +32,38 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
 import cz.cuni.mff.d3s.jdeeco.network.l2.PacketHeader;
 
 /**
+ * Task responsible for regularly broadcasting local knowledge data into the network.
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class PushGossipTaskListener implements TimerTaskListener {
+public class PushKnowledgeTaskListener implements TimerTaskListener {
 
 	private String nodeId;
 	private KnowledgeManagerContainer kmContainer;
 	private CurrentTimeProvider timeProvider;
 	private Layer2 networkLayer;
 	private Scheduler scheduler;
-	private Integer publishingPeriod;
+	private int period;
 	
 	/**
-	 * 
+	 * Creates a new instance of {@link TimerTaskListener} responsible for regularly broadcasting
+	 * local knowledge data. The period of the broadcast is a configurable property.
 	 */
-	public PushGossipTaskListener(String nodeId, RuntimeFramework runtime, Network network) {
+	public PushKnowledgeTaskListener(String nodeId, RuntimeFramework runtime, Network network) {
 		this.nodeId = nodeId;
 		this.networkLayer = network.getL2();
 		this.kmContainer = runtime.getContainer();
 		this.scheduler = runtime.getScheduler();
 		this.timeProvider = scheduler.getTimer();
-		this.publishingPeriod = Integer.getInteger(DeecoProperties.PUBLISHING_PERIOD, 
-				PublisherTask.DEFAULT_PUBLISHING_PERIOD);
+		this.period = GossipProperties.getKnowledgePushPeriod();
+		
+		// initialise empty knowledge path
+		RuntimeMetadataFactory factory = RuntimeMetadataFactoryExt.eINSTANCE;
+		emptyPath.add(factory.createKnowledgePath());
 	}
 	
 	// NOTE: Taken from DefaultKnowledgeDataManager
-	protected final List<KnowledgePath> emptyPath = null;
-	
+	protected final List<KnowledgePath> emptyPath = new LinkedList<KnowledgePath>();
 	// NOTE: Taken from DefaultKnowledgeDataManager
 	protected List<KnowledgeData> prepareLocalKnowledgeData() {
 		List<KnowledgeData> result = new LinkedList<>();
@@ -113,7 +119,7 @@ public class PushGossipTaskListener implements TimerTaskListener {
 			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 		}
 		
-		scheduler.addTask(new CustomStepTask(scheduler, this, publishingPeriod));
+		scheduler.addTask(new CustomStepTask(scheduler, this, period));
 	}
 	
 	/* (non-Javadoc)
@@ -121,10 +127,7 @@ public class PushGossipTaskListener implements TimerTaskListener {
 	 */
 	@Override
 	public TimerTask getInitialTask(Scheduler scheduler) {
-		
-		TimerTask task = new CustomStepTask(scheduler, this, publishingPeriod);
-		
-		return task;
+		return new CustomStepTask(scheduler, this, period);
 	}
 
 }
