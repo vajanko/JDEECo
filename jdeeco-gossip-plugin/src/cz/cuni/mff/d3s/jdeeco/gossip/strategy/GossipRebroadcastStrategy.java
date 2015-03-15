@@ -13,23 +13,26 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy;
 import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
 
 /**
- * Rebroadcast received knowledge over MANET with certain probability.
+ * Rebroadcast received L2 packets over MANET with certain probability.
+ * Different probabilities are used for knowledge and other types of data.
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class KnowledgeRebroadcastStrategy implements L2Strategy {
+public class GossipRebroadcastStrategy implements L2Strategy {
 
 	private Random generator;
-	private double probability;
+	private double knowledgeProbability;
+	private double headersProbability;
 	private Layer2 networkLayer;
 	
 	/**
 	 * Creates a new instance of network Layer2 strategy which rebroadcasts
 	 * received packets with certain probability.
 	 */
-	public KnowledgeRebroadcastStrategy(Layer2 networkLayer) {
+	public GossipRebroadcastStrategy(Layer2 networkLayer) {
 		this.generator = new Random();
-		this.probability = GossipProperties.getKnowledgePushProbability();
+		this.knowledgeProbability = GossipProperties.getKnowledgePushProbability();
+		this.headersProbability = GossipProperties.getHeadersPushProbability();
 		this.networkLayer = networkLayer;
 	}
 	
@@ -40,7 +43,12 @@ public class KnowledgeRebroadcastStrategy implements L2Strategy {
 	public void processL2Packet(L2Packet packet) {
 		
 		if (packet.header.type.equals(L2PacketType.KNOWLEDGE)) {
-			if (generator.nextDouble() < probability) {
+			if (generator.nextDouble() < knowledgeProbability) {
+				networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
+			}
+		}
+		else if (packet.header.type.equals(L2PacketType.MESSAGE_HEADERS)) {
+			if (generator.nextDouble() < headersProbability) {
 				networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 			}
 		}
