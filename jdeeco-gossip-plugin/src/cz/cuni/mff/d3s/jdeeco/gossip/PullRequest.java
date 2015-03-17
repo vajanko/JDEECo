@@ -3,6 +3,7 @@
  */
 package cz.cuni.mff.d3s.jdeeco.gossip;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -12,7 +13,10 @@ import java.util.Collection;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class PullRequest {
+public class PullRequest implements Serializable {
+	
+	private static final long serialVersionUID = 1736658246438509897L;
+	
 	private Collection<String> messages;
 	
 	/**
