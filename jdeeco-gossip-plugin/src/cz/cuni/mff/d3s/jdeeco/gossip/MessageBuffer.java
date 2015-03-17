@@ -33,7 +33,8 @@ public class MessageBuffer {
 	private int localTimeout;
 	
 	public MessageBuffer() {
-		this.globalTimeout = 100000;
+		this.localTimeout = GossipProperties.getKnowledgePullTimeout();
+		this.globalTimeout = GossipProperties.getComponentPullTimeout();
 	}
 
 	/**
