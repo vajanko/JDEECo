@@ -115,6 +115,19 @@ public class MessageBuffer {
 		
 		return result;
 	}
+	
+	public Collection<MessageHeader> getKnownMessages(long currentTime) {
+		
+		// remove old messages - no need sent them to other nodes
+		removeTimeoutMessages(currentTime);
+		// get a list of messages and the time of lastly received by any node in the network 
+		ArrayList<MessageHeader> result = new ArrayList<MessageHeader>();
+		for (Entry<String, MessageInfo> entry : buffer.entrySet()) {
+			result.add(new MessageHeader(entry.getKey(), entry.getValue().GlobalUpdate));
+		}
+		
+		return result;
+	}
 		
 	class MessageInfo {
 		/**

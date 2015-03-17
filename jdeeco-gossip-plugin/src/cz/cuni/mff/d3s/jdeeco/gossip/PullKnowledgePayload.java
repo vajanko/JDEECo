@@ -13,7 +13,7 @@ import java.util.Collection;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class PullRequest implements Serializable {
+public class PullKnowledgePayload implements Serializable {
 	
 	private static final long serialVersionUID = 1736658246438509897L;
 	
@@ -26,7 +26,7 @@ public class PullRequest implements Serializable {
 		return messages;
 	}
 	
-	public PullRequest(Collection<String> messges) {
+	public PullKnowledgePayload(Collection<String> messges) {
 		this.messages = new ArrayList<String>(messages);
 	}
 }

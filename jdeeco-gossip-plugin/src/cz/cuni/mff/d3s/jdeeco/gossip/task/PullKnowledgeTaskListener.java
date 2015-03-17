@@ -9,7 +9,7 @@ import cz.cuni.mff.d3s.deeco.task.TimerTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
-import cz.cuni.mff.d3s.jdeeco.gossip.PullRequest;
+import cz.cuni.mff.d3s.jdeeco.gossip.PullKnowledgePayload;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.address.MANETBroadcastAddress;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
@@ -39,7 +39,7 @@ public class PullKnowledgeTaskListener implements TimerTaskListener {
 		// check whether there are some missing messages and if yes send a PULL request
 		Collection<String> missingMessages = messageBuffer.getMissingMessages(time);
 		if (!missingMessages.isEmpty()) {
-			PullRequest data = new PullRequest(missingMessages);
+			PullKnowledgePayload data = new PullKnowledgePayload(missingMessages);
 			L2Packet packet = new L2Packet(header, data);
 			
 			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);

@@ -3,12 +3,11 @@
  */
 package cz.cuni.mff.d3s.jdeeco.gossip.strategy;
 
-import java.util.Map.Entry;
-
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
-import cz.cuni.mff.d3s.jdeeco.gossip.MessageHeaders;
+import cz.cuni.mff.d3s.jdeeco.gossip.MessageHeader;
+import cz.cuni.mff.d3s.jdeeco.gossip.PushHeadersPayload;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy;
@@ -50,10 +49,10 @@ public class MessageUpdateStrategy implements L2Strategy {
 		else if (packet.header.type.equals(L2PacketType.MESSAGE_HEADERS)) {
 			// Message headers from other nodes are not re-broadcasted but they
 			// are combined with headers known by this node and then gossipped together.
-			MessageHeaders msgs = (MessageHeaders)packet.getObject();
+			PushHeadersPayload msgs = (PushHeadersPayload)packet.getObject();
 			
-			for (Entry<String, Long> entry : msgs.getHeaders().entrySet()) {
-				messageBuffer.globalUpdate(entry.getKey(), entry.getValue());
+			for (MessageHeader header : msgs.getHeaders()) {
+				messageBuffer.globalUpdate(header.id, header.timestamp);
 			}
 		}
 	}
