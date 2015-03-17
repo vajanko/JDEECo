@@ -51,10 +51,13 @@ public class PushHeadersTaskListener implements TimerTaskListener {
 		PacketHeader header = new PacketHeader(L2PacketType.MESSAGE_HEADERS);
 		
 		Collection<MessageHeader> headers = messageBuffer.getKnownMessages(time);
-		PushHeadersPayload data = new PushHeadersPayload(headers);
-		L2Packet packet = new L2Packet(header, data);
-		
-		networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
+		if (!headers.isEmpty()) {
+			PushHeadersPayload data = new PushHeadersPayload(headers);
+			L2Packet packet = new L2Packet(header, data);
+
+			System.out.println(String.format("[%s] %4d: PUSH headers", "??", time));
+			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
+		}
 		
 		scheduler.addTask(new CustomStepTask(scheduler, this, period));
 	}

@@ -115,6 +115,7 @@ public class PushKnowledgeTaskListener implements TimerTaskListener {
 			PacketHeader header = new PacketHeader(L2PacketType.KNOWLEDGE);
 			L2Packet packet = new L2Packet(header, data);
 			
+			System.out.println(String.format("[%s] %4d: PUSH knowledge", data.getMetaData().componentId, time));
 			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 		}
 		

@@ -16,6 +16,11 @@ import cz.cuni.mff.d3s.deeco.annotations.Process;
 public class DemoComponent {
 	public String id;
 	
+	
+	public DemoComponent(String id) {
+		this.id = id;
+	}
+	
 	@Process
 	@PeriodicScheduling(period=1000)
 	public static void process(@In("id") String id) {

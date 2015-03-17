@@ -35,4 +35,9 @@ public class MessageHeader implements Serializable {
 		this.id = id;
 		this.timestamp = timestamp;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s at %d ms", id, timestamp);
+	}
 }

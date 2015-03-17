@@ -42,6 +42,7 @@ public class PullKnowledgeTaskListener implements TimerTaskListener {
 			PullKnowledgePayload data = new PullKnowledgePayload(missingMessages);
 			L2Packet packet = new L2Packet(header, data);
 			
+			System.out.println(time + ": PULL knowledge");
 			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 		}
 		
