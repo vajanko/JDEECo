@@ -14,8 +14,12 @@ import cz.cuni.mff.d3s.deeco.task.CustomStepTask;
 import cz.cuni.mff.d3s.deeco.task.Task;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.MessageUpdateStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.task.PullKnowledgeTaskListener;
+import cz.cuni.mff.d3s.jdeeco.gossip.task.PushHeadersTaskListener;
 import cz.cuni.mff.d3s.jdeeco.gossip.task.PushKnowledgeTaskListener;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
+import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
+import cz.cuni.mff.d3s.jdeeco.network.marshaller.MarshallerRegistry;
+import cz.cuni.mff.d3s.jdeeco.network.marshaller.SerializingMarshaller;
 
 /**
  * 
@@ -53,18 +57,26 @@ public class GossipPlugin implements DEECoPlugin {
 		// TODO: load setup parameters such a the probabilities and periods of tasks
 		// these parameters can be then changed at runtime by the adaptable protocol
 	
-		// run PUSH gossip task
+		// run PUSH knowledge gossip task
 		String nodeId = String.valueOf(container.getId());
 		PushKnowledgeTaskListener pushListener = new PushKnowledgeTaskListener(nodeId, runtime, network);
 		Task publishTask = new CustomStepTask(scheduler, pushListener);
 		scheduler.addTask(publishTask);
 		
-		// TODO: run message headers gossipping task
+		// run PUSH message headers gossip task
+		PushHeadersTaskListener pushHeadersListener = new PushHeadersTaskListener(messageBuffer, runtime, network);
+		Task pushHeadersTask = new CustomStepTask(scheduler, pushHeadersListener);
+		scheduler.addTask(pushHeadersTask);
 		
-		// run PULL gossip task
+		// run PULL knowledge gossip task
 		PullKnowledgeTaskListener pullListener = new PullKnowledgeTaskListener(messageBuffer, runtime, network);
 		Task pullTask = new CustomStepTask(scheduler, pullListener);
 		scheduler.addTask(pullTask);
+		
+		// register marshalers for other types of data except knowledge
+		MarshallerRegistry registry = network.getL2().getMarshallers();
+		registry.registerMarshaller(L2PacketType.MESSAGE_HEADERS, new SerializingMarshaller());
+		registry.registerMarshaller(L2PacketType.PULL_REQUEST, new SerializingMarshaller());
 	}
 
 }
