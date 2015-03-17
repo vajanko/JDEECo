@@ -10,6 +10,7 @@ import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
 import cz.cuni.mff.d3s.deeco.task.CustomStepTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
+import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageHeader;
@@ -35,8 +36,8 @@ public class PushHeadersTaskListener implements TimerTaskListener {
 	/**
 	 * 
 	 */
-	public PushHeadersTaskListener(MessageBuffer messageBuffer, RuntimeFramework runtime, Network network) {
-		this.messageBuffer = messageBuffer;
+	public PushHeadersTaskListener(RuntimeFramework runtime, Network network, GossipPlugin gossip) {
+		this.messageBuffer = gossip.getMessageBuffer();
 		this.scheduler = runtime.getScheduler();
 		this.networkLayer = network.getL2();
 		this.period = GossipProperties.getHeadersPushPeriod();

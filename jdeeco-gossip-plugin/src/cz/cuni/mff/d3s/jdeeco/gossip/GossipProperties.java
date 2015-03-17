@@ -15,7 +15,7 @@ public final class GossipProperties {
 	/**
 	 * Default value of knowledge publishing period in milliseconds.
 	 */
-	public static final int KNOWLEDGE_PUSH_PERIOD_DEFAULT = 1000;
+	public static final int KNOWLEDGE_PUSH_PERIOD_DEFAULT = 20000;
 	/**
 	 * See {@link #KNOWLEDGE_PUSH_PERIOD_DEFAULT} for default value.
 	 * @return Knowledge publishing period in milliseconds.
@@ -60,7 +60,7 @@ public final class GossipProperties {
 	}*/
 	
 	public static final String KNOWLEDGE_PULL_PERIOD = "deeco.pull.knowledge_period";
-	public static final int KNOWLEDGE_PULL_PERIOD_DEFAULT = 3000;
+	public static final int KNOWLEDGE_PULL_PERIOD_DEFAULT = 2000;
 	/**
 	 * 
 	 * @return Knowledge pulling period in milliseconds.
@@ -70,7 +70,7 @@ public final class GossipProperties {
 	}
 	
 	public static final String KNOWLEDGE_PULL_TIMEOUT = "deeco.pull.knowledge_timeout";
-	public static final int KNOWLEDGE_PULL_TIMEOUT_DEFAULT = 5000;
+	public static final int KNOWLEDGE_PULL_TIMEOUT_DEFAULT = 3000;
 	/**
 	 * See {@link #KNOWLEDGE_PULL_TIMEOUT_DEFAULT} for default value.
 	 * @return Time after which knowledge is considered to be outdated and PULL request

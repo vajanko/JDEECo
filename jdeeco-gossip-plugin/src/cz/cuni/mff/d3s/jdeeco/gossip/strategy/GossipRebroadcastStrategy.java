@@ -5,7 +5,11 @@ package cz.cuni.mff.d3s.jdeeco.gossip.strategy;
 
 import java.util.Random;
 
+import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManagerContainer;
+import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
+import cz.cuni.mff.d3s.jdeeco.gossip.PullKnowledgePayload;
+import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.address.MANETBroadcastAddress;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
@@ -24,16 +28,18 @@ public class GossipRebroadcastStrategy implements L2Strategy {
 	private double knowledgeProbability;
 	private double headersProbability;
 	private Layer2 networkLayer;
+	private KnowledgeManagerContainer kmContainer;
 	
 	/**
 	 * Creates a new instance of network Layer2 strategy which rebroadcasts
 	 * received packets with certain probability.
 	 */
-	public GossipRebroadcastStrategy(Layer2 networkLayer) {
+	public GossipRebroadcastStrategy(RuntimeFramework runtime, Network network) {
 		this.generator = new Random();
 		this.knowledgeProbability = GossipProperties.getKnowledgePushProbability();
 		this.headersProbability = GossipProperties.getHeadersPushProbability();
-		this.networkLayer = networkLayer;
+		this.networkLayer = network.getL2();
+		this.kmContainer = runtime.getContainer();
 	}
 	
 	/* (non-Javadoc)
@@ -51,6 +57,14 @@ public class GossipRebroadcastStrategy implements L2Strategy {
 			if (generator.nextDouble() < headersProbability) {
 				networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 			}
+		}
+		else if (packet.header.type.equals(L2PacketType.PULL_REQUEST)) {
+			// TODO: somehow get the knowledge and PUSH it
+			PullKnowledgePayload pullRequest = (PullKnowledgePayload)packet.getObject();
+			for (String msgId : pullRequest.getMessages()) {
+				//kmContainer.getLocal(msgId)
+			}
+			//pullRequest.getMessages()
 		}
 	}
 

@@ -7,6 +7,7 @@ import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
 import cz.cuni.mff.d3s.deeco.task.CustomStepTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
+import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.PullKnowledgePayload;
@@ -24,8 +25,8 @@ public class PullKnowledgeTaskListener implements TimerTaskListener {
 	private Layer2 networkLayer;
 	private int period;
 	
-	public PullKnowledgeTaskListener(MessageBuffer messageBuffer, RuntimeFramework runtime, Network network) {
-		this.messageBuffer = messageBuffer;
+	public PullKnowledgeTaskListener(RuntimeFramework runtime, Network network, GossipPlugin gossip) {
+		this.messageBuffer = gossip.getMessageBuffer();
 		this.scheduler = runtime.getScheduler();
 		this.networkLayer = network.getL2();
 		this.period = GossipProperties.getKnowledgePullPeriod();
@@ -42,7 +43,7 @@ public class PullKnowledgeTaskListener implements TimerTaskListener {
 			PullKnowledgePayload data = new PullKnowledgePayload(missingMessages);
 			L2Packet packet = new L2Packet(header, data);
 			
-			System.out.println(time + ": PULL knowledge");
+			System.out.println(String.format("[%s] %4d: PULL knowledge", "??", time));
 			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 		}
 		

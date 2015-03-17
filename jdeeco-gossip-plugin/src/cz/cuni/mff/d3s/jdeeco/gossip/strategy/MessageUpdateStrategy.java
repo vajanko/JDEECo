@@ -4,7 +4,9 @@
 package cz.cuni.mff.d3s.jdeeco.gossip.strategy;
 
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
+import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
 import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
+import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageHeader;
 import cz.cuni.mff.d3s.jdeeco.gossip.PushHeadersPayload;
@@ -24,9 +26,9 @@ public class MessageUpdateStrategy implements L2Strategy {
 	/**
 	 * 
 	 */
-	public MessageUpdateStrategy(MessageBuffer messageBuffer, CurrentTimeProvider timeProvider) {
-		this.messageBuffer = messageBuffer;
-		this.timeProvider = timeProvider;
+	public MessageUpdateStrategy(RuntimeFramework runtime, GossipPlugin gossip) {
+		this.messageBuffer = gossip.getMessageBuffer();
+		this.timeProvider = runtime.getScheduler().getTimer();
 	}
 	
 	/* (non-Javadoc)
