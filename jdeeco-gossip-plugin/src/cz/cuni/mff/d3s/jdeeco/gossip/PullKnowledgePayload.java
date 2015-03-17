@@ -26,7 +26,7 @@ public class PullKnowledgePayload implements Serializable {
 		return messages;
 	}
 	
-	public PullKnowledgePayload(Collection<String> messges) {
+	public PullKnowledgePayload(Collection<String> messages) {
 		this.messages = new ArrayList<String>(messages);
 	}
 }
