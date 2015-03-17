@@ -18,7 +18,7 @@ import cz.cuni.mff.d3s.jdeeco.network.device.BroadcastLoopback;
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
 public class Launcher {
-	public static void main(String[] args) throws DEECoException, AnnotationProcessorException {
+	public static void main(String[] args) throws DEECoException, AnnotationProcessorException, InstantiationException, IllegalAccessException {
 		/* create main application container */
 		SimulationTimer simulationTimer = new DiscreteEventTimer();
 		DEECoSimulation realm = new DEECoSimulation(simulationTimer);
@@ -26,13 +26,13 @@ public class Launcher {
 		BroadcastLoopback loopback = new BroadcastLoopback();
 
 		/* create first deeco node */
-		DEECoNode deeco1 = realm.createNode(new Network(), loopback, new GossipPlugin());
+		DEECoNode deeco1 = realm.createNode(1, new Network(), loopback, new GossipPlugin());
 		/* deploy components and ensembles */
 		deeco1.deployComponent(new DemoComponent("D1"));
 		deeco1.deployEnsemble(DemoEnsemble.class);
 
 		/* create second deeco node */
-		DEECoNode deeco2 = realm.createNode(new Network(), loopback, new GossipPlugin());
+		DEECoNode deeco2 = realm.createNode(2, new Network(), loopback, new GossipPlugin());
 		/* deploy components and ensembles */
 		deeco2.deployComponent(new DemoComponent("D2"));
 		deeco2.deployEnsemble(DemoEnsemble.class);
