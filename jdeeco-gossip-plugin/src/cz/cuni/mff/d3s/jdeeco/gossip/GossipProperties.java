@@ -41,15 +41,13 @@ public final class GossipProperties {
 		return Integer.getInteger(HEADERS_PUSH_TIMEOUT, HEADERS_PUSH_TIMEOUT_DEFAULT);
 	}
 	
-	public static final String KNOWLEDGE_PULL_TIMEOUT = "deeco.pull.knowledge_period";
-	public static final int KNOWLEDGE_PULL_TIMEOUT_DEFAULT = 3000;
-	public static final int getKnowledgePullTimeout() {
-		return Integer.getInteger(KNOWLEDGE_PULL_TIMEOUT, KNOWLEDGE_PULL_TIMEOUT_DEFAULT);
+	public static final String KNOWLEDGE_PULL_PERIOD = "deeco.pull.knowledge_period";
+	public static final int KNOWLEDGE_PULL_PERIOD_DEFAULT = 3000;
+	public static final int getKnowledgePullPeriod() {
+		return Integer.getInteger(KNOWLEDGE_PULL_PERIOD, KNOWLEDGE_PULL_PERIOD_DEFAULT);
 	}
 	
-	
-	
-	
+
 	
 	private static double getDouble(String name, double def) {
 		String prop = System.getProperty(name, Double.toString(def));

@@ -3,11 +3,12 @@
  */
 package cz.cuni.mff.d3s.jdeeco.gossip.strategy;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Map.Entry;
 
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
+import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
+import cz.cuni.mff.d3s.jdeeco.gossip.MessageHeaders;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy;
@@ -16,17 +17,16 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class IdCollectorStrategy implements L2Strategy {
+public class MessageUpdateStrategy implements L2Strategy {
 
-	// this collection must be provided from outside as it is necessary in other 
-	// objects as well
-	private Map<String, Long> ids = new HashMap<String, Long>();
+	private MessageBuffer messageBuffer;
 	private CurrentTimeProvider timeProvider;
 	
 	/**
 	 * 
 	 */
-	public IdCollectorStrategy(CurrentTimeProvider timeProvider) {
+	public MessageUpdateStrategy(MessageBuffer messageBuffer, CurrentTimeProvider timeProvider) {
+		this.messageBuffer = messageBuffer;
 		this.timeProvider = timeProvider;
 	}
 	
@@ -44,14 +44,17 @@ public class IdCollectorStrategy implements L2Strategy {
 			// is lost and does not participate in the communication any more.
 			String id = kd.getMetaData().componentId;
 			long time = timeProvider.getCurrentMilliseconds();
-			
-			ids.put(id, time);
+
+			messageBuffer.localUpdate(id, time);
 		}
 		else if (packet.header.type.equals(L2PacketType.MESSAGE_HEADERS)) {
 			// Message headers from other nodes are not re-broadcasted but they
 			// are combined with headers known by this node and then gossipped together.
+			MessageHeaders msgs = (MessageHeaders)packet.getObject();
 			
-			// TODO: process message headers data
+			for (Entry<String, Long> entry : msgs.getHeaders().entrySet()) {
+				messageBuffer.globalUpdate(entry.getKey(), entry.getValue());
+			}
 		}
 	}
 
