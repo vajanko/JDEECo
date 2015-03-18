@@ -26,6 +26,7 @@ public class PullKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 	private Scheduler scheduler;
 	private Layer2 networkLayer;
 	private int period;
+	private int nodeId;
 		
 	@Override
 	public void at(long time, Object triger) {
@@ -38,7 +39,7 @@ public class PullKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 			PullKnowledgePayload data = new PullKnowledgePayload(missingMessages);
 			L2Packet packet = new L2Packet(header, data);
 			
-			System.out.println(String.format("[%s] %4d: PULL knowledge", "??", time));
+			System.out.println(String.format("[%2d] %4d: PULL knowledge", nodeId, time));
 			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 		}
 		
@@ -64,6 +65,7 @@ public class PullKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 		this.scheduler = container.getRuntimeFramework().getScheduler();
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
 		this.messageBuffer = container.getPluginInstance(MessageBuffer.class);
+		this.nodeId = container.getId();
 		
 		this.period = GossipProperties.getKnowledgePullPeriod();
 	}

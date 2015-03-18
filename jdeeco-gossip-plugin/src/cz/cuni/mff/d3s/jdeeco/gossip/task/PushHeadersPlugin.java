@@ -34,6 +34,7 @@ public class PushHeadersPlugin implements TimerTaskListener, DEECoPlugin {
 	private Layer2 networkLayer;
 	private Scheduler scheduler;
 	private int period;
+	private int nodeId;
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.task.TimerTaskListener#at(long, java.lang.Object)
@@ -48,7 +49,7 @@ public class PushHeadersPlugin implements TimerTaskListener, DEECoPlugin {
 			PushHeadersPayload data = new PushHeadersPayload(headers);
 			L2Packet packet = new L2Packet(header, data);
 
-			System.out.println(String.format("[%s] %4d: PUSH headers", "??", time));
+			System.out.println(String.format("[%2d] %4d: PUSH headers", nodeId, time));
 			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 		}
 		
@@ -78,6 +79,7 @@ public class PushHeadersPlugin implements TimerTaskListener, DEECoPlugin {
 		this.scheduler = container.getRuntimeFramework().getScheduler();
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
 		this.messageBuffer = container.getPluginInstance(MessageBuffer.class);
+		this.nodeId = container.getId();
 		
 		this.period = GossipProperties.getHeadersPushPeriod();
 	}

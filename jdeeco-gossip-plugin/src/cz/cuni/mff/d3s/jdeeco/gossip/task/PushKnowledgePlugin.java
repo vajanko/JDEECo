@@ -34,14 +34,7 @@ public class PushKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 	private Layer2 networkLayer;
 	private Scheduler scheduler;
 	private int period;
-	
-	/**
-	 * Creates a new instance of {@link TimerTaskListener} responsible for regularly broadcasting
-	 * local knowledge data. The period of the broadcast is a configurable property.
-	 */
-	public PushKnowledgePlugin() {
-		this.period = GossipProperties.getKnowledgePushPeriod();
-	}
+	private int nodeId;
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.task.TimerTaskListener#at(long, java.lang.Object)
@@ -52,7 +45,7 @@ public class PushKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 			PacketHeader header = new PacketHeader(L2PacketType.KNOWLEDGE);
 			L2Packet packet = new L2Packet(header, data);
 			
-			System.out.println(String.format("[%s] %4d: PUSH knowledge", data.getMetaData().componentId, time));
+			System.out.println(String.format("[%2d] %4d: PUSH knowledge", nodeId, time));
 			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 		}
 		
@@ -85,6 +78,9 @@ public class PushKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 		this.knowledgeProvider = container.getPluginInstance(KnowledgeProvider.class);
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
 		this.scheduler = container.getRuntimeFramework().getScheduler();
+		this.nodeId = container.getId();
+		
+		this.period = GossipProperties.getKnowledgePushPeriod();
 	}
 
 }
