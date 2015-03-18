@@ -38,6 +38,6 @@ public class MessageHeader implements Serializable {
 	
 	@Override
 	public String toString() {
-		return String.format("%s at %d ms", id, timestamp);
+		return String.format("%s-%d", id, timestamp);
 	}
 }

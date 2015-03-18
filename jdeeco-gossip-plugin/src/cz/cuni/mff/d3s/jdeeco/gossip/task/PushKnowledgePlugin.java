@@ -45,7 +45,7 @@ public class PushKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 			PacketHeader header = new PacketHeader(L2PacketType.KNOWLEDGE);
 			L2Packet packet = new L2Packet(header, data);
 			
-			System.out.println(String.format("[%2d] %4d: PUSH knowledge", nodeId, time));
+			System.out.println(String.format("[%2d] %4d KN PUSH [%s]", nodeId, time, data.getMetaData().componentId));
 			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 		}
 		

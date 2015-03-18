@@ -49,7 +49,7 @@ public class PushHeadersPlugin implements TimerTaskListener, DEECoPlugin {
 			PushHeadersPayload data = new PushHeadersPayload(headers);
 			L2Packet packet = new L2Packet(header, data);
 
-			System.out.println(String.format("[%2d] %4d: PUSH headers", nodeId, time));
+			System.out.println(String.format("[%2d] %4d HD PUSH %s", nodeId, time, headers));
 			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 		}
 		

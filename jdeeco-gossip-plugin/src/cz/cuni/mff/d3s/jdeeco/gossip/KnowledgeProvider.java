@@ -80,6 +80,21 @@ public class KnowledgeProvider implements DEECoPlugin {
 		return result;
 	}
 	
+	public KnowledgeData getKnowledgeByComponentId(String id) {
+		try {
+			KnowledgeManager km = kmContainer.getLocal(id);
+			if (km != null)
+				return prepareLocalKnowledgeData(km);
+			
+			km = kmContainer.getReplica(null, id);
+			if (km != null)
+				return prepareLocalKnowledgeData(km);
+		
+		} catch (KnowledgeNotFoundException e) { }
+		
+		return null;
+	}
+	
 	// NOTE: Taken from DefaultKnowledgeDataManager
 	private KnowledgeData prepareLocalKnowledgeData(KnowledgeManager km) throws KnowledgeNotFoundException {
 		String componentId = km.getId();
@@ -100,7 +115,7 @@ public class KnowledgeProvider implements DEECoPlugin {
 		return data;
 	}
 	// NOTE: Taken from DefaultKnowledgeDataManager
-	private ValueSet filterNonSerializablePaths(ValueSet toFilter, KnowledgeManager km) {
+	private static ValueSet filterNonSerializablePaths(ValueSet toFilter, KnowledgeManager km) {
 		ValueSet result = new ValueSet();
 		for (KnowledgePath kp : toFilter.getKnowledgePaths()) {
 			if (!km.isLocal(kp)) {

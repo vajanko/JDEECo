@@ -26,6 +26,7 @@ public class MessageUpdateStrategy implements L2Strategy, DEECoPlugin {
 
 	private MessageBuffer messageBuffer;
 	private CurrentTimeProvider timeProvider;
+	private int nodeId;
 		
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy#processL2Packet(cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet)
@@ -42,6 +43,7 @@ public class MessageUpdateStrategy implements L2Strategy, DEECoPlugin {
 			String id = kd.getMetaData().componentId;
 			long time = timeProvider.getCurrentMilliseconds();
 
+			System.out.println(String.format("[%2d] %4d KN RECV [%s]", nodeId, time, id));
 			messageBuffer.localUpdate(id, time);
 		}
 		else if (packet.header.type.equals(L2PacketType.MESSAGE_HEADERS)) {
@@ -69,6 +71,7 @@ public class MessageUpdateStrategy implements L2Strategy, DEECoPlugin {
 	public void init(DEECoContainer container) {
 		this.timeProvider = container.getRuntimeFramework().getScheduler().getTimer();
 		this.messageBuffer = container.getPluginInstance(MessageBuffer.class);
+		this.nodeId = container.getId();
 		
 		// register L2 strategy
 		container.getPluginInstance(Network.class).getL2().registerL2Strategy(this);

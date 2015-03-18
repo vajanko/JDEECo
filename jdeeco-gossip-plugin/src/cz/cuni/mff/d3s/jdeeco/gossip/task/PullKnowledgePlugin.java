@@ -39,7 +39,7 @@ public class PullKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 			PullKnowledgePayload data = new PullKnowledgePayload(missingMessages);
 			L2Packet packet = new L2Packet(header, data);
 			
-			System.out.println(String.format("[%2d] %4d: PULL knowledge", nodeId, time));
+			System.out.println(String.format("[%2d] %4d KN PULL %s", nodeId, time, missingMessages));
 			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 		}
 		
