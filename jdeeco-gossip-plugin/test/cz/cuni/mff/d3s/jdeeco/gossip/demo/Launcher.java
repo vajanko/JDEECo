@@ -10,6 +10,7 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoNode;
 import cz.cuni.mff.d3s.deeco.timer.DiscreteEventTimer;
 import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.device.BroadcastLoopback;
 
@@ -22,17 +23,19 @@ public class Launcher {
 		/* create main application container */
 		SimulationTimer simulationTimer = new DiscreteEventTimer();
 		DEECoSimulation realm = new DEECoSimulation(simulationTimer);
-
-		BroadcastLoopback loopback = new BroadcastLoopback();
+		realm.addPlugin(BroadcastLoopback.class);
+		realm.addPlugin(Network.class);
+		realm.addPlugin(GossipPlugin.class);
+		realm.addPlugin(KnowledgeProvider.class);
 
 		/* create first deeco node */
-		DEECoNode deeco1 = realm.createNode(1, new Network(), loopback, new GossipPlugin());
+		DEECoNode deeco1 = realm.createNode(1);
 		/* deploy components and ensembles */
 		deeco1.deployComponent(new DemoComponent("D1"));
 		deeco1.deployEnsemble(DemoEnsemble.class);
 
 		/* create second deeco node */
-		DEECoNode deeco2 = realm.createNode(2, new Network(), loopback, new GossipPlugin());
+		DEECoNode deeco2 = realm.createNode(2);
 		/* deploy components and ensembles */
 		deeco2.deployComponent(new DemoComponent("D2"));
 		deeco2.deployEnsemble(DemoEnsemble.class);

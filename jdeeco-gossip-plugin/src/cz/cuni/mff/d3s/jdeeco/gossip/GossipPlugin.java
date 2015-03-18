@@ -6,6 +6,7 @@ package cz.cuni.mff.d3s.jdeeco.gossip;
 import java.util.Arrays;
 import java.util.List;
 
+import cz.cuni.mff.d3s.deeco.network.KnowledgeDataManager;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
@@ -32,13 +33,13 @@ public class GossipPlugin implements DEECoPlugin {
 	private Network network;
 	private RuntimeFramework runtime;
 	private MessageBuffer messageBuffer;
-	private KnowledgeProvider knowledgeProvider;
+	private KnowledgeProvider knowledgeProvider; 
 	
-	public MessageBuffer getMessageBuffer() {
-		return messageBuffer;
-	}
 	public KnowledgeProvider getKnowledgeProvider() {
 		return knowledgeProvider;
+	}
+	public MessageBuffer getMessageBuffer() {
+		return messageBuffer;
 	}
 
 	/* (non-Javadoc)
@@ -59,7 +60,8 @@ public class GossipPlugin implements DEECoPlugin {
 		this.runtime = container.getRuntimeFramework();
 		
 		this.messageBuffer = new MessageBuffer();
-		this.knowledgeProvider = new KnowledgeProvider(container);
+		this.knowledgeProvider = new KnowledgeProvider();
+		this.knowledgeProvider.init(container);
 		
 		Scheduler scheduler = runtime.getScheduler();
 		
