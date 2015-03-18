@@ -63,7 +63,7 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 					PacketHeader hdr = new PacketHeader(L2PacketType.KNOWLEDGE);
 					L2Packet pck = new L2Packet(hdr, kd);
 					
-					System.out.println(String.format("[%2d] %4d KN PUSH [%s]", nodeId, timeProvider.getCurrentMilliseconds(), kd.getMetaData().componentId));
+					System.out.println(String.format("[%2] %4d KN PUSH [%s]", nodeId, timeProvider.getCurrentMilliseconds(), kd.getMetaData().componentId));
 					networkLayer.sendL2Packet(pck, MANETBroadcastAddress.BROADCAST);
 				}
 				else {

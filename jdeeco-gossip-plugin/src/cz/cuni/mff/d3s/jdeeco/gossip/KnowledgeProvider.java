@@ -94,6 +94,9 @@ public class KnowledgeProvider implements DEECoPlugin {
 		
 		return null;
 	}
+	public boolean hasLocal(String componentId) {
+		return kmContainer.hasLocal(componentId);
+	}
 	
 	// NOTE: Taken from DefaultKnowledgeDataManager
 	private KnowledgeData prepareLocalKnowledgeData(KnowledgeManager km) throws KnowledgeNotFoundException {

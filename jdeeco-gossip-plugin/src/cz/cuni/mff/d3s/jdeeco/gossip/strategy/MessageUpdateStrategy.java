@@ -10,6 +10,7 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
+import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageHeader;
 import cz.cuni.mff.d3s.jdeeco.gossip.PushHeadersPayload;
@@ -26,6 +27,7 @@ public class MessageUpdateStrategy implements L2Strategy, DEECoPlugin {
 
 	private MessageBuffer messageBuffer;
 	private CurrentTimeProvider timeProvider;
+	private KnowledgeProvider knowledgeProvider;
 	private int nodeId;
 		
 	/* (non-Javadoc)
@@ -43,16 +45,23 @@ public class MessageUpdateStrategy implements L2Strategy, DEECoPlugin {
 			String id = kd.getMetaData().componentId;
 			long time = timeProvider.getCurrentMilliseconds();
 
-			System.out.println(String.format("[%2d] %4d KN RECV [%s]", nodeId, time, id));
-			messageBuffer.localUpdate(id, time);
+			if (!knowledgeProvider.hasLocal(id)) {
+				System.out.println(String.format("[%d] %4d KN RECV [%s]", nodeId, time, id));
+				messageBuffer.localUpdate(id, time);
+			}
 		}
 		else if (packet.header.type.equals(L2PacketType.MESSAGE_HEADERS)) {
 			// Message headers from other nodes are not re-broadcasted but they
 			// are combined with headers known by this node and then gossipped together.
-			PushHeadersPayload msgs = (PushHeadersPayload)packet.getObject();
+			PushHeadersPayload messages = (PushHeadersPayload)packet.getObject();
 			
-			for (MessageHeader header : msgs.getHeaders()) {
-				messageBuffer.globalUpdate(header.id, header.timestamp);
+			long time = timeProvider.getCurrentMilliseconds();
+			System.out.println(String.format("[%d] %4d HD RECV %s", nodeId, time, messages.getHeaders()));
+			
+			for (MessageHeader header : messages.getHeaders()) {
+				if (!knowledgeProvider.hasLocal(header.id)) {
+					messageBuffer.globalUpdate(header.id, header.timestamp);
+				}
 			}
 		}
 	}
@@ -62,7 +71,7 @@ public class MessageUpdateStrategy implements L2Strategy, DEECoPlugin {
 	 */
 	@Override
 	public List<Class<? extends DEECoPlugin>> getDependencies() {
-		return Arrays.asList(Network.class, MessageBuffer.class);
+		return Arrays.asList(Network.class, MessageBuffer.class, KnowledgeProvider.class);
 	}
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#init(cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)
@@ -71,6 +80,7 @@ public class MessageUpdateStrategy implements L2Strategy, DEECoPlugin {
 	public void init(DEECoContainer container) {
 		this.timeProvider = container.getRuntimeFramework().getScheduler().getTimer();
 		this.messageBuffer = container.getPluginInstance(MessageBuffer.class);
+		this.knowledgeProvider = container.getPluginInstance(KnowledgeProvider.class);
 		this.nodeId = container.getId();
 		
 		// register L2 strategy
