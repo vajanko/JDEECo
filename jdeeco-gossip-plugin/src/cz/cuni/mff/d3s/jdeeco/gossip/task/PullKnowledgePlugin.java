@@ -10,6 +10,7 @@ import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
 import cz.cuni.mff.d3s.deeco.task.CustomStepTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
+import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.PullKnowledgePayload;
@@ -39,7 +40,7 @@ public class PullKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 			PullKnowledgePayload data = new PullKnowledgePayload(missingMessages);
 			L2Packet packet = new L2Packet(header, data);
 			
-			System.out.println(String.format("[%d] %4d KN PULL %s", nodeId, time, missingMessages));
+			ConsoleLog.printRequest(nodeId, time, "KN", "PULL", missingMessages);
 			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 		}
 		

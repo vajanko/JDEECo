@@ -11,6 +11,7 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
+import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.PullKnowledgePayload;
@@ -63,7 +64,8 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 					PacketHeader hdr = new PacketHeader(L2PacketType.KNOWLEDGE);
 					L2Packet pck = new L2Packet(hdr, kd);
 					
-					System.out.println(String.format("[%2] %4d KN PUSH [%s]", nodeId, timeProvider.getCurrentMilliseconds(), kd.getMetaData().componentId));
+					long time = timeProvider.getCurrentMilliseconds();
+					ConsoleLog.printRequest(nodeId, time, "KN", "PUSH", kd.getMetaData().componentId);
 					networkLayer.sendL2Packet(pck, MANETBroadcastAddress.BROADCAST);
 				}
 				else {

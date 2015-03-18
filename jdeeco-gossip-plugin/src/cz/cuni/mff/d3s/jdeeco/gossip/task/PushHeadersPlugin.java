@@ -13,6 +13,7 @@ import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
 import cz.cuni.mff.d3s.deeco.task.CustomStepTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
+import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageHeader;
@@ -49,7 +50,7 @@ public class PushHeadersPlugin implements TimerTaskListener, DEECoPlugin {
 			PushHeadersPayload data = new PushHeadersPayload(headers);
 			L2Packet packet = new L2Packet(header, data);
 
-			System.out.println(String.format("[%d] %4d HD PUSH %s", nodeId, time, headers));
+			ConsoleLog.printRequest(nodeId, time, "HD", "PUSH", headers);
 			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 		}
 		
