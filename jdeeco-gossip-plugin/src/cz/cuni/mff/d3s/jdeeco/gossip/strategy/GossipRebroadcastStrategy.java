@@ -3,10 +3,12 @@
  */
 package cz.cuni.mff.d3s.jdeeco.gossip.strategy;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
-import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManagerContainer;
-import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
+import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
+import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 import cz.cuni.mff.d3s.jdeeco.gossip.PullKnowledgePayload;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
@@ -22,25 +24,12 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class GossipRebroadcastStrategy implements L2Strategy {
+public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 
-	private Random generator;
+	private final Random generator = new Random();
 	private double knowledgeProbability;
 	private double headersProbability;
 	private Layer2 networkLayer;
-	private KnowledgeManagerContainer kmContainer;
-	
-	/**
-	 * Creates a new instance of network Layer2 strategy which rebroadcasts
-	 * received packets with certain probability.
-	 */
-	public GossipRebroadcastStrategy(RuntimeFramework runtime, Network network) {
-		this.generator = new Random();
-		this.knowledgeProbability = GossipProperties.getKnowledgePushProbability();
-		this.headersProbability = GossipProperties.getHeadersPushProbability();
-		this.networkLayer = network.getL2();
-		this.kmContainer = runtime.getContainer();
-	}
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy#processL2Packet(cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet)
@@ -61,11 +50,31 @@ public class GossipRebroadcastStrategy implements L2Strategy {
 		else if (packet.header.type.equals(L2PacketType.PULL_REQUEST)) {
 			// TODO: somehow get the knowledge and PUSH it
 			PullKnowledgePayload pullRequest = (PullKnowledgePayload)packet.getObject();
-			for (String msgId : pullRequest.getMessages()) {
+			//for (String msgId : pullRequest.getMessages()) {
 				//kmContainer.getLocal(msgId)
-			}
+			//}
 			//pullRequest.getMessages()
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#getDependencies()
+	 */
+	@Override
+	public List<Class<? extends DEECoPlugin>> getDependencies() {
+		return Arrays.asList(Network.class);
+	}
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#init(cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)
+	 */
+	@Override
+	public void init(DEECoContainer container) {
+		this.networkLayer = container.getPluginInstance(Network.class).getL2();		
+		// register L2 strategy
+		this.networkLayer.registerL2Strategy(this);
+		
+		this.knowledgeProbability = GossipProperties.getKnowledgePushProbability();
+		this.headersProbability = GossipProperties.getHeadersPushProbability();
 	}
 
 }

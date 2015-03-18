@@ -3,13 +3,17 @@
  */
 package cz.cuni.mff.d3s.jdeeco.gossip.strategy;
 
+import java.util.Arrays;
+import java.util.List;
+
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
-import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
+import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
+import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
-import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageHeader;
 import cz.cuni.mff.d3s.jdeeco.gossip.PushHeadersPayload;
+import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy;
@@ -18,19 +22,11 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class MessageUpdateStrategy implements L2Strategy {
+public class MessageUpdateStrategy implements L2Strategy, DEECoPlugin {
 
 	private MessageBuffer messageBuffer;
 	private CurrentTimeProvider timeProvider;
-	
-	/**
-	 * 
-	 */
-	public MessageUpdateStrategy(RuntimeFramework runtime, GossipPlugin gossip) {
-		this.messageBuffer = gossip.getMessageBuffer();
-		this.timeProvider = runtime.getScheduler().getTimer();
-	}
-	
+		
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy#processL2Packet(cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet)
 	 */
@@ -57,6 +53,25 @@ public class MessageUpdateStrategy implements L2Strategy {
 				messageBuffer.globalUpdate(header.id, header.timestamp);
 			}
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#getDependencies()
+	 */
+	@Override
+	public List<Class<? extends DEECoPlugin>> getDependencies() {
+		return Arrays.asList(Network.class, MessageBuffer.class);
+	}
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#init(cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)
+	 */
+	@Override
+	public void init(DEECoContainer container) {
+		this.timeProvider = container.getRuntimeFramework().getScheduler().getTimer();
+		this.messageBuffer = container.getPluginInstance(MessageBuffer.class);
+		
+		// register L2 strategy
+		container.getPluginInstance(Network.class).getL2().registerL2Strategy(this);
 	}
 
 }

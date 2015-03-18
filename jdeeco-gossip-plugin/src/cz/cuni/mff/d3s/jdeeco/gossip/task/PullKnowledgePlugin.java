@@ -1,13 +1,15 @@
 package cz.cuni.mff.d3s.jdeeco.gossip.task;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
-import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
+import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
+import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
 import cz.cuni.mff.d3s.deeco.task.CustomStepTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
-import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.PullKnowledgePayload;
@@ -18,20 +20,13 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
 import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
 import cz.cuni.mff.d3s.jdeeco.network.l2.PacketHeader;
 
-public class PullKnowledgeTaskListener implements TimerTaskListener {
+public class PullKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 
 	private MessageBuffer messageBuffer;
 	private Scheduler scheduler;
 	private Layer2 networkLayer;
 	private int period;
-	
-	public PullKnowledgeTaskListener(RuntimeFramework runtime, Network network, GossipPlugin gossip) {
-		this.messageBuffer = gossip.getMessageBuffer();
-		this.scheduler = runtime.getScheduler();
-		this.networkLayer = network.getL2();
-		this.period = GossipProperties.getKnowledgePullPeriod();
-	}
-	
+		
 	@Override
 	public void at(long time, Object triger) {
 		
@@ -52,6 +47,25 @@ public class PullKnowledgeTaskListener implements TimerTaskListener {
 	@Override
 	public TimerTask getInitialTask(Scheduler scheduler) {
 		return new CustomStepTask(scheduler, this, period);
+	}
+
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#getDependencies()
+	 */
+	@Override
+	public List<Class<? extends DEECoPlugin>> getDependencies() {
+		return Arrays.asList(Network.class, MessageBuffer.class);
+	}
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#init(cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)
+	 */
+	@Override
+	public void init(DEECoContainer container) {
+		this.scheduler = container.getRuntimeFramework().getScheduler();
+		this.networkLayer = container.getPluginInstance(Network.class).getL2();
+		this.messageBuffer = container.getPluginInstance(MessageBuffer.class);
+		
+		this.period = GossipProperties.getKnowledgePullPeriod();
 	}
 
 }
