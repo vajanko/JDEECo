@@ -36,11 +36,6 @@ public class KnowledgeProvider implements DEECoPlugin {
 	private String nodeId;
 	private final List<KnowledgePath> emptyPath = new LinkedList<KnowledgePath>();
 	
-	public KnowledgeProvider() {
-		// initialise empty knowledge path
-		RuntimeMetadataFactory factory = RuntimeMetadataFactoryExt.eINSTANCE;
-		emptyPath.add(factory.createKnowledgePath());
-	}
 	/**
 	 * @return Unique identifier of current DEECo node as a {@code String}
 	 */
@@ -136,6 +131,10 @@ public class KnowledgeProvider implements DEECoPlugin {
 		this.timeProvider = runtime.getScheduler().getTimer();
 		
 		this.nodeId = String.valueOf(container.getId());
+		
+		// initialise empty knowledge path
+		RuntimeMetadataFactory factory = RuntimeMetadataFactoryExt.eINSTANCE;
+		emptyPath.add(factory.createKnowledgePath());
 	}
 
 	
