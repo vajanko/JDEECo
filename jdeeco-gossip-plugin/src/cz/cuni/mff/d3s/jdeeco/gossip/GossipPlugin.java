@@ -17,7 +17,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.strategy.GossipRebroadcastStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.MessageUpdateStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.task.PullKnowledgeTaskListener;
 import cz.cuni.mff.d3s.jdeeco.gossip.task.PushHeadersTaskListener;
-import cz.cuni.mff.d3s.jdeeco.gossip.task.PushKnowledgeTaskListener;
+import cz.cuni.mff.d3s.jdeeco.gossip.task.PushKnowledgePlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
 import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
@@ -47,7 +47,7 @@ public class GossipPlugin implements DEECoPlugin {
 	 */
 	@Override
 	public List<Class<? extends DEECoPlugin>> getDependencies() {
-		return Arrays.asList(Network.class);
+		return Arrays.asList(Network.class, PushKnowledgePlugin.class);
 	}
 
 	/* (non-Javadoc)
@@ -77,7 +77,7 @@ public class GossipPlugin implements DEECoPlugin {
 		// these parameters can be then changed at runtime by the adaptable protocol
 	
 		// run PUSH knowledge gossip task
-		PushKnowledgeTaskListener pushListener = new PushKnowledgeTaskListener(runtime, network, this);
+		PushKnowledgePlugin pushListener = container.getPluginInstance(PushKnowledgePlugin.class); 
 		Task publishTask = new CustomStepTask(scheduler, pushListener);
 		scheduler.addTask(publishTask);
 		
