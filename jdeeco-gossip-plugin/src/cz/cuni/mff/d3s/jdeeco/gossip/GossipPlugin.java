@@ -6,7 +6,6 @@ package cz.cuni.mff.d3s.jdeeco.gossip;
 import java.util.Arrays;
 import java.util.List;
 
-import cz.cuni.mff.d3s.deeco.network.KnowledgeDataManager;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
@@ -16,7 +15,7 @@ import cz.cuni.mff.d3s.deeco.task.Task;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.GossipRebroadcastStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.MessageUpdateStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.task.PullKnowledgeTaskListener;
-import cz.cuni.mff.d3s.jdeeco.gossip.task.PushHeadersTaskListener;
+import cz.cuni.mff.d3s.jdeeco.gossip.task.PushHeadersPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.task.PushKnowledgePlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
@@ -47,7 +46,7 @@ public class GossipPlugin implements DEECoPlugin {
 	 */
 	@Override
 	public List<Class<? extends DEECoPlugin>> getDependencies() {
-		return Arrays.asList(Network.class, PushKnowledgePlugin.class);
+		return Arrays.asList(Network.class, PushKnowledgePlugin.class, PushHeadersPlugin.class);
 	}
 
 	/* (non-Javadoc)
@@ -82,7 +81,7 @@ public class GossipPlugin implements DEECoPlugin {
 		scheduler.addTask(publishTask);
 		
 		// run PUSH message headers gossip task
-		PushHeadersTaskListener pushHeadersListener = new PushHeadersTaskListener(runtime, network, this);
+		PushHeadersPlugin pushHeadersListener = container.getPluginInstance(PushHeadersPlugin.class); 
 		Task pushHeadersTask = new CustomStepTask(scheduler, pushHeadersListener);
 		scheduler.addTask(pushHeadersTask);
 		

@@ -11,6 +11,9 @@ import cz.cuni.mff.d3s.deeco.timer.DiscreteEventTimer;
 import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
+import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
+import cz.cuni.mff.d3s.jdeeco.gossip.task.PushHeadersPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.task.PushKnowledgePlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.device.BroadcastLoopback;
 
@@ -27,6 +30,9 @@ public class Launcher {
 		realm.addPlugin(Network.class);
 		realm.addPlugin(GossipPlugin.class);
 		realm.addPlugin(KnowledgeProvider.class);
+		realm.addPlugin(MessageBuffer.class);
+		realm.addPlugin(PushKnowledgePlugin.class);
+		realm.addPlugin(PushHeadersPlugin.class);
 
 		/* create first deeco node */
 		DEECoNode deeco1 = realm.createNode(1);

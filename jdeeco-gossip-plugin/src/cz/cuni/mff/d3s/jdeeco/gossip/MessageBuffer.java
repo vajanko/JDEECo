@@ -7,14 +7,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
+import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 
 /**
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class MessageBuffer {
+public class MessageBuffer implements DEECoPlugin {
 	/**
 	 * A collection of message IDs and information about time of message received
 	 * locally and globally by any node in the network.
@@ -146,5 +150,20 @@ public class MessageBuffer {
 			this.LocalUpdate = localUpdate;
 			this.GlobalUpdate = globalUpdate;
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#getDependencies()
+	 */
+	@Override
+	public List<Class<? extends DEECoPlugin>> getDependencies() {
+		return new ArrayList<Class<? extends DEECoPlugin>>();
+	}
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#init(cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)
+	 */
+	@Override
+	public void init(DEECoContainer container) {
+		// nothing to initialise
 	}
 }
