@@ -30,4 +30,9 @@ public class PushHeadersPayload implements Serializable {
 	public PushHeadersPayload(Collection<MessageHeader> messageHeaders) {
 		this.headers = new ArrayList<MessageHeader>(messageHeaders);
 	}
+	
+	@Override
+	public String toString() {
+		return headers.toString();
+	}
 }
