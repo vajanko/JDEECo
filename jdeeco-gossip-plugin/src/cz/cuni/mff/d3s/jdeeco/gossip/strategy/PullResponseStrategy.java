@@ -52,8 +52,6 @@ public class PullResponseStrategy implements L2Strategy, DEECoPlugin {
 		ArrayList<String> missingMessages = new ArrayList<String>();
 		long time = timeProvider.getCurrentMilliseconds();
 		
-		ConsoleLog.printRequest(nodeId, time, MsgType.PL, ActType.RECV, pullRequest.getMessages());
-		
 		for (String id : pullRequest.getMessages()) {
 			
 			// check whether message requested by the PULL is present on current node
