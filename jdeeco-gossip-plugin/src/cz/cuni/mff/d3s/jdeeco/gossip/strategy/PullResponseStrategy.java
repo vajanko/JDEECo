@@ -11,12 +11,9 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
-import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.PullKnowledgePayload;
-import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog.ActType;
-import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog.MsgType;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.address.MANETBroadcastAddress;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
@@ -35,7 +32,6 @@ public class PullResponseStrategy implements L2Strategy, DEECoPlugin {
 	private KnowledgeProvider knowledgeProvider;
 	private MessageBuffer messageBuffer;
 	private CurrentTimeProvider timeProvider;
-	private int nodeId;
 	
 	
 	/* (non-Javadoc)
@@ -61,7 +57,6 @@ public class PullResponseStrategy implements L2Strategy, DEECoPlugin {
 				PacketHeader hdr = new PacketHeader(L2PacketType.KNOWLEDGE);
 				L2Packet pck = new L2Packet(hdr, kd);
 				
-				ConsoleLog.printRequest(nodeId, time, MsgType.KN, ActType.SEND, kd.getMetaData().componentId);
 				networkLayer.sendL2Packet(pck, MANETBroadcastAddress.BROADCAST);
 			}
 			else {
@@ -96,7 +91,7 @@ public class PullResponseStrategy implements L2Strategy, DEECoPlugin {
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
 		this.messageBuffer = container.getPluginInstance(MessageBuffer.class);
 		this.timeProvider = container.getRuntimeFramework().getScheduler().getTimer();
-		this.nodeId = container.getId();
+
 		// register L2 strategy
 		this.networkLayer.registerL2Strategy(this);
 	}

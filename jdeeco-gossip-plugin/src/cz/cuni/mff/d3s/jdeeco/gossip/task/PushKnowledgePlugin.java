@@ -13,11 +13,8 @@ import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
 import cz.cuni.mff.d3s.deeco.task.CustomStepTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
-import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
-import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog.ActType;
-import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog.MsgType;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.address.MANETBroadcastAddress;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
@@ -37,7 +34,6 @@ public class PushKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 	private Layer2 networkLayer;
 	private Scheduler scheduler;
 	private int period;
-	private int nodeId;
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.task.TimerTaskListener#at(long, java.lang.Object)
@@ -48,7 +44,6 @@ public class PushKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 			PacketHeader header = new PacketHeader(L2PacketType.KNOWLEDGE);
 			L2Packet packet = new L2Packet(header, data);
 			
-			ConsoleLog.printRequest(nodeId, time, MsgType.KN, ActType.SEND, data.getMetaData().componentId);
 			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 		}
 		
@@ -81,7 +76,6 @@ public class PushKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 		this.knowledgeProvider = container.getPluginInstance(KnowledgeProvider.class);
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
 		this.scheduler = container.getRuntimeFramework().getScheduler();
-		this.nodeId = container.getId();
 		
 		this.period = GossipProperties.getKnowledgePushPeriod();
 		
