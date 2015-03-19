@@ -84,6 +84,9 @@ public class PushKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 		this.nodeId = container.getId();
 		
 		this.period = GossipProperties.getKnowledgePushPeriod();
+		
+		// run PUSH knowledge gossip task 
+		scheduler.addTask(new CustomStepTask(scheduler, this));
 	}
 
 }

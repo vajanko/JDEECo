@@ -85,6 +85,9 @@ public class PushHeadersPlugin implements TimerTaskListener, DEECoPlugin {
 		this.nodeId = container.getId();
 		
 		this.period = GossipProperties.getHeadersPushPeriod();
+		
+		// run PUSH message headers gossip task
+		scheduler.addTask(new CustomStepTask(scheduler, this));
 	}
 
 }

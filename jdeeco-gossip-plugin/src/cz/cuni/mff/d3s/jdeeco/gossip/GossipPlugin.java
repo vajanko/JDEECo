@@ -8,9 +8,6 @@ import java.util.List;
 
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
-import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
-import cz.cuni.mff.d3s.deeco.task.CustomStepTask;
-import cz.cuni.mff.d3s.deeco.task.Task;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.GossipRebroadcastStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.MessageUpdateStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.task.PullKnowledgePlugin;
@@ -40,24 +37,7 @@ public class GossipPlugin implements DEECoPlugin {
 	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#init(cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)
 	 */
 	@Override
-	public void init(DEECoContainer container) {	
-		Scheduler scheduler = container.getRuntimeFramework().getScheduler();
-	
-		// run PUSH knowledge gossip task
-		PushKnowledgePlugin pushListener = container.getPluginInstance(PushKnowledgePlugin.class); 
-		Task publishTask = new CustomStepTask(scheduler, pushListener);
-		scheduler.addTask(publishTask);
-		
-		// run PUSH message headers gossip task
-		PushHeadersPlugin pushHeadersListener = container.getPluginInstance(PushHeadersPlugin.class); 
-		Task pushHeadersTask = new CustomStepTask(scheduler, pushHeadersListener);
-		scheduler.addTask(pushHeadersTask);
-		
-		// run PULL knowledge gossip task
-		PullKnowledgePlugin pullListener = container.getPluginInstance(PullKnowledgePlugin.class); 
-		Task pullTask = new CustomStepTask(scheduler, pullListener);
-		scheduler.addTask(pullTask);
-		
+	public void init(DEECoContainer container) {
 		// TODO: move these
 		// register marshalers for other types of data except knowledge
 		Network network = container.getPluginInstance(Network.class);
