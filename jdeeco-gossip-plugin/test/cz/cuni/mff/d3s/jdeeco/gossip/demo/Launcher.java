@@ -11,6 +11,7 @@ import cz.cuni.mff.d3s.deeco.timer.DiscreteEventTimer;
 import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
 import cz.cuni.mff.d3s.jdeeco.gossip.BroadcastDevice;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.GossipRebroadcastStrategy;
@@ -27,6 +28,9 @@ import cz.cuni.mff.d3s.jdeeco.network.Network;
  */
 public class Launcher {
 	public static void main(String[] args) throws DEECoException, AnnotationProcessorException, InstantiationException, IllegalAccessException {
+		
+		GossipProperties.initialize();
+		
 		/* create main application container */
 		SimulationTimer simulationTimer = new DiscreteEventTimer();
 		DEECoSimulation realm = new DEECoSimulation(simulationTimer);

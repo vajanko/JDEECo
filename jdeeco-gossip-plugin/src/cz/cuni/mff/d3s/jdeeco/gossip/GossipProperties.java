@@ -3,6 +3,9 @@
  */
 package cz.cuni.mff.d3s.jdeeco.gossip;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
  * For correct behaviour these values should be constrained as follows:
  * HEADERS_PUSH_PERIOD < HEADERS_PUSH_TIMEOUT < KNOWLEDGE_PULL_TIMEOUT
@@ -11,11 +14,35 @@ package cz.cuni.mff.d3s.jdeeco.gossip;
  */
 public final class GossipProperties {
 	
+	/**
+	 * Loads user properties specified by the user in the config.properties file.
+	 */
+	public static void initialize() {
+		InputStream input = null;
+		
+		try {
+			input = GossipProperties.class.getClassLoader().getResourceAsStream("config.properties");
+			
+			System.getProperties().load(input);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 	public static final String KNOWLEDGE_PUSH_PERIOD = "deeco.push.knowledge_period";
 	/**
 	 * Default value of knowledge publishing period in milliseconds.
 	 */
-	public static final int KNOWLEDGE_PUSH_PERIOD_DEFAULT = 20000;
+	public static final int KNOWLEDGE_PUSH_PERIOD_DEFAULT = 1000;
 	/**
 	 * See {@link #KNOWLEDGE_PUSH_PERIOD_DEFAULT} for default value.
 	 * @return Knowledge publishing period in milliseconds.
@@ -25,7 +52,7 @@ public final class GossipProperties {
 	}
 	
 	public static final String KONWLEDGE_PUSH_PROBABILITY = "deeco.push.knowledge_probability";
-	public static final double KONWLEDGE_PUSH_PROBABILITY_DEFAULT = 0.0;
+	public static final double KONWLEDGE_PUSH_PROBABILITY_DEFAULT = 0.5;
 	/**
 	 * @return Probability of knowledge rebroadcast when received by current node.
 	 */
@@ -34,7 +61,7 @@ public final class GossipProperties {
 	}
 	
 	public static final String HEADERS_PUSH_PERIOD = "deeco.push.headers_period";
-	public static final int HEADERS_PUSH_PERIOD_DEFAULT = 1000;
+	public static final int HEADERS_PUSH_PERIOD_DEFAULT = 2000;
 	/**
 	 * 
 	 * @return Message headers publishing period in milliseconds.
@@ -60,7 +87,7 @@ public final class GossipProperties {
 	}*/
 	
 	public static final String KNOWLEDGE_PULL_PERIOD = "deeco.pull.knowledge_period";
-	public static final int KNOWLEDGE_PULL_PERIOD_DEFAULT = 2000;
+	public static final int KNOWLEDGE_PULL_PERIOD_DEFAULT = 4000;
 	/**
 	 * 
 	 * @return Knowledge pulling period in milliseconds.
@@ -70,7 +97,7 @@ public final class GossipProperties {
 	}
 	
 	public static final String KNOWLEDGE_PULL_TIMEOUT = "deeco.pull.knowledge_timeout";
-	public static final int KNOWLEDGE_PULL_TIMEOUT_DEFAULT = 3000;
+	public static final int KNOWLEDGE_PULL_TIMEOUT_DEFAULT = 4000;
 	/**
 	 * See {@link #KNOWLEDGE_PULL_TIMEOUT_DEFAULT} for default value.
 	 * @return Time after which knowledge is considered to be outdated and PULL request
