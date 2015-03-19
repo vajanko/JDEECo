@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cz.cuni.mff.d3s.jdeeco.gossip.strategy;
+package cz.cuni.mff.d3s.jdeeco.gossip;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,29 +9,30 @@ import java.util.List;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
-import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog;
 import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog.ActType;
 import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog.MsgType;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
+import cz.cuni.mff.d3s.jdeeco.network.address.Address;
+import cz.cuni.mff.d3s.jdeeco.network.l1.L2PacketSender;
+import cz.cuni.mff.d3s.jdeeco.network.l1.Layer1;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
-import cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy;
-import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
 
 /**
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class PacketLoggerStrategy implements L2Strategy, DEECoPlugin {
+public class L2LogPacketSender implements L2PacketSender, DEECoPlugin {
 
+	private Layer1 layer1;
 	private CurrentTimeProvider timeProvider;
 	private int nodeId;
 	
 	/* (non-Javadoc)
-	 * @see cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy#processL2Packet(cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet)
+	 * @see cz.cuni.mff.d3s.jdeeco.network.l1.L2PacketSender#sendL2Packet(cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet, cz.cuni.mff.d3s.jdeeco.network.address.Address)
 	 */
 	@Override
-	public void processL2Packet(L2Packet packet) {
+	public boolean sendL2Packet(L2Packet packet, Address address) {
 		MsgType msgType = MsgType.KN;
 		Object data = packet.getObject();
 		
@@ -46,7 +47,11 @@ public class PacketLoggerStrategy implements L2Strategy, DEECoPlugin {
 		}
 		
 		long time = timeProvider.getCurrentMilliseconds();
-		ConsoleLog.printRequest(nodeId, time, msgType, ActType.RECV, data);
+		ConsoleLog.printRequest(nodeId, time, msgType, ActType.SEND, data);
+		
+		// just pass the packet to the underlying layer as would be done
+		// previously by L2 layer
+		return layer1.sendL2Packet(packet, address);
 	}
 	
 	/* (non-Javadoc)
@@ -64,11 +69,12 @@ public class PacketLoggerStrategy implements L2Strategy, DEECoPlugin {
 		this.timeProvider = container.getRuntimeFramework().getScheduler().getTimer();
 		this.nodeId = container.getId();
 		
-		// register L2 strategy
-		Layer2 networkLayer = container.getPluginInstance(Network.class).getL2();
-		networkLayer.registerL2Strategy(this);
+		Network net = container.getPluginInstance(Network.class);
+		
+		// replace standard sender of layer 2
+		net.getL2().setL2PacketSender(this);
+		
+		// but the underlying layer 1 will be used
+		this.layer1 = net.getL1();
 	}
-
-	
-
 }

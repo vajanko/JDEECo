@@ -13,6 +13,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.BroadcastDevice;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
+import cz.cuni.mff.d3s.jdeeco.gossip.L2LogPacketSender;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.GossipRebroadcastStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.MessageUpdateStrategy;
@@ -39,6 +40,8 @@ public class Launcher {
 		realm.addPlugin(Network.class);
 		// only one instance for all nodes
 		BroadcastDevice broadcast = new BroadcastDevice();
+		realm.addPlugin(broadcast);
+		realm.addPlugin(L2LogPacketSender.class);
 		
 		realm.addPlugin(GossipPlugin.class);
 		realm.addPlugin(KnowledgeProvider.class);
@@ -53,13 +56,13 @@ public class Launcher {
 		realm.addPlugin(PullResponseStrategy.class);
 
 		/* create first deeco node */
-		DEECoNode deeco1 = realm.createNode(1, broadcast);
+		DEECoNode deeco1 = realm.createNode(1);
 		/* deploy components and ensembles */
 		deeco1.deployComponent(new DemoComponent("D1"));
 		deeco1.deployEnsemble(DemoEnsemble.class);
 
 		/* create second deeco node */
-		DEECoNode deeco2 = realm.createNode(2, broadcast);
+		DEECoNode deeco2 = realm.createNode(2);
 		/* deploy components and ensembles */
 		deeco2.deployComponent(new DemoComponent("D2"));
 		deeco2.deployEnsemble(DemoEnsemble.class);
