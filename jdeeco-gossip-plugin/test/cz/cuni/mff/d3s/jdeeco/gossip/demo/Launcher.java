@@ -9,6 +9,7 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoException;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoNode;
 import cz.cuni.mff.d3s.deeco.timer.DiscreteEventTimer;
 import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
+import cz.cuni.mff.d3s.jdeeco.gossip.BroadcastDevice;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
@@ -19,7 +20,6 @@ import cz.cuni.mff.d3s.jdeeco.gossip.task.PullKnowledgePlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.task.PushHeadersPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.task.PushKnowledgePlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
-import cz.cuni.mff.d3s.jdeeco.network.device.BroadcastLoopback;
 
 /**
  * 
@@ -33,7 +33,7 @@ public class Launcher {
 		
 		realm.addPlugin(Network.class);
 		// only one instance for all nodes
-		BroadcastLoopback loopback = new BroadcastLoopback();
+		BroadcastDevice broadcast = new BroadcastDevice();
 		
 		realm.addPlugin(GossipPlugin.class);
 		realm.addPlugin(KnowledgeProvider.class);
@@ -47,13 +47,13 @@ public class Launcher {
 		realm.addPlugin(PullResponseStrategy.class);
 
 		/* create first deeco node */
-		DEECoNode deeco1 = realm.createNode(1, loopback);
+		DEECoNode deeco1 = realm.createNode(1, broadcast);
 		/* deploy components and ensembles */
 		deeco1.deployComponent(new DemoComponent("D1"));
 		deeco1.deployEnsemble(DemoEnsemble.class);
 
 		/* create second deeco node */
-		DEECoNode deeco2 = realm.createNode(2, loopback);
+		DEECoNode deeco2 = realm.createNode(2, broadcast);
 		/* deploy components and ensembles */
 		deeco2.deployComponent(new DemoComponent("D2"));
 		deeco2.deployEnsemble(DemoEnsemble.class);
