@@ -15,6 +15,8 @@ import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.PullKnowledgePayload;
+import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog.ActType;
+import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog.MsgType;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.address.MANETBroadcastAddress;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
@@ -48,9 +50,11 @@ public class PullResponseStrategy implements L2Strategy, DEECoPlugin {
 		
 		PullKnowledgePayload pullRequest = (PullKnowledgePayload)packet.getObject();
 		ArrayList<String> missingMessages = new ArrayList<String>();
+		long time = timeProvider.getCurrentMilliseconds();
+		
+		ConsoleLog.printRequest(nodeId, time, MsgType.PL, ActType.RECV, pullRequest.getMessages());
 		
 		for (String id : pullRequest.getMessages()) {
-			long time = timeProvider.getCurrentMilliseconds();
 			
 			// check whether message requested by the PULL is present on current node
 			if (messageBuffer.hasRecentMessage(id, time)) {
@@ -59,12 +63,12 @@ public class PullResponseStrategy implements L2Strategy, DEECoPlugin {
 				PacketHeader hdr = new PacketHeader(L2PacketType.KNOWLEDGE);
 				L2Packet pck = new L2Packet(hdr, kd);
 				
-				ConsoleLog.printRequest(nodeId, time, "KN", "PUSH", kd.getMetaData().componentId);
+				ConsoleLog.printRequest(nodeId, time, MsgType.KN, ActType.SEND, kd.getMetaData().componentId);
 				networkLayer.sendL2Packet(pck, MANETBroadcastAddress.BROADCAST);
 			}
 			else {
 				// may be there is the required message but too old
-				missingMessages.add(id);
+				//missingMessages.add(id);
 			}
 		}
 		

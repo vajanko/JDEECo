@@ -18,6 +18,8 @@ import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageHeader;
 import cz.cuni.mff.d3s.jdeeco.gossip.PushHeadersPayload;
+import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog.ActType;
+import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog.MsgType;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.address.MANETBroadcastAddress;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
@@ -50,7 +52,7 @@ public class PushHeadersPlugin implements TimerTaskListener, DEECoPlugin {
 			PushHeadersPayload data = new PushHeadersPayload(headers);
 			L2Packet packet = new L2Packet(header, data);
 
-			ConsoleLog.printRequest(nodeId, time, "HD", "PUSH", headers);
+			ConsoleLog.printRequest(nodeId, time, MsgType.HD, ActType.SEND, headers);
 			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 		}
 		

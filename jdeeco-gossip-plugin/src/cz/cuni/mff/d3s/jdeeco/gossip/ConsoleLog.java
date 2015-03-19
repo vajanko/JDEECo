@@ -9,7 +9,19 @@ package cz.cuni.mff.d3s.jdeeco.gossip;
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
 public class ConsoleLog {
-	public static void printRequest(int node, long time, String msgType, String actionType, Object data) {
-		System.out.println(String.format("[%d] %4d %s %s %s", node, time, msgType, actionType, data));
+	public enum MsgType {
+		KN,
+		HD,
+		PL
+	}
+	public enum ActType {
+		SEND,
+		RECV
+	}
+	
+	public static void printRequest(int node, long time, MsgType msgType, ActType actType, Object data) {
+		System.out.println(String.format("[%d] %4d %s %s %s", node, time, msgType, actType, data));
 	}
 }
+
+

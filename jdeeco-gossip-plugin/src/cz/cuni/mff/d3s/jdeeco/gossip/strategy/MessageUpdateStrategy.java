@@ -11,6 +11,8 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog;
+import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog.ActType;
+import cz.cuni.mff.d3s.jdeeco.gossip.ConsoleLog.MsgType;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageHeader;
@@ -59,7 +61,7 @@ public class MessageUpdateStrategy implements L2Strategy, DEECoPlugin {
 			PushHeadersPayload messages = (PushHeadersPayload)packet.getObject();
 			
 			long time = timeProvider.getCurrentMilliseconds();
-			ConsoleLog.printRequest(nodeId, time, "HD", "RECV", messages.getHeaders());
+			ConsoleLog.printRequest(nodeId, time, MsgType.HD, ActType.RECV, messages.getHeaders());
 			
 			for (MessageHeader header : messages.getHeaders()) {
 				if (!knowledgeProvider.hasLocal(header.id)) {
