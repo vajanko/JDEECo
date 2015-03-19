@@ -14,6 +14,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.GossipRebroadcastStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.MessageUpdateStrategy;
+import cz.cuni.mff.d3s.jdeeco.gossip.strategy.PullResponseStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.task.PullKnowledgePlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.task.PushHeadersPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.task.PushKnowledgePlugin;
@@ -43,6 +44,7 @@ public class Launcher {
 		
 		realm.addPlugin(MessageUpdateStrategy.class);
 		realm.addPlugin(GossipRebroadcastStrategy.class);
+		realm.addPlugin(PullResponseStrategy.class);
 
 		/* create first deeco node */
 		DEECoNode deeco1 = realm.createNode(1, loopback);

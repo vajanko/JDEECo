@@ -4,6 +4,7 @@
 package cz.cuni.mff.d3s.jdeeco.gossip;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +32,7 @@ import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
  */
 public class KnowledgeProvider implements DEECoPlugin {
 	
+	private MessageBuffer messageBuffer;
 	private KnowledgeManagerContainer kmContainer;
 	private CurrentTimeProvider timeProvider;
 	private String nodeId;
@@ -47,14 +49,14 @@ public class KnowledgeProvider implements DEECoPlugin {
 	 * @return Copy of local knowledge data prepared for network transfer.
 	 */
 	public Collection<KnowledgeData> getLocalKnowledgeData() {
-		return getKnowledgeDataCopy(kmContainer.getLocals());
+		return getKnowledgeDataCopy(kmContainer.getLocals(), true);
 	}
 	/**
 	 * 
 	 * @return Copy of replica knowledge data prepared for network transfer.
 	 */
 	public Collection<KnowledgeData> getReplicaKnowledgeData() {
-		return getKnowledgeDataCopy(kmContainer.getReplicas());
+		return getKnowledgeDataCopy(kmContainer.getReplicas(), false);
 	}
 	/**
 	 * Create a copy of given knowledge data prepared for network transfer. This
@@ -63,13 +65,13 @@ public class KnowledgeProvider implements DEECoPlugin {
 	 * @param knowledgeManagers A list of {@link KnowledgeManager}s to copy data from.
 	 * @return Copy of given knowledge data prepared for network transfer.
 	 */
-	private Collection<KnowledgeData> getKnowledgeDataCopy(Collection<KnowledgeManager> knowledgeManagers) {
+	private Collection<KnowledgeData> getKnowledgeDataCopy(Collection<KnowledgeManager> knowledgeManagers, boolean isLocalKnowledge) {
 		Collection<KnowledgeData> result = new ArrayList<KnowledgeData>();
 		
 		for (KnowledgeManager km : knowledgeManagers) {
 			try {
 				
-				KnowledgeData kd = prepareLocalKnowledgeData(km); 
+				KnowledgeData kd = prepareKnowledgeData(km, isLocalKnowledge); 
 				result.add(kd);
 				
 			} catch (Exception e) {
@@ -80,49 +82,73 @@ public class KnowledgeProvider implements DEECoPlugin {
 		return result;
 	}
 	
-	public KnowledgeData getKnowledgeByComponentId(String id) {
+	public KnowledgeData getComponentKnowledge(String id) {
 		try {
-			KnowledgeManager km = kmContainer.getLocal(id);
-			if (km != null)
-				return prepareLocalKnowledgeData(km);
-			
-			km = kmContainer.getReplica(null, id);
-			if (km != null)
-				return prepareLocalKnowledgeData(km);
-		
+			if (kmContainer.hasLocal(id))
+				return prepareKnowledgeData(kmContainer.getLocal(id), true);
+			else if (kmContainer.hasReplica(id))
+				return prepareKnowledgeData(kmContainer.getReplica(null, id), true);
 		} catch (KnowledgeNotFoundException e) { }
 		
+		// null if KnowledgeManager or Knowledge not found
 		return null;
 	}
+	/**
+	 * Gets value indicating whether there is knowledge data from component identified
+	 * by given component ID which comes from current (local) node component instance.
+	 * 
+	 * @param componentId Unique component identifier.
+	 * @return True if there is a local knowledge data otherwise false.
+	 */
 	public boolean hasLocal(String componentId) {
 		return kmContainer.hasLocal(componentId);
 	}
 	
-	// NOTE: Taken from DefaultKnowledgeDataManager
-	private KnowledgeData prepareLocalKnowledgeData(KnowledgeManager km) throws KnowledgeNotFoundException {
-		String componentId = km.getId();
+	
+	private KnowledgeData prepareKnowledgeData(KnowledgeManager km, boolean isLocalKnowledge) throws KnowledgeNotFoundException {
 		// TODO: version is implemented by current time
+		// TODO: We are ignoring security, and host
+		
+		String componentId = km.getId();
 		long versionId = timeProvider.getCurrentMilliseconds();
 		String sender = getNodeId();
-		long createdAt = timeProvider.getCurrentMilliseconds();
+		long createdAt = 0;
+		if (isLocalKnowledge) {
+			// local knowledge is always up-to-date therefore we use current time
+			createdAt = timeProvider.getCurrentMilliseconds();
+		}
+		else {
+			// get time when replica knowledge data was last time received
+			createdAt = messageBuffer.getLastLocalUpdate(componentId);
+		}
 		int hopCount = 1;
+		
 		KnowledgeMetaData metadata = new KnowledgeMetaData(componentId, versionId, sender, createdAt, hopCount);
 		
 		ValueSet toFilter = km.get(emptyPath);
-		ValueSet knowledge = filterNonSerializablePaths(toFilter, km);
-		// TODO: We are ignoring security, and host
+		ValueSet knowledge = getTransferableKnowledge(toFilter, km);
+		
 		ValueSet security = new ValueSet();
 		ValueSet authors = new ValueSet();
 		
 		KnowledgeData data = new KnowledgeData(knowledge, security, authors, metadata);
 		return data;
 	}
-	// NOTE: Taken from DefaultKnowledgeDataManager
-	private static ValueSet filterNonSerializablePaths(ValueSet toFilter, KnowledgeManager km) {
+	
+	/**
+	 * Gets knowledge that can be send via network (is not @Local annotated)
+	 * 
+	 * @param source
+	 *            Knowledge values to be stripped of non-transferable knowledge
+	 * @param knowledgeManager
+	 *            Knowledge manager containing the source knowledge
+	 * @return Source knowledge stripped of @Local annotated knowledge
+	 */
+	private static ValueSet getTransferableKnowledge(ValueSet source, KnowledgeManager knowledgeManager) {
 		ValueSet result = new ValueSet();
-		for (KnowledgePath kp : toFilter.getKnowledgePaths()) {
-			if (!km.isLocal(kp)) {
-				result.setValue(kp, toFilter.getValue(kp));
+		for (KnowledgePath kp : source.getKnowledgePaths()) {
+			if (!knowledgeManager.isLocal(kp)) {
+				result.setValue(kp, source.getValue(kp));
 			}
 		}
 		return result;
@@ -134,7 +160,7 @@ public class KnowledgeProvider implements DEECoPlugin {
 	 */
 	@Override
 	public List<Class<? extends DEECoPlugin>> getDependencies() {
-		return new ArrayList<Class<? extends DEECoPlugin>>();
+		return Arrays.asList(MessageBuffer.class);
 	}
 
 	/* (non-Javadoc)
@@ -142,9 +168,8 @@ public class KnowledgeProvider implements DEECoPlugin {
 	 */
 	@Override
 	public void init(DEECoContainer container) {
-		// no dependencies other than runtime framework
+		this.messageBuffer = container.getPluginInstance(MessageBuffer.class);
 		RuntimeFramework runtime = container.getRuntimeFramework();
-		
 		this.kmContainer = runtime.getContainer();
 		this.timeProvider = runtime.getScheduler().getTimer();
 		

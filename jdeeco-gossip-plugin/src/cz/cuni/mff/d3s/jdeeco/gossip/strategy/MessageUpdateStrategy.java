@@ -44,10 +44,12 @@ public class MessageUpdateStrategy implements L2Strategy, DEECoPlugin {
 			// Remember also the time so that we can recognise when some component
 			// is lost and does not participate in the communication any more.
 			String id = kd.getMetaData().componentId;
-			long time = timeProvider.getCurrentMilliseconds();
+			long time = kd.getMetaData().createdAt;
+			//long time = timeProvider.getCurrentMilliseconds();
 
 			if (!knowledgeProvider.hasLocal(id)) {
-				System.out.println(String.format("[%d] %4d KN RECV [%s]", nodeId, time, id));
+				// exclude messages received from current node
+				System.out.println(String.format("[%d] %4d KN RECV [%s]", nodeId, timeProvider.getCurrentMilliseconds(), id));
 				messageBuffer.localUpdate(id, time);
 			}
 		}

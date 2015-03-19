@@ -36,6 +36,9 @@ public class MessageBuffer implements DEECoPlugin {
 	 */
 	private int localTimeout;
 	
+	/**
+	 * Create a new instance of buffer for received messages with default timeouts.
+	 */
 	public MessageBuffer() {
 		this.localTimeout = GossipProperties.getKnowledgePullTimeout();
 		this.globalTimeout = GossipProperties.getComponentPullTimeout();
@@ -85,6 +88,27 @@ public class MessageBuffer implements DEECoPlugin {
 	}
 	
 	/**
+	 * Gets value indicating whether current node has a message with given ID
+	 * which is actual (not too old).
+	 * 
+	 * @param id Unique message identifier
+	 * @param time Current system or simulation time.
+	 * @return True if there is a recent message on the current node, otherwise false
+	 * (this includes also a case when there is no such a message at all).
+	 */
+	public boolean hasRecentMessage(String id, long time) {	
+		MessageInfo info = buffer.get(id);
+		
+		if (info == null)
+			return false;
+		
+		return (time - info.LocalUpdate < localTimeout);
+	}
+	public long getLastLocalUpdate(String id) {
+		return buffer.get(id).LocalUpdate;
+	}
+	
+	/**
 	 * Removes all timeout messages which weren't received by any node in the system for
 	 * a long time. 
 	 */
@@ -120,7 +144,13 @@ public class MessageBuffer implements DEECoPlugin {
 		
 		return result;
 	}
-	
+	/**
+	 * Retrieves a collection of messages know by current node at given time. Too old
+	 * messages are forgotten.
+	 * 
+	 * @param currentTime Current system or simulation time.
+	 * @return List of message headers received by current node.
+	 */
 	public Collection<MessageHeader> getKnownMessages(long currentTime) {
 		
 		// remove old messages - no need sent them to other nodes
@@ -133,7 +163,12 @@ public class MessageBuffer implements DEECoPlugin {
 		
 		return result;
 	}
-		
+	
+	/**
+	 * A helper structure for holding information about message receive times.
+	 * 
+	 * @author Ondrej Kov·Ë <info@vajanko.me>
+	 */
 	class MessageInfo {
 		/**
 		 * The last time when the message was received by current node.
