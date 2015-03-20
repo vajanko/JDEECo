@@ -40,7 +40,7 @@ public class L2LogPacketSender implements L2PacketSender, DEECoPlugin {
 		}
 		
 		long time = timeProvider.getCurrentMilliseconds();
-		System.out.println(String.format("[%d] %4d SEND %s %s", nodeId, time, msgType, data));
+		System.out.println(String.format("[%d];%4d;SEND;%s;%s", nodeId, time, msgType, data));
 	}
 	
 	/* (non-Javadoc)

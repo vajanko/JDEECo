@@ -38,7 +38,7 @@ public class PacketLoggerStrategy implements L2Strategy, DEECoPlugin {
 		}
 		
 		long time = timeProvider.getCurrentMilliseconds();
-		System.out.println(String.format("[%d] %4d RECV %s %s", nodeId, time, msgType, data));
+		System.out.println(String.format("[%d];%4d;RECV;%s;%s", nodeId, time, msgType, data));
 	}
 	
 	/* (non-Javadoc)
