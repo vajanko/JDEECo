@@ -19,6 +19,12 @@ import java.util.Map.Entry;
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
 public class ReceptionBuffer {
+	
+	/**
+	 * Minimal possible value of item reception.
+	 */
+	public static final long MINUS_INFINITE = Long.MIN_VALUE;
+	
 	/**
 	 * A collection of item IDs and associated information about item reception
 	 * by the current node and globally by nodes in the network.
@@ -77,7 +83,7 @@ public class ReceptionBuffer {
 	 */
 	public void receiveGlobal(String id, long time) {
 		if (!buffer.containsKey(id)) {
-			buffer.put(id, new ItemInfo(Long.MIN_VALUE,  time));
+			buffer.put(id, new ItemInfo(MINUS_INFINITE,  time));
 		}
 		else {
 			ItemInfo info = buffer.get(id);
@@ -85,6 +91,33 @@ public class ReceptionBuffer {
 				info.globalReception = time;
 		}
 	}
+	/**
+	 * Gets reception time of locally received item identified by given {@code id}
+	 * 
+	 * @param id Unique identifier of received item
+	 * @return System or simulation time of item received locally or {@link #MINUS_INFINITE}
+	 * if the item was never received locally.
+	 */
+	public long getLocalReceptionTime(String id) {
+		ItemInfo info = buffer.get(id);
+		if (info == null)
+			return MINUS_INFINITE;
+		return info.localReception;
+	}
+	/**
+	 * Gets reception time of globally received item identified by given {@code id}
+	 * 
+	 * @param id Unique identifier of received item
+	 * @return System or simulation time of item received globally or {@link #MINUS_INFINITE}
+	 * if the item was never received globally.
+	 */
+	public long getGlobalReceptionTime(String id) {
+		ItemInfo info = buffer.get(id);
+		if (info == null)
+			return MINUS_INFINITE;
+		return info.localReception;
+	}
+	
 	/**
 	 * Removes all items from the buffer which are globally expired at 
 	 * the time {@link currentTime}.

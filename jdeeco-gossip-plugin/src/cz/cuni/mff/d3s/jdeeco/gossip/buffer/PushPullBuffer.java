@@ -17,27 +17,30 @@ import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
  */
 public class PushPullBuffer implements DEECoPlugin {
 	
-	private ReceptionBuffer headers;
-	private ReceptionBuffer pulls;
+	private ReceptionBuffer push;
+	private ReceptionBuffer pull;
 	
 	public void notifyLocalPush(String componentId, long currentTime) {
-		headers.receiveLocal(componentId, currentTime);
+		push.receiveLocal(componentId, currentTime);
 	}
 	public void notifyGlobalPush(String componentId, long currentTime) {
-		headers.receiveGlobal(componentId, currentTime);
+		push.receiveGlobal(componentId, currentTime);
 	}
 	public Collection<ItemHeader> getRecentPushedMessages(long currentTime) {
-		return headers.getRecentItems(currentTime);
+		return push.getRecentItems(currentTime);
 	}
 	public Collection<ItemHeader> getObsoletePushedItems(long currentTime) {
-		return headers.getLocallyObsoleteItems(currentTime);
+		return push.getLocallyObsoleteItems(currentTime);
+	}
+	public long getLocalPushTime(String componentId) {
+		return push.getLocalReceptionTime(componentId);
 	}
 	
 	/*public void notifyLocalPull(String componentId, long currentTime) {
 		pulls.receiveLocal(componentId, currentTime);
 	}*/
 	public void notifyGlobalPull(String componentId, long currentTime) {
-		pulls.receiveGlobal(componentId, currentTime);
+		pull.receiveGlobal(componentId, currentTime);
 	}
 	/*public Collection<ItemHeader> getRecentPulledMessages() {
 		return null;
@@ -59,8 +62,8 @@ public class PushPullBuffer implements DEECoPlugin {
 		long localTimeout = GossipProperties.getKnowledgePullTimeout();
 		long globalTimeout = GossipProperties.getComponentPullTimeout();
 		
-		headers = new ReceptionBuffer(localTimeout, globalTimeout);
-		pulls = new ReceptionBuffer(localTimeout, globalTimeout);
+		push = new ReceptionBuffer(localTimeout, globalTimeout);
+		pull = new ReceptionBuffer(localTimeout, globalTimeout);
 	}
 
 }

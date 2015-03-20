@@ -120,8 +120,7 @@ public class KnowledgeProvider implements DEECoPlugin {
 		}
 		else {
 			// get time when replica knowledge data was last time received
-			// TODO: get time from the buffer
-			createdAt = 0;//messageBuffer.getLastLocalUpdate(componentId);
+			createdAt = messageBuffer.getLocalPushTime(componentId);
 		}
 		int hopCount = 1;
 		
