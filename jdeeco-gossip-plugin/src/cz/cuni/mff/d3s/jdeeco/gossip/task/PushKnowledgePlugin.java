@@ -11,7 +11,6 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
-import cz.cuni.mff.d3s.deeco.task.CustomStepTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
@@ -34,9 +33,7 @@ public class PushKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 
 	private KnowledgeProvider knowledgeProvider; 
 	private Layer2 networkLayer;
-	private Scheduler scheduler;
 	private MessageBuffer messageBuffer;
-	private int period;
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.task.TimerTaskListener#at(long, java.lang.Object)
@@ -54,8 +51,6 @@ public class PushKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 			KnowledgeMetaData meta = data.getMetaData();
 			messageBuffer.localUpdate(meta.componentId, meta.createdAt);
 		}
-		
-		scheduler.addTask(new CustomStepTask(scheduler, this, period));
 	}
 	
 	/* (non-Javadoc)
@@ -63,7 +58,7 @@ public class PushKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 	 */
 	@Override
 	public TimerTask getInitialTask(Scheduler scheduler) {
-		return new CustomStepTask(scheduler, this, period);
+		return null;
 	}
 
 	
@@ -83,13 +78,12 @@ public class PushKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 		// initialise dependencies
 		this.knowledgeProvider = container.getPluginInstance(KnowledgeProvider.class);
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
-		this.scheduler = container.getRuntimeFramework().getScheduler();
 		this.messageBuffer = container.getPluginInstance(MessageBuffer.class);
 		
-		this.period = GossipProperties.getKnowledgePushPeriod();
-		
 		// run PUSH knowledge gossip task 
-		scheduler.addTask(new CustomStepTask(scheduler, this));
+		Scheduler scheduler = container.getRuntimeFramework().getScheduler();
+		long period = GossipProperties.getKnowledgePushPeriod();
+		scheduler.addTask(new PeriodicTask(scheduler, this, period));
 	}
 
 }

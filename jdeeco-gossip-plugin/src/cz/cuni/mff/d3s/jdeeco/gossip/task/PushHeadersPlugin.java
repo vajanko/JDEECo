@@ -1,6 +1,3 @@
-/**
- * 
- */
 package cz.cuni.mff.d3s.jdeeco.gossip.task;
 
 import java.util.Arrays;
@@ -10,7 +7,6 @@ import java.util.List;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
-import cz.cuni.mff.d3s.deeco.task.CustomStepTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
@@ -32,8 +28,6 @@ public class PushHeadersPlugin implements TimerTaskListener, DEECoPlugin {
 	
 	private MessageBuffer messageBuffer;
 	private Layer2 networkLayer;
-	private Scheduler scheduler;
-	private int period;
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.task.TimerTaskListener#at(long, java.lang.Object)
@@ -50,15 +44,14 @@ public class PushHeadersPlugin implements TimerTaskListener, DEECoPlugin {
 
 			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 		}
-		
-		scheduler.addTask(new CustomStepTask(scheduler, this, period));
 	}
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.task.TimerTaskListener#getInitialTask(cz.cuni.mff.d3s.deeco.scheduler.Scheduler)
 	 */
 	@Override
 	public TimerTask getInitialTask(Scheduler scheduler) {
-		return new CustomStepTask(scheduler, this, period);
+		return null;
+		//return new CustomStepTask(scheduler, this, period);
 	}
 
 	/* (non-Javadoc)
@@ -74,14 +67,13 @@ public class PushHeadersPlugin implements TimerTaskListener, DEECoPlugin {
 	@Override
 	public void init(DEECoContainer container) {
 		// initialise dependencies
-		this.scheduler = container.getRuntimeFramework().getScheduler();
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
 		this.messageBuffer = container.getPluginInstance(MessageBuffer.class);
 		
-		this.period = GossipProperties.getHeadersPushPeriod();
-		
 		// run PUSH message headers gossip task
-		scheduler.addTask(new CustomStepTask(scheduler, this));
+		Scheduler scheduler = container.getRuntimeFramework().getScheduler();
+		long period = GossipProperties.getHeadersPushPeriod();
+		scheduler.addTask(new PeriodicTask(scheduler, this, period));
 	}
 
 }

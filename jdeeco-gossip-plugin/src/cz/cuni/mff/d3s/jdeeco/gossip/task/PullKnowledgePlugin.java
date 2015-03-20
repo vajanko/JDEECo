@@ -7,7 +7,6 @@ import java.util.List;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
-import cz.cuni.mff.d3s.deeco.task.CustomStepTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
@@ -23,9 +22,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.PacketHeader;
 public class PullKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 
 	private MessageBuffer messageBuffer;
-	private Scheduler scheduler;
 	private Layer2 networkLayer;
-	private int period;
 		
 	@Override
 	public void at(long time, Object triger) {
@@ -40,12 +37,10 @@ public class PullKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 			
 			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 		}
-		
-		scheduler.addTask(new CustomStepTask(scheduler, this, period));
 	}
 	@Override
 	public TimerTask getInitialTask(Scheduler scheduler) {
-		return new CustomStepTask(scheduler, this, period);
+		return null;
 	}
 
 	/* (non-Javadoc)
@@ -60,14 +55,13 @@ public class PullKnowledgePlugin implements TimerTaskListener, DEECoPlugin {
 	 */
 	@Override
 	public void init(DEECoContainer container) {
-		this.scheduler = container.getRuntimeFramework().getScheduler();
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
 		this.messageBuffer = container.getPluginInstance(MessageBuffer.class);
 		
-		this.period = GossipProperties.getKnowledgePullPeriod();
-		
 		// run PULL knowledge gossip task
-		scheduler.addTask(new CustomStepTask(scheduler, this));
+		Scheduler scheduler = container.getRuntimeFramework().getScheduler();
+		long period = GossipProperties.getKnowledgePullPeriod();
+		scheduler.addTask(new PeriodicTask(scheduler, this, period));
 	}
 
 }
