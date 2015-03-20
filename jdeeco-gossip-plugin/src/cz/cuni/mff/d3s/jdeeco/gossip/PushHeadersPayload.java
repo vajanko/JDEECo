@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ItemHeader;
+
 /**
  * Wraps a collection of message headers received by particular node.
  * Each header is associated with a time instance when message was received.
@@ -21,14 +23,14 @@ public class PushHeadersPayload implements Serializable {
 	 */
 	private static final long serialVersionUID = -3056777165365098083L;
 	
-	private Collection<MessageHeader> headers;
+	private Collection<ItemHeader> headers;
 	
-	public Collection<MessageHeader> getHeaders() {
+	public Collection<ItemHeader> getHeaders() {
 		return headers;
 	}
 	
-	public PushHeadersPayload(Collection<MessageHeader> messageHeaders) {
-		this.headers = new ArrayList<MessageHeader>(messageHeaders);
+	public PushHeadersPayload(Collection<ItemHeader> messageHeaders) {
+		this.headers = new ArrayList<ItemHeader>(messageHeaders);
 	}
 	
 	@Override

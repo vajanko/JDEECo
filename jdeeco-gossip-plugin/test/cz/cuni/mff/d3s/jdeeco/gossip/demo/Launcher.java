@@ -13,15 +13,17 @@ import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.L2LogPacketSender;
-import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
+import cz.cuni.mff.d3s.jdeeco.gossip.buffer.PushPullBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.device.BroadcastDevice;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.GossipRebroadcastStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.strategy.MessageUpdateStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.PacketLoggerStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.PullResponseStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.task.PullKnowledgePlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.task.PushHeadersPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.task.PushKnowledgePlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.strategy.ReceiveHDStrategy;
+import cz.cuni.mff.d3s.jdeeco.gossip.strategy.ReceiveKNStrategy;
+import cz.cuni.mff.d3s.jdeeco.gossip.strategy.ReceivePLStrategy;
+import cz.cuni.mff.d3s.jdeeco.gossip.task.SendPLPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.task.SendHDPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.task.SendKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 
 /**
@@ -41,17 +43,22 @@ public class Launcher {
 		// only one instance for all nodes
 		BroadcastDevice broadcast = new BroadcastDevice();
 		realm.addPlugin(broadcast);
-		realm.addPlugin(L2LogPacketSender.class);
 		
 		realm.addPlugin(GossipPlugin.class);
 		realm.addPlugin(KnowledgeProvider.class);
-		realm.addPlugin(MessageBuffer.class);
-		realm.addPlugin(PushKnowledgePlugin.class);
-		realm.addPlugin(PushHeadersPlugin.class);
-		realm.addPlugin(PullKnowledgePlugin.class);
+		realm.addPlugin(PushPullBuffer.class);
+		
+		realm.addPlugin(L2LogPacketSender.class);
 		realm.addPlugin(PacketLoggerStrategy.class);
 		
-		realm.addPlugin(MessageUpdateStrategy.class);
+		realm.addPlugin(SendKNPlugin.class);
+		realm.addPlugin(SendHDPlugin.class);
+		realm.addPlugin(SendPLPlugin.class);
+		
+		realm.addPlugin(ReceiveKNStrategy.class);
+		realm.addPlugin(ReceiveHDStrategy.class);
+		realm.addPlugin(ReceivePLStrategy.class);
+		
 		realm.addPlugin(GossipRebroadcastStrategy.class);
 		realm.addPlugin(PullResponseStrategy.class);
 

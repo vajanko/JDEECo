@@ -7,13 +7,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
-import cz.cuni.mff.d3s.jdeeco.gossip.MessageBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.PullKnowledgePayload;
+import cz.cuni.mff.d3s.jdeeco.gossip.buffer.HeaderPayload;
+import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ItemHeader;
+import cz.cuni.mff.d3s.jdeeco.gossip.buffer.PushPullBuffer;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.address.MANETBroadcastAddress;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
@@ -30,7 +31,7 @@ public class PullResponseStrategy implements L2Strategy, DEECoPlugin {
 	
 	private Layer2 networkLayer;
 	private KnowledgeProvider knowledgeProvider;
-	private MessageBuffer messageBuffer;
+	private PushPullBuffer messageBuffer;
 	private CurrentTimeProvider timeProvider;
 	
 	
@@ -44,14 +45,14 @@ public class PullResponseStrategy implements L2Strategy, DEECoPlugin {
 		if (!packet.header.type.equals(L2PacketType.PULL_REQUEST))
 			return;
 		
-		PullKnowledgePayload pullRequest = (PullKnowledgePayload)packet.getObject();
+		HeaderPayload headers = (HeaderPayload)packet.getObject();
 		ArrayList<String> missingMessages = new ArrayList<String>();
 		long time = timeProvider.getCurrentMilliseconds();
 		
-		for (String id : pullRequest.getMessages()) {
+		for (ItemHeader item : headers.getHeaders()) {
 			
 			// check whether message requested by the PULL is present on current node
-			if (messageBuffer.hasRecentMessage(id, time)) {
+			/*if (messageBuffer.hasRecentMessage(id, time)) {
 				
 				KnowledgeData kd = knowledgeProvider.getComponentKnowledge(id);
 				PacketHeader hdr = new PacketHeader(L2PacketType.KNOWLEDGE);
@@ -62,7 +63,7 @@ public class PullResponseStrategy implements L2Strategy, DEECoPlugin {
 			else {
 				// may be there is the required message but too old
 				//missingMessages.add(id);
-			}
+			}*/
 		}
 		
 		if (!missingMessages.isEmpty()) {
@@ -80,7 +81,7 @@ public class PullResponseStrategy implements L2Strategy, DEECoPlugin {
 	 */
 	@Override
 	public List<Class<? extends DEECoPlugin>> getDependencies() {
-		return Arrays.asList(Network.class, KnowledgeProvider.class, MessageBuffer.class);
+		return Arrays.asList(Network.class, KnowledgeProvider.class, PushPullBuffer.class);
 	}
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#init(cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)
@@ -89,7 +90,7 @@ public class PullResponseStrategy implements L2Strategy, DEECoPlugin {
 	public void init(DEECoContainer container) {
 		this.knowledgeProvider = container.getPluginInstance(KnowledgeProvider.class);
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
-		this.messageBuffer = container.getPluginInstance(MessageBuffer.class);
+		this.messageBuffer = container.getPluginInstance(PushPullBuffer.class);
 		this.timeProvider = container.getRuntimeFramework().getScheduler().getTimer();
 
 		// register L2 strategy

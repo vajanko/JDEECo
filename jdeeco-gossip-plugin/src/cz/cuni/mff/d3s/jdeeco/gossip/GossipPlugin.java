@@ -9,10 +9,12 @@ import java.util.List;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.GossipRebroadcastStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.strategy.MessageUpdateStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.task.PullKnowledgePlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.task.PushHeadersPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.task.PushKnowledgePlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.strategy.ReceiveHDStrategy;
+import cz.cuni.mff.d3s.jdeeco.gossip.strategy.ReceiveKNStrategy;
+import cz.cuni.mff.d3s.jdeeco.gossip.strategy.ReceivePLStrategy;
+import cz.cuni.mff.d3s.jdeeco.gossip.task.SendPLPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.task.SendHDPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.task.SendKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
 import cz.cuni.mff.d3s.jdeeco.network.marshaller.MarshallerRegistry;
@@ -29,8 +31,16 @@ public class GossipPlugin implements DEECoPlugin {
 	 */
 	@Override
 	public List<Class<? extends DEECoPlugin>> getDependencies() {
-		return Arrays.asList(PushKnowledgePlugin.class, PushHeadersPlugin.class, PullKnowledgePlugin.class,
-				MessageUpdateStrategy.class, GossipRebroadcastStrategy.class);
+		return Arrays.asList(
+				SendKNPlugin.class, 
+				SendHDPlugin.class, 
+				SendPLPlugin.class,
+				
+				ReceiveKNStrategy.class, 
+				ReceiveHDStrategy.class,
+				ReceivePLStrategy.class,
+				
+				GossipRebroadcastStrategy.class);
 	}
 
 	/* (non-Javadoc)
