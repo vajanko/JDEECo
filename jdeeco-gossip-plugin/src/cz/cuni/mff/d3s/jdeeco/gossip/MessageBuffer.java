@@ -78,7 +78,7 @@ public class MessageBuffer implements DEECoPlugin {
 	 */
 	public void globalUpdate(String id, long time) {
 		if (!buffer.containsKey(id)) {
-			buffer.put(id, new MessageInfo(0,  time));
+			buffer.put(id, new MessageInfo(Long.MIN_VALUE,  time));
 		}
 		else {
 			MessageInfo info = buffer.get(id);
