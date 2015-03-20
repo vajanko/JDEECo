@@ -20,7 +20,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
  * @see PushPullBuffer
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public abstract class BaseReceiveStrategy implements L2Strategy, DEECoPlugin {
+public abstract class ReceiveBaseStrategy implements L2Strategy, DEECoPlugin {
 
 	protected PushPullBuffer messageBuffer;
 		
