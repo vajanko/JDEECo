@@ -15,32 +15,42 @@ import cz.cuni.mff.d3s.jdeeco.network.l1.L2PacketSender;
 import cz.cuni.mff.d3s.jdeeco.network.l1.Layer1;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
+import cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy;
 
 /**
+ * Plugin for debugging purpose only. Allows for logging of sent and received
+ * messages.
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class L2LogPacketSender implements L2PacketSender, DEECoPlugin {
-
-	private Layer1 layer1;
+public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlugin {
+	
 	private CurrentTimeProvider timeProvider;
+	private Layer1 layer1;
 	private int nodeId;
 	
-	private void printSend(L2PacketType type, Object data) {
-		String msgType = "??";
-		
-		if (type.equals(L2PacketType.KNOWLEDGE)) {
-			msgType = "KN";
-		}
-		else if (type.equals(L2PacketType.MESSAGE_HEADERS)) {
-			msgType = "HD";
-		}
-		else if (type.equals(L2PacketType.PULL_REQUEST)) {
-			msgType = "PL";
-		}
-		
+	private static String getMessageType(L2PacketType type) {
+		if (type.equals(L2PacketType.KNOWLEDGE))
+			return "KN";
+		else if (type.equals(L2PacketType.MESSAGE_HEADERS))
+			return "HD";
+		else if (type.equals(L2PacketType.PULL_REQUEST))
+			return "PL";
+
+		return "";
+	}
+	private void printRequest(String action, L2PacketType type, Object data) {
 		long time = timeProvider.getCurrentMilliseconds();
-		System.out.println(String.format("[%d];%4d;SEND;%s;%s", nodeId, time, msgType, data));
+		String msgType = getMessageType(type);
+		System.out.println(String.format("[%d];%4d;%s;%s;%s", nodeId, time, action, msgType, data));
+	}
+	
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy#processL2Packet(cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet)
+	 */
+	@Override
+	public void processL2Packet(L2Packet packet) {
+		printRequest("RECV", packet.header.type, packet.getObject());
 	}
 	
 	/* (non-Javadoc)
@@ -49,7 +59,7 @@ public class L2LogPacketSender implements L2PacketSender, DEECoPlugin {
 	@Override
 	public boolean sendL2Packet(L2Packet packet, Address address) {
 		
-		printSend(packet.header.type, packet.getObject());
+		printRequest("SEND", packet.header.type, packet.getObject());
 		
 		// just pass the packet to the underlying layer as would be done
 		// previously by L2 layer
@@ -68,6 +78,7 @@ public class L2LogPacketSender implements L2PacketSender, DEECoPlugin {
 	 */
 	@Override
 	public void init(DEECoContainer container) {
+		// dependencies
 		this.timeProvider = container.getRuntimeFramework().getScheduler().getTimer();
 		this.nodeId = container.getId();
 		
@@ -75,8 +86,11 @@ public class L2LogPacketSender implements L2PacketSender, DEECoPlugin {
 		
 		// replace standard sender of layer 2
 		net.getL2().setL2PacketSender(this);
-		
 		// but the underlying layer 1 will be used
 		this.layer1 = net.getL1();
+		
+		// register L2 strategy
+		net.getL2().registerL2Strategy(this);
 	}
+	
 }

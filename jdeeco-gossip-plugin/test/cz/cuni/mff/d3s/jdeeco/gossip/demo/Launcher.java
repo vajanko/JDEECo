@@ -12,11 +12,10 @@ import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
-import cz.cuni.mff.d3s.jdeeco.gossip.L2LogPacketSender;
+import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.PushPullBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.device.BroadcastDevice;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.GossipRebroadcastStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.strategy.PacketLoggerStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.PullResponseStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.ReceiveHDStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.ReceiveKNStrategy;
@@ -48,8 +47,7 @@ public class Launcher {
 		realm.addPlugin(KnowledgeProvider.class);
 		realm.addPlugin(PushPullBuffer.class);
 		
-		realm.addPlugin(L2LogPacketSender.class);
-		realm.addPlugin(PacketLoggerStrategy.class);
+		realm.addPlugin(RequestLoggerPlugin.class);
 		
 		realm.addPlugin(SendKNPlugin.class);
 		realm.addPlugin(SendHDPlugin.class);
