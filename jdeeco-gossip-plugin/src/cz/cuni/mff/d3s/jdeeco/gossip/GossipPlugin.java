@@ -14,7 +14,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.strategy.ReceiveKNStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.ReceivePLStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.task.SendPLPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.task.SendHDPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.task.SendKNPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.task.SendPushedKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
 import cz.cuni.mff.d3s.jdeeco.network.marshaller.MarshallerRegistry;
@@ -32,7 +32,7 @@ public class GossipPlugin implements DEECoPlugin {
 	@Override
 	public List<Class<? extends DEECoPlugin>> getDependencies() {
 		return Arrays.asList(
-				SendKNPlugin.class, 
+				SendPushedKNPlugin.class, 
 				SendHDPlugin.class, 
 				SendPLPlugin.class,
 				

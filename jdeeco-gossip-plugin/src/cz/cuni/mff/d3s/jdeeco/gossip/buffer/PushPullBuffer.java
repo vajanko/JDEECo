@@ -36,15 +36,14 @@ public class PushPullBuffer implements DEECoPlugin {
 		return push.getLocalReceptionTime(componentId);
 	}
 	
-	/*public void notifyLocalPull(String componentId, long currentTime) {
-		pulls.receiveLocal(componentId, currentTime);
-	}*/
-	public void notifyGlobalPull(String componentId, long currentTime) {
-		pull.receiveGlobal(componentId, currentTime);
+	public void notifyPull(String componentId, long currentTime) {
+		pull.receiveLocal(componentId, currentTime);
+		
+		push.receiveGlobal(componentId, currentTime); 
 	}
-	/*public Collection<ItemHeader> getRecentPulledMessages() {
-		return null;
-	}*/
+	public Collection<ItemHeader> getRecentPulledMessages(long currentTime) {
+		return pull.getRecentItems(currentTime);
+	}
 	
 
 	/* (non-Javadoc)

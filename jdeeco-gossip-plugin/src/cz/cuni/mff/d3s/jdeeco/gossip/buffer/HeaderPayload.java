@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
+ * Wraps a collection of message headers received by particular node.
+ * Each header is associated with a time instance when message was received.
+ * These data are used by nodes to discover that some specific message is 
+ * missing on the current node or to request a particular message rebroadcast.
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */

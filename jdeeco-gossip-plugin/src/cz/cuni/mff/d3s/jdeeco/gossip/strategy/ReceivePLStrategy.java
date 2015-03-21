@@ -26,7 +26,7 @@ public class ReceivePLStrategy extends ReceiveBaseStrategy {
 			HeaderPayload messages = (HeaderPayload)packet.getObject();
 			
 			for (ItemHeader header : messages.getHeaders()) {
-				messageBuffer.notifyGlobalPull(header.id, header.timestamp);
+				messageBuffer.notifyPull(header.id, header.timestamp);
 			}
 		}
 	}

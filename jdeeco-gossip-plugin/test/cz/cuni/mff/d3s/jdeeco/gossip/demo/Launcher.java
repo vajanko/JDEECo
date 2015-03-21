@@ -16,13 +16,13 @@ import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.PushPullBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.device.BroadcastDevice;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.GossipRebroadcastStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.strategy.PullResponseStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.ReceiveHDStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.ReceiveKNStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.ReceivePLStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.task.SendPLPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.task.SendHDPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.task.SendKNPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.task.SendPulledKNPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.task.SendPushedKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 
 /**
@@ -49,7 +49,8 @@ public class Launcher {
 		
 		realm.addPlugin(RequestLoggerPlugin.class);
 		
-		realm.addPlugin(SendKNPlugin.class);
+		realm.addPlugin(SendPushedKNPlugin.class);
+		realm.addPlugin(SendPulledKNPlugin.class);
 		realm.addPlugin(SendHDPlugin.class);
 		realm.addPlugin(SendPLPlugin.class);
 		
@@ -58,7 +59,6 @@ public class Launcher {
 		realm.addPlugin(ReceivePLStrategy.class);
 		
 		realm.addPlugin(GossipRebroadcastStrategy.class);
-		realm.addPlugin(PullResponseStrategy.class);
 
 		/* create first deeco node */
 		DEECoNode deeco1 = realm.createNode(1);
