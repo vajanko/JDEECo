@@ -46,6 +46,10 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 * and an update (request for reception) is required.
 	 */
 	private long localTimeout;
+	/**
+	 * A queue of pulled items.
+	 */
+	private Collection<String> pullQueue = new ArrayList<String>();
 	
 	/**
 	 * Stores information about receiving a message with given {@code id} locally.
@@ -155,6 +159,14 @@ public class ReceptionBuffer implements DEECoPlugin {
 		return result;
 	}
 	
+	/**
+	 * Gets valid content of the buffer. This includes items not globally
+	 * expired.
+	 * 
+	 * @param currentTime Current system or simulation time
+	 * @return Collection of {@link ItemHeader} representing valid items 
+	 * currently present in the buffer.
+	 */
 	public Collection<ItemHeader> getRecentItems(long currentTime) {
 		// remove old items ...
 		removeGloballyObsoleteItems(currentTime);
@@ -166,6 +178,31 @@ public class ReceptionBuffer implements DEECoPlugin {
 			result.add(new ItemHeader(entry.getKey(), entry.getValue().globalReception));
 		}
 		return result;
+	}
+	/**
+	 * Notifies that knowledge identified with given {@code id} should be
+	 * broadcasted based on a pull request. Notice that event replica knowledge
+	 * data can be broadcasted.
+	 * 
+	 * @param id Unique identifier of knowledge data.
+	 */
+	public void notifyPull(String id) {
+		pullQueue.add(id);
+	}
+	/**
+	 * Gets collection of IDs of currently pulled knowledge data which
+	 * should be broadcasted.
+	 * 
+	 * @return Collection of component IDs
+	 */
+	public Collection<String> getPulledItems() {
+		return pullQueue;
+	}
+	/**
+	 * Marks all pulled knowledge data as processed.
+	 */
+	public void clearPulledItems() {
+		pullQueue.clear();
 	}
 	
 	/**

@@ -8,7 +8,6 @@ import java.util.Collection;
 
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
-import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ItemHeader;
 
 /**
  * 
@@ -26,16 +25,15 @@ public class SendPulledKNPlugin extends SendBaseKNPlugin {
 	 */
 	@Override
 	protected Collection<KnowledgeData> getKnowledgeData(long currentTime) {
-		//Collection<ItemHeader> pulledItems = messageBuffer.getRecentPulledMessages(currentTime);
 		ArrayList<KnowledgeData> result = new ArrayList<KnowledgeData>();
-		/*for (ItemHeader item : pulledItems) {
-			KnowledgeData kd = knowledgeProvider.getComponentKnowledge(item.id);
+		for (String id : messageBuffer.getPulledItems()) {
+			KnowledgeData kd = knowledgeProvider.getComponentKnowledge(id);
 			if (kd != null) {
 				result.add(kd);
-				
-				messageBuffer.notifyPull(item.id, Long.MIN_VALUE);
 			}
-		}*/
+		}
+		
+		messageBuffer.clearPulledItems();
 		
 		return result;
 	}

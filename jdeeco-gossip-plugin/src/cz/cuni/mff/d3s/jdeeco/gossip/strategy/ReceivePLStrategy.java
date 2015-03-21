@@ -39,7 +39,8 @@ public class ReceivePLStrategy extends ReceiveBaseStrategy {
 				//	this knowledge will be PULLed as well
 				messageBuffer.receiveGlobal(header.id, header.timestamp);
 				
-				
+				// make this knowledge as PULLed, will be broadcasted when present
+				messageBuffer.notifyPull(header.id);
 			}
 		}
 	}

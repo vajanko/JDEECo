@@ -23,7 +23,7 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
 import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
-import cz.cuni.mff.d3s.jdeeco.gossip.buffer.PushPullBuffer;
+import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 
 /**
  * Provides the ability to create a copy of knowledge data prepared for marshaling
@@ -33,7 +33,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.buffer.PushPullBuffer;
  */
 public class KnowledgeProvider implements DEECoPlugin {
 	
-	private PushPullBuffer messageBuffer;
+	private ReceptionBuffer messageBuffer;
 	private KnowledgeManagerContainer kmContainer;
 	private CurrentTimeProvider timeProvider;
 	private String nodeId;
@@ -120,7 +120,7 @@ public class KnowledgeProvider implements DEECoPlugin {
 		}
 		else {
 			// get time when replica knowledge data was last time received
-			createdAt = messageBuffer.getLocalPushTime(componentId);
+			createdAt = messageBuffer.getLocalReceptionTime(componentId);
 		}
 		int hopCount = 1;
 		
@@ -161,7 +161,7 @@ public class KnowledgeProvider implements DEECoPlugin {
 	 */
 	@Override
 	public List<Class<? extends DEECoPlugin>> getDependencies() {
-		return Arrays.asList(PushPullBuffer.class);
+		return Arrays.asList(ReceptionBuffer.class);
 	}
 
 	/* (non-Javadoc)
@@ -169,7 +169,7 @@ public class KnowledgeProvider implements DEECoPlugin {
 	 */
 	@Override
 	public void init(DEECoContainer container) {
-		this.messageBuffer = container.getPluginInstance(PushPullBuffer.class);
+		this.messageBuffer = container.getPluginInstance(ReceptionBuffer.class);
 		RuntimeFramework runtime = container.getRuntimeFramework();
 		this.kmContainer = runtime.getContainer();
 		this.timeProvider = runtime.getScheduler().getTimer();
