@@ -26,16 +26,16 @@ public class SendPulledKNPlugin extends SendBaseKNPlugin {
 	 */
 	@Override
 	protected Collection<KnowledgeData> getKnowledgeData(long currentTime) {
-		Collection<ItemHeader> pulledItems = messageBuffer.getRecentPulledMessages(currentTime);
+		//Collection<ItemHeader> pulledItems = messageBuffer.getRecentPulledMessages(currentTime);
 		ArrayList<KnowledgeData> result = new ArrayList<KnowledgeData>();
-		for (ItemHeader item : pulledItems) {
+		/*for (ItemHeader item : pulledItems) {
 			KnowledgeData kd = knowledgeProvider.getComponentKnowledge(item.id);
 			if (kd != null) {
 				result.add(kd);
 				
 				messageBuffer.notifyPull(item.id, Long.MIN_VALUE);
 			}
-		}
+		}*/
 		
 		return result;
 	}

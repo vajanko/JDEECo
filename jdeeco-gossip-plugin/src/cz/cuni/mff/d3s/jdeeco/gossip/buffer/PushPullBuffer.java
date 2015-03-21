@@ -61,8 +61,8 @@ public class PushPullBuffer implements DEECoPlugin {
 		long localTimeout = GossipProperties.getKnowledgePullTimeout();
 		long globalTimeout = GossipProperties.getComponentPullTimeout();
 		
-		push = new ReceptionBuffer(localTimeout, globalTimeout);
-		pull = new ReceptionBuffer(localTimeout, globalTimeout);
+		//push = new ReceptionBuffer(localTimeout, globalTimeout);
+		//pull = new ReceptionBuffer(localTimeout, globalTimeout);
 	}
 
 }

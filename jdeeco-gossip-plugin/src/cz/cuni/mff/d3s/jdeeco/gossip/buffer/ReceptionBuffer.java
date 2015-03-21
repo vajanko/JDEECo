@@ -4,11 +4,17 @@
 package cz.cuni.mff.d3s.jdeeco.gossip.buffer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
+import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 
 /**
  * Buffered collection of items which are passed between multiple nodes across
@@ -18,7 +24,7 @@ import java.util.Map.Entry;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class ReceptionBuffer {
+public class ReceptionBuffer implements DEECoPlugin {
 	
 	/**
 	 * Minimal possible value of item reception.
@@ -41,14 +47,6 @@ public class ReceptionBuffer {
 	 */
 	private long localTimeout;
 	
-	/**
-	 * Create a new instance of buffer for received messages with default timeouts.
-	 */
-	public ReceptionBuffer(long localTimeout, long globalTimeout) {
-		this.localTimeout = localTimeout;
-		this.globalTimeout = globalTimeout;
-	}
-
 	/**
 	 * Stores information about receiving a message with given {@code id} locally.
 	 * Receiving a message locally also implies global message update.
@@ -163,6 +161,8 @@ public class ReceptionBuffer {
 		// ... then take all left items
 		ArrayList<ItemHeader> result = new ArrayList<ItemHeader>();
 		for (Entry<String, ItemInfo> entry : buffer.entrySet()) {
+			// TODO: could locally obsolete items be omitted?
+			// obsolete items will be sent in the PULL request as well
 			result.add(new ItemHeader(entry.getKey(), entry.getValue().globalReception));
 		}
 		return result;
@@ -193,5 +193,21 @@ public class ReceptionBuffer {
 			this.localReception = localReception;
 			this.globalReception = globalReception;
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#getDependencies()
+	 */
+	@Override
+	public List<Class<? extends DEECoPlugin>> getDependencies() {
+		return Arrays.asList();
+	}
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#init(cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)
+	 */
+	@Override
+	public void init(DEECoContainer container) {
+		localTimeout = GossipProperties.getKnowledgePullTimeout();
+		globalTimeout = GossipProperties.getComponentPullTimeout();
 	}
 }

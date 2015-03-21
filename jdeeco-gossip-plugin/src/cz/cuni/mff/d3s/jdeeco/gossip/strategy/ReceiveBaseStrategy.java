@@ -8,7 +8,7 @@ import java.util.List;
 
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.buffer.PushPullBuffer;
+import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy;
@@ -22,7 +22,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
  */
 public abstract class ReceiveBaseStrategy implements L2Strategy, DEECoPlugin {
 
-	protected PushPullBuffer messageBuffer;
+	protected ReceptionBuffer messageBuffer;
 		
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy#processL2Packet(cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet)
@@ -35,14 +35,14 @@ public abstract class ReceiveBaseStrategy implements L2Strategy, DEECoPlugin {
 	 */
 	@Override
 	public List<Class<? extends DEECoPlugin>> getDependencies() {
-		return Arrays.asList(Network.class, PushPullBuffer.class);
+		return Arrays.asList(Network.class, ReceptionBuffer.class);
 	}
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#init(cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)
 	 */
 	@Override
 	public void init(DEECoContainer container) {
-		this.messageBuffer = container.getPluginInstance(PushPullBuffer.class);
+		this.messageBuffer = container.getPluginInstance(ReceptionBuffer.class);
 		
 		// register L2 strategy
 		Layer2 networkLayer = container.getPluginInstance(Network.class).getL2();

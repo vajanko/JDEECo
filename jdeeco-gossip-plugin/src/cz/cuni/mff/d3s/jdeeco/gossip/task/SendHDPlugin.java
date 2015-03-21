@@ -31,7 +31,7 @@ public class SendHDPlugin extends SendBasePlugin {
 		
 		// get messages received by current node or messages received by other nodes
 		// which notified about those messages
-		Collection<ItemHeader> headers = messageBuffer.getRecentPushedMessages(time);
+		Collection<ItemHeader> headers = messageBuffer.getRecentItems(time); 
 		if (!headers.isEmpty()) {
 			HeaderPayload data = new HeaderPayload(headers);
 			L2Packet packet = new L2Packet(header, data);

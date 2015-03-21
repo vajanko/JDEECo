@@ -27,8 +27,7 @@ public class ReceiveKNStrategy extends ReceiveBaseStrategy {
 			// is lost and does not participate in the communication any more.
 			KnowledgeMetaData meta = kd.getMetaData();
 
-			// TODO: should message received from current node be excluded ??
-			messageBuffer.notifyLocalPush(meta.componentId, meta.createdAt);
+			messageBuffer.receiveLocal(meta.componentId, meta.createdAt);
 		}
 	}
 }

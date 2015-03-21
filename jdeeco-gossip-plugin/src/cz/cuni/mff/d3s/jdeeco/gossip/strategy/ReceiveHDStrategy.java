@@ -25,11 +25,7 @@ public class ReceiveHDStrategy extends ReceiveBaseStrategy {
 			HeaderPayload messages = (HeaderPayload)packet.getObject();
 			
 			for (ItemHeader header : messages.getHeaders()) {
-				// TODO: local messages be filtered ??
-				messageBuffer.notifyGlobalPush(header.id, header.timestamp);
-				/*if (!knowledgeProvider.hasLocal(header.id)) {
-					messageBuffer.globalUpdate(header.id, header.timestamp);
-				}*/
+				messageBuffer.receiveGlobal(header.id, header.timestamp);
 			}
 		}
 	}

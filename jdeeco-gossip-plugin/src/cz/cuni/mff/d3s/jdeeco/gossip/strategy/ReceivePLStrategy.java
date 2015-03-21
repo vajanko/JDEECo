@@ -26,7 +26,20 @@ public class ReceivePLStrategy extends ReceiveBaseStrategy {
 			HeaderPayload messages = (HeaderPayload)packet.getObject();
 			
 			for (ItemHeader header : messages.getHeaders()) {
-				messageBuffer.notifyPull(header.id, header.timestamp);
+				// PULL request from other node:
+				// 1) knowledge with ID is not present on this node:
+				//	this will result in adding a header with local reception -INFINITE 
+				//	and this knowledge will be PULLed also with the current node
+				// 2a) knowledge with ID is present on this node:
+				//	local and global reception stay unchanged, knowledge can be sent
+				//	from this node and the PULL request finished here.
+				// 2b) knowledge with ID is not present on this node:
+				//	local reception stays unchanged and a max value will be taken for
+				//	the global reception.
+				//	this knowledge will be PULLed as well
+				messageBuffer.receiveGlobal(header.id, header.timestamp);
+				
+				
 			}
 		}
 	}

@@ -13,7 +13,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.buffer.PushPullBuffer;
+import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.device.BroadcastDevice;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.GossipRebroadcastStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.ReceiveHDStrategy;
@@ -45,7 +45,7 @@ public class Launcher {
 		
 		realm.addPlugin(GossipPlugin.class);
 		realm.addPlugin(KnowledgeProvider.class);
-		realm.addPlugin(PushPullBuffer.class);
+		realm.addPlugin(ReceptionBuffer.class);
 		
 		realm.addPlugin(RequestLoggerPlugin.class);
 		
