@@ -70,6 +70,10 @@ public class ReceptionBuffer implements DEECoPlugin {
 			ItemInfo info = buffer.get(id); 
 			if (info.localReception < time)
 				info.localReception = time;
+			// We separately test also global reception time, but it is probably
+			// impossible that globalReception >= time, because we call this method
+			// upon local reception of an item. It is not possible that it was 
+			// received somewhere in a future time.
 			if (info.globalReception < time)
 				info.globalReception = time;
 		}
@@ -85,7 +89,15 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 */
 	public void receiveGlobal(String id, long time) {
 		if (!buffer.containsKey(id)) {
-			buffer.put(id, new ItemInfo(MINUS_INFINITE,  time));
+			// Item was never seen on the current node. The very first idea is
+			// to add something similar: new ItemInfo(MINUS_INFINITE,  time). The problem of
+			// this approach is that the item is immediately obsolete and will be PULLed.
+			//buffer.put(id, new ItemInfo(MINUS_INFINITE,  time));
+			
+			// Our approach is that when a header of item never seen before is received
+			// we are waiting for PULL timeout and only then we sent the PULL request.
+			// It is probable that the item will be received meantime.
+			buffer.put(id, new ItemInfo(time, time));
 		}
 		else {
 			ItemInfo info = buffer.get(id);
@@ -93,6 +105,18 @@ public class ReceptionBuffer implements DEECoPlugin {
 				info.globalReception = time;
 		}
 	}
+	/*public void receivePull(String id, long time) {
+		if (!buffer.containsKey(id)) {
+			buffer.put(id, new ItemInfo(MINUS_INFINITE, time));
+		}
+		else {
+			ItemInfo info = buffer.get(id);
+			info.localReception = MINUS_INFINITE;
+			if (info.globalReception < time)
+				info.globalReception = time;
+		}
+	}*/
+	
 	/**
 	 * Gets reception time of locally received item identified by given {@code id}
 	 * 
