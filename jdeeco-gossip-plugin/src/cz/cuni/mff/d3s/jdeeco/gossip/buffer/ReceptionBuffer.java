@@ -68,10 +68,10 @@ public class ReceptionBuffer implements DEECoPlugin {
 		}
 		else {
 			ItemInfo info = buffer.get(id); 
-			if (info.localReception < time) {
+			if (info.localReception < time)
 				info.localReception = time;
+			if (info.globalReception < time)
 				info.globalReception = time;
-			}
 		}
 	}
 	/**
