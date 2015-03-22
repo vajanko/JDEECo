@@ -268,7 +268,7 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 */
 	@Override
 	public void init(DEECoContainer container) {
-		localTimeout = GossipProperties.getKnowledgePullTimeout();
-		globalTimeout = GossipProperties.getComponentPullTimeout();
+		localTimeout = GossipProperties.getPublishKNTimeout();
+		globalTimeout = GossipProperties.getPushlishPLTimeout();
 	}
 }

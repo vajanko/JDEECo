@@ -13,7 +13,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 public class SendPushedKNPlugin extends SendBaseKNPlugin {
 	
 	public SendPushedKNPlugin() {
-		super(GossipProperties.getKnowledgePushPeriod());
+		super(GossipProperties.getPublishKNPeriod());
 	}
 	
 	/* (non-Javadoc)

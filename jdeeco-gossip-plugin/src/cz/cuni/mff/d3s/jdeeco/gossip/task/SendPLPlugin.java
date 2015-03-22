@@ -18,7 +18,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.PacketHeader;
 public class SendPLPlugin extends SendBasePlugin {
 	
 	public SendPLPlugin() {
-		super(GossipProperties.getKnowledgePullPeriod());
+		super(GossipProperties.getPublishPLPeriod());
 	}
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.task.TimerTaskListener#at(long, java.lang.Object)

@@ -26,8 +26,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
 public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 
 	private final Random generator = new Random();
-	private double knowledgeProbability;
-	private double headersProbability;
+	private double probability;
 	private Layer2 networkLayer;
 	//private int nodeId;
 	
@@ -38,12 +37,7 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 	public void processL2Packet(L2Packet packet) {
 		
 		if (packet.header.type.equals(L2PacketType.KNOWLEDGE)) {
-			if (generator.nextDouble() < knowledgeProbability) {
-				networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
-			}
-		}
-		else if (packet.header.type.equals(L2PacketType.MESSAGE_HEADERS)) {
-			if (generator.nextDouble() < headersProbability) {
+			if (generator.nextDouble() < probability) {
 				networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 			}
 		}
@@ -62,12 +56,10 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 	@Override
 	public void init(DEECoContainer container) {
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
-		//this.nodeId = container.getId();
 		// register L2 strategy
 		this.networkLayer.registerL2Strategy(this);
 		
-		this.knowledgeProbability = GossipProperties.getKnowledgePushProbability();
-		this.headersProbability = GossipProperties.getHeadersPushProbability();
+		this.probability = GossipProperties.getPublishProbability();
 	}
 
 }

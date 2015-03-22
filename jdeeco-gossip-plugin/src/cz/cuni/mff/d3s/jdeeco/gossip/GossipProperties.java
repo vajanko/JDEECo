@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * For correct behaviour these values should be constrained as follows:
- * HEADERS_PUSH_PERIOD < HEADERS_PUSH_TIMEOUT < KNOWLEDGE_PULL_TIMEOUT
  * 
  * @author Ondrej Kováè <info@vajanko.me>
  */
@@ -38,84 +36,86 @@ public final class GossipProperties {
 		}
 	}
 	
-	public static final String KNOWLEDGE_PUSH_PERIOD = "deeco.push.knowledge_period";
+	public static final String PUBLISH_KN_PERIOD = "deeco.publish.kn_period";
 	/**
-	 * Default value of knowledge publishing period in milliseconds.
+	 * Default value of knowledge broadcasting period in milliseconds.
 	 */
-	public static final long KNOWLEDGE_PUSH_PERIOD_DEFAULT = 1000;
+	public static final long PUBLISH_KN_PERIOD_DEFAULT = 2000;
 	/**
-	 * See {@link #KNOWLEDGE_PUSH_PERIOD_DEFAULT} for default value.
-	 * @return Knowledge publishing period in milliseconds.
-	 */
-	public static long getKnowledgePushPeriod() {
-		return Long.getLong(KNOWLEDGE_PUSH_PERIOD, KNOWLEDGE_PUSH_PERIOD_DEFAULT);
-	}
-	
-	public static final String KONWLEDGE_PUSH_PROBABILITY = "deeco.push.knowledge_probability";
-	public static final double KONWLEDGE_PUSH_PROBABILITY_DEFAULT = 0.5;
-	/**
-	 * @return Probability of knowledge rebroadcast when received by current node.
-	 */
-	public static double getKnowledgePushProbability() {
-		return getDouble(KONWLEDGE_PUSH_PROBABILITY, KONWLEDGE_PUSH_PROBABILITY_DEFAULT);
-	}
-	
-	public static final String HEADERS_PUSH_PERIOD = "deeco.push.headers_period";
-	public static final long HEADERS_PUSH_PERIOD_DEFAULT = 2000;
-	/**
+	 * See {@link #PUBLISH_KN_PERIOD_DEFAULT} for default value.
 	 * 
-	 * @return Message headers publishing period in milliseconds.
+	 * @return Knowledge broadcasting period in milliseconds.
 	 */
-	public static long getHeadersPushPeriod() {
-		return Long.getLong(HEADERS_PUSH_PERIOD, HEADERS_PUSH_PERIOD_DEFAULT);
+	public static long getPublishKNPeriod() {
+		return Long.getLong(PUBLISH_KN_PERIOD, PUBLISH_KN_PERIOD_DEFAULT);
 	}
 	
-	public static final String HEADERS_PUSH_PROBABILITY = "deeco.push.headers_probability";
-	public static final double HEADERS_PUSH_PROBABILITY_DEFAULT = 0.0;
+	public static final String PUBLISH_HD_PERIOD = "deeco.publish.hd_period";
 	/**
-	 * 
-	 * @return Probability of message headers rebroadcast when received by current node.
+	 * Default value of message headers broadcasting period in milliseconds.
 	 */
-	public static double getHeadersPushProbability() {
-		return getDouble(HEADERS_PUSH_PROBABILITY, HEADERS_PUSH_PROBABILITY_DEFAULT);
+	public static final long PUBLISH_HD_PERIOD_DEFAULT = 2000;
+	/**
+	 * See {@link #PUBLISH_HD_PERIOD_DEFAULT} for default value.
+	 * 
+	 * @return Message headers broadcasting period in milliseconds.
+	 */
+	public static long getPublishHDPeriod() {
+		return Long.getLong(PUBLISH_HD_PERIOD, PUBLISH_HD_PERIOD_DEFAULT);
 	}
 	
-	/*public static final String HEADERS_PUSH_TIMEOUT = "deeco.push_headers_timeout";
-	public static final int HEADERS_PUSH_TIMEOUT_DEFAULT = 10000;
-	public static int getHeadersPushTimeout() {
-		return Integer.getInteger(HEADERS_PUSH_TIMEOUT, HEADERS_PUSH_TIMEOUT_DEFAULT);
-	}*/
-	
-	public static final String KNOWLEDGE_PULL_PERIOD = "deeco.pull.knowledge_period";
-	public static final long KNOWLEDGE_PULL_PERIOD_DEFAULT = 4000;
+	public static final String PUBLISH_PL_PERIOD = "deeco.publish.pl_period";
+	public static final long PUBLISH_PL_PERIOD_DEFAULT = 1000;
 	/**
 	 * 
 	 * @return Knowledge pulling period in milliseconds.
 	 */
-	public static final long getKnowledgePullPeriod() {
-		return Long.getLong(KNOWLEDGE_PULL_PERIOD, KNOWLEDGE_PULL_PERIOD_DEFAULT);
+	public static final long getPublishPLPeriod() {
+		return Long.getLong(PUBLISH_PL_PERIOD, PUBLISH_PL_PERIOD_DEFAULT);
 	}
 	
-	public static final String KNOWLEDGE_PULL_TIMEOUT = "deeco.pull.knowledge_timeout";
-	public static final long KNOWLEDGE_PULL_TIMEOUT_DEFAULT = 4000;
+	public static final String PUBLISH_PROBABILITY = "deeco.publish.probability";
 	/**
-	 * See {@link #KNOWLEDGE_PULL_TIMEOUT_DEFAULT} for default value.
-	 * @return Time after which knowledge is considered to be outdated and PULL request
-	 * is necessary.
+	 * Default value of knowledge rebroadcast probability when received by current node.
 	 */
-	public static final long getKnowledgePullTimeout() {
-		return Long.getLong(KNOWLEDGE_PULL_TIMEOUT, KNOWLEDGE_PULL_TIMEOUT_DEFAULT);
+	public static final double PUBLISH_PROBABILITY_DEFAULT = 0.5;
+	/**
+	 * See {@link #PUBLISH_PROBABILITY_DEFAULT} for default value.
+	 * 
+	 * @return Probability of knowledge rebroadcast when received by current node.
+	 */
+	public static double getPublishProbability() {
+		return getDouble(PUBLISH_PROBABILITY, PUBLISH_PROBABILITY_DEFAULT);
+	}
+		
+	public static final String PUBLISH_KN_TIMEOUT = "deeco.publish.kn_timeout";
+	/**
+	 * Default value of knowledge timeout. After this time knowledge is considered 
+	 * to be outdated.
+	 */
+	public static final long PUBLISH_KN_TIMEOUT_DEFAULT = 4000;
+	/**
+	 * See {@link #PUBLISH_KN_TIMEOUT_DEFAULT} for default value.
+	 * 
+	 * @return Knowledge timeout after which it is considered to be outdated.
+	 */
+	public static final long getPublishKNTimeout() {
+		return Long.getLong(PUBLISH_KN_TIMEOUT, PUBLISH_KN_TIMEOUT_DEFAULT);
 	}
 	
-	public static final String COMPONENT_PULL_TIMEOUT = "deeco.pull.component_timeout";
-	public static final int COMPONENT_PULL_TIMEOUT_DEFAULT = 20000;
+	public static final String PUBLISH_PL_TIMEOUT = "deeco.publish.pl_timeout";
 	/**
-	 * See {@link #COMPONENT_PULL_TIMEOUT_DEFAULT} for default value.
-	 * @return Time after which component is considered to be decommissioned and
-	 * can be removed from all buffers.
+	 * Default value of pull request timeout. After this time component is considered
+	 * to be outdated. 
 	 */
-	public static final long getComponentPullTimeout() {
-		return Long.getLong(COMPONENT_PULL_TIMEOUT, COMPONENT_PULL_TIMEOUT_DEFAULT);
+	public static final int PUBLISH_PL_TIMEOUT_DEFAULT = 20000;
+	/**
+	 * See {@link #PUBLISH_PL_TIMEOUT_DEFAULT} for default value.
+	 * 
+	 * @return Pull request timeout after which component is considered to be outdated.
+	 */
+	public static final long getPushlishPLTimeout() {
+		return Long.getLong(PUBLISH_PL_TIMEOUT, PUBLISH_PL_TIMEOUT_DEFAULT);
 	}
 	
 	private static double getDouble(String name, double def) {

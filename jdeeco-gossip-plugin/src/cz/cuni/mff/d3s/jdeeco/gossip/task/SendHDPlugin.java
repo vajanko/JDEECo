@@ -18,7 +18,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.PacketHeader;
 public class SendHDPlugin extends SendBasePlugin {
 	
 	public SendHDPlugin() {
-		super(GossipProperties.getHeadersPushPeriod());
+		super(GossipProperties.getPublishHDPeriod());
 	}
 	
 	/* (non-Javadoc)

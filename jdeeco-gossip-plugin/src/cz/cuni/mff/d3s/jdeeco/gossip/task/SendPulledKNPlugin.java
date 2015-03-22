@@ -17,7 +17,7 @@ public class SendPulledKNPlugin extends SendBaseKNPlugin {
 
 	public SendPulledKNPlugin() {
 		// TODO: name this parameter properly
-		super(GossipProperties.getHeadersPushPeriod());
+		super(GossipProperties.getPublishHDPeriod());
 	}
 
 	/* (non-Javadoc)
