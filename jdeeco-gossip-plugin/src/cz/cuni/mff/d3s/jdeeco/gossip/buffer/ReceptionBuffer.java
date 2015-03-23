@@ -101,6 +101,7 @@ public class ReceptionBuffer implements DEECoPlugin {
 				info.globalReception = time;
 		}
 	}
+	
 	/**
 	 * Stores information about receiving  a pull request for a message with
 	 * given {@code id}.
@@ -142,6 +143,19 @@ public class ReceptionBuffer implements DEECoPlugin {
 		if (info != null) {
 			info.pulled = false;
 		}
+	}
+	/**
+	 * Gets collection of IDs of currently pulled knowledge data which
+	 * should be broadcasted.
+	 * 
+	 * @return Collection of component IDs
+	 */
+	public Collection<String> getPulledItems() {
+		ArrayList<String> result = new ArrayList<String>();
+		for (Entry<String, ItemInfo> item : buffer.entrySet())
+			if (item.getValue().pulled)
+				result.add(item.getKey());
+		return result;
 	}
 	
 	/**
@@ -230,41 +244,6 @@ public class ReceptionBuffer implements DEECoPlugin {
 		}
 		return result;
 	}
-	/**
-	 * Notifies that knowledge identified with given {@code id} should be
-	 * broadcasted based on a pull request. Notice that event replica knowledge
-	 * data can be broadcasted.
-	 * 
-	 * @param id Unique identifier of knowledge data.
-	 */
-	/*public void notifyPull(String id) {
-		ItemInfo info = buffer.get(id);
-		if (info != null)
-			info.pulled = true;
-		//pullQueue.add(id);
-	}*/
-	/**
-	 * Gets collection of IDs of currently pulled knowledge data which
-	 * should be broadcasted.
-	 * 
-	 * @return Collection of component IDs
-	 */
-	public Collection<String> getPulledItems() {
-		ArrayList<String> result = new ArrayList<String>();
-		for (Entry<String, ItemInfo> item : buffer.entrySet())
-			if (item.getValue().pulled)
-				result.add(item.getKey());
-		return result;
-	}
-	/**
-	 * Mark particular pulled knowledge data as processed.
-	 * @param id
-	 */
-	/*public void clearPull(String id) {
-		ItemInfo info = buffer.get(id);
-		if (info != null)
-			info.pulled = false;
-	}*/
 	
 	/**
 	 * A helper structure for holding information about item reception times.
