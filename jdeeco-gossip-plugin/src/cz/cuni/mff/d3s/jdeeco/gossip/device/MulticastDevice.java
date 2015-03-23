@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
@@ -191,7 +190,5 @@ public class MulticastDevice implements DEECoPlugin {
 			loops.get(address).add(other);
 			loops.get(other.address).add(dev);
 		}
-		// TODO: initialise multicast links
-		//loops.put(address, loop);
 	}
 }

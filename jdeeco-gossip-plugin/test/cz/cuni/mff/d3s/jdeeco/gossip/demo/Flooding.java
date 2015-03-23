@@ -11,7 +11,6 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoException;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoNode;
 import cz.cuni.mff.d3s.deeco.timer.DiscreteEventTimer;
 import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
-import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
@@ -21,12 +20,6 @@ import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoEnsemble;
 import cz.cuni.mff.d3s.jdeeco.gossip.device.MulticastDevice;
 import cz.cuni.mff.d3s.jdeeco.gossip.device.NetworkLink;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.GossipRebroadcastStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.strategy.KnowledgeReceptionStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.strategy.ReceiveHDStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.strategy.ReceiveKNStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.strategy.ReceivePLStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.task.SendHDPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.task.SendPLPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.task.SendPushedKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 
@@ -34,35 +27,29 @@ import cz.cuni.mff.d3s.jdeeco.network.Network;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class ChainTopology {
+public class Flooding {
 
+	/**
+	 * @param args
+	 * @throws DEECoException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws AnnotationProcessorException 
+	 */
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, DEECoException, AnnotationProcessorException {
+		GossipProperties.initialize("test/cz/cuni/mff/d3s/jdeeco/gossip/demo/Flooding.properties");
 		
-		GossipProperties.initialize();
-		
-		/* create main application container */
 		SimulationTimer simulationTimer = new DiscreteEventTimer();
 		DEECoSimulation realm = new DEECoSimulation(simulationTimer);
 		
+		realm.addPlugin(RequestLoggerPlugin.class);
 		realm.addPlugin(Network.class);
 		
-		realm.addPlugin(GossipPlugin.class);
-		realm.addPlugin(KnowledgeProvider.class);
 		realm.addPlugin(ReceptionBuffer.class);
-		
-		realm.addPlugin(RequestLoggerPlugin.class);
-		
+		realm.addPlugin(KnowledgeProvider.class);
 		realm.addPlugin(SendPushedKNPlugin.class);
-		//realm.addPlugin(SendPulledKNPlugin.class);
-		realm.addPlugin(SendHDPlugin.class);
-		realm.addPlugin(SendPLPlugin.class);
-		
-		realm.addPlugin(ReceiveKNStrategy.class);
-		realm.addPlugin(ReceiveHDStrategy.class);
-		realm.addPlugin(ReceivePLStrategy.class);
 		
 		realm.addPlugin(GossipRebroadcastStrategy.class);
-		realm.addPlugin(KnowledgeReceptionStrategy.class);
 		
 		// create a following topology
 		// 1 --- 3 --- 4 --- 2
@@ -87,10 +74,8 @@ public class ChainTopology {
 		
 		deeco3.deployEnsemble(DemoEnsemble.class);
 		deeco4.deployEnsemble(DemoEnsemble.class);
-		//deeco3.deployComponent(new DemoComponent("O3"));
-		//deeco4.deployComponent(new DemoComponent("O4"));
 
-		/* WHEN simulation is performed */
-		realm.start(10000);
+		realm.start(4000);
 	}
+
 }

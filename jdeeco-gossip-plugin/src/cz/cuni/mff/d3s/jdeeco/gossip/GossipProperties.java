@@ -3,6 +3,7 @@
  */
 package cz.cuni.mff.d3s.jdeeco.gossip;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -16,23 +17,36 @@ public final class GossipProperties {
 	 * Loads user properties specified by the user in the config.properties file.
 	 */
 	public static void initialize() {
-		InputStream input = null;
-		
+		InputStream input = GossipProperties.class.getClassLoader().getResourceAsStream("config.properties");
+		initialize(input);
+	}
+	/**
+	 * Loads user properties specified in the given {@code config}
+	 * 
+	 * @param config
+	 */
+	public static void initialize(InputStream config) {
 		try {
-			input = GossipProperties.class.getClassLoader().getResourceAsStream("config.properties");
-			
-			System.getProperties().load(input);
+			System.getProperties().load(config);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		finally {
-			if (input != null) {
+			if (config != null) {
 				try {
-					input.close();
+					config.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+	public static void initialize(String config) {
+		try {
+			InputStream input = new FileInputStream(config);
+			initialize(input);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
