@@ -91,6 +91,10 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 		
 		// register L2 strategy
 		net.getL2().registerL2Strategy(this);
+		
+		// TODO: this is a hack, remove it
+		if (nodeId == 1)
+			System.out.println("Node;Time;Action;Type;Data");
 	}
 	
 }
