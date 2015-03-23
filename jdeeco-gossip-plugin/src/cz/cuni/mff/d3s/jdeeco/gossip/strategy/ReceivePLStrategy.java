@@ -14,7 +14,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
 public class ReceivePLStrategy extends ReceiveBaseStrategy {
-	
+		
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy#processL2Packet(cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet)
 	 */
@@ -37,10 +37,11 @@ public class ReceivePLStrategy extends ReceiveBaseStrategy {
 				//	local reception stays unchanged and a max value will be taken for
 				//	the global reception.
 				//	this knowledge will be PULLed as well
-				messageBuffer.receiveGlobal(header.id, header.timestamp);
+				messageBuffer.receivePull(header.id, header.timestamp);
+				//messageBuffer.receiveGlobal(header.id, header.timestamp);
 				
 				// make this knowledge as PULLed, will be broadcasted when present
-				messageBuffer.notifyPull(header.id);
+				//messageBuffer.notifyPull(header.id);
 			}
 		}
 	}

@@ -85,10 +85,17 @@ public class KnowledgeProvider implements DEECoPlugin {
 	
 	public KnowledgeData getComponentKnowledge(String id) {
 		try {
-			if (kmContainer.hasLocal(id))
+			if (kmContainer.hasLocal(id)) {
 				return prepareKnowledgeData(kmContainer.getLocal(id), true);
-			else if (kmContainer.hasReplica(id))
-				return prepareKnowledgeData(kmContainer.getReplica(null, id), true);
+			}
+			else if (kmContainer.hasReplica(id)) {
+				for (KnowledgeManager r : kmContainer.getReplicas()) {
+					if (id.equals(r.getId())) {
+						return prepareKnowledgeData(r, false);
+					}
+				}
+			}
+			
 		} catch (KnowledgeNotFoundException e) { }
 		
 		// null if KnowledgeManager or Knowledge not found
@@ -105,6 +112,9 @@ public class KnowledgeProvider implements DEECoPlugin {
 		return kmContainer.hasLocal(componentId);
 	}
 	
+	/*public boolean hasKnowledgeManager(String componentId) {
+		return kmContainer.hasLocal(componentId) || kmContainer.hasReplica(componentId);
+	}*/
 	
 	private KnowledgeData prepareKnowledgeData(KnowledgeManager km, boolean isLocalKnowledge) throws KnowledgeNotFoundException {
 		// TODO: version is implemented by current time

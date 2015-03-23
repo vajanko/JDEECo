@@ -52,7 +52,7 @@ public class ChainTopology {
 		realm.addPlugin(RequestLoggerPlugin.class);
 		
 		realm.addPlugin(SendPushedKNPlugin.class);
-		realm.addPlugin(SendPulledKNPlugin.class);
+		//realm.addPlugin(SendPulledKNPlugin.class);
 		realm.addPlugin(SendHDPlugin.class);
 		realm.addPlugin(SendPLPlugin.class);
 		
@@ -84,6 +84,8 @@ public class ChainTopology {
 		deeco2.deployComponent(new DemoComponent("D2"));
 		deeco2.deployEnsemble(DemoEnsemble.class);
 		
+		deeco3.deployEnsemble(DemoEnsemble.class);
+		deeco4.deployEnsemble(DemoEnsemble.class);
 		//deeco3.deployComponent(new DemoComponent("O3"));
 		//deeco4.deployComponent(new DemoComponent("O4"));
 

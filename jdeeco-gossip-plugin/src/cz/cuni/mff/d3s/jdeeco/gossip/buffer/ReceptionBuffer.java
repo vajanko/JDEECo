@@ -46,10 +46,6 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 * and an update (request for reception) is required.
 	 */
 	private long localTimeout;
-	/**
-	 * A queue of pulled items.
-	 */
-	private Collection<String> pullQueue = new ArrayList<String>();
 	
 	/**
 	 * Stores information about receiving a message with given {@code id} locally.
@@ -105,17 +101,48 @@ public class ReceptionBuffer implements DEECoPlugin {
 				info.globalReception = time;
 		}
 	}
-	/*public void receivePull(String id, long time) {
+	/**
+	 * Stores information about receiving  a pull request for a message with
+	 * given {@code id}.
+	 * 
+	 * @param id Unique message identifier
+	 * @param time System or simulation time of last message received by remote node.
+	 */
+	public void receivePull(String id, long time) {
 		if (!buffer.containsKey(id)) {
-			buffer.put(id, new ItemInfo(MINUS_INFINITE, time));
+			ItemInfo info = new ItemInfo(MINUS_INFINITE, time);
+			info.pulled = true;
+			buffer.put(id, info);
 		}
 		else {
 			ItemInfo info = buffer.get(id);
-			info.localReception = MINUS_INFINITE;
+			info.pulled = true;
+			//info.localReception = MINUS_INFINITE;
 			if (info.globalReception < time)
 				info.globalReception = time;
 		}
-	}*/
+	}
+	/**
+	 * Gets indication whether particular message was pulled on current node.
+	 * 
+	 * @param id Unique message identifier.
+	 * @return True if message was pulled, otherwise false.
+	 */
+	public boolean getPulledTag(String id) {
+		ItemInfo info = buffer.get(id);
+		return info != null && info.pulled;
+	}
+	/**
+	 * Clear pull indication for particular message.
+	 * 
+	 * @param id Unique message identifier.
+	 */
+	public void clearPulledTag(String id) {
+		ItemInfo info = buffer.get(id);
+		if (info != null) {
+			info.pulled = false;
+		}
+	}
 	
 	/**
 	 * Gets reception time of locally received item identified by given {@code id}
@@ -210,9 +237,12 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 * 
 	 * @param id Unique identifier of knowledge data.
 	 */
-	public void notifyPull(String id) {
-		pullQueue.add(id);
-	}
+	/*public void notifyPull(String id) {
+		ItemInfo info = buffer.get(id);
+		if (info != null)
+			info.pulled = true;
+		//pullQueue.add(id);
+	}*/
 	/**
 	 * Gets collection of IDs of currently pulled knowledge data which
 	 * should be broadcasted.
@@ -220,14 +250,21 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 * @return Collection of component IDs
 	 */
 	public Collection<String> getPulledItems() {
-		return pullQueue;
+		ArrayList<String> result = new ArrayList<String>();
+		for (Entry<String, ItemInfo> item : buffer.entrySet())
+			if (item.getValue().pulled)
+				result.add(item.getKey());
+		return result;
 	}
 	/**
-	 * Marks all pulled knowledge data as processed.
+	 * Mark particular pulled knowledge data as processed.
+	 * @param id
 	 */
-	public void clearPulledItems() {
-		pullQueue.clear();
-	}
+	/*public void clearPull(String id) {
+		ItemInfo info = buffer.get(id);
+		if (info != null)
+			info.pulled = false;
+	}*/
 	
 	/**
 	 * A helper structure for holding information about item reception times.
@@ -249,6 +286,8 @@ public class ReceptionBuffer implements DEECoPlugin {
 		 * Invariant: {@link #localReception} <= {@link #globalReception}
 		 */
 		public long globalReception;
+		
+		public boolean pulled = false;
 		
 		public ItemInfo(long localReception, long globalReception) {
 			this.localReception = localReception;

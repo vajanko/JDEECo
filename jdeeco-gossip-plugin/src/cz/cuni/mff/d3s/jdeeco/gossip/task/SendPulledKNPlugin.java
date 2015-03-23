@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
+import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 
 /**
@@ -30,10 +31,16 @@ public class SendPulledKNPlugin extends SendBaseKNPlugin {
 			KnowledgeData kd = knowledgeProvider.getComponentKnowledge(id);
 			if (kd != null) {
 				result.add(kd);
+				
+				// this is necessary only when responding to PULL request on local data
+				KnowledgeMetaData meta = kd.getMetaData();
+				messageBuffer.receiveLocal(meta.componentId, meta.createdAt);
 			}
 		}
 		
-		messageBuffer.clearPulledItems();
+		for (KnowledgeData kd : result) {
+			messageBuffer.clearPulledTag(kd.getMetaData().componentId);
+		}
 		
 		return result;
 	}
