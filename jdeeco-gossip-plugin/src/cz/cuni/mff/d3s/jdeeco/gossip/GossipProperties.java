@@ -6,6 +6,8 @@ package cz.cuni.mff.d3s.jdeeco.gossip;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * 
@@ -130,6 +132,22 @@ public final class GossipProperties {
 	 */
 	public static final long getPushlishPLTimeout() {
 		return Long.getLong(PUBLISH_PL_TIMEOUT, PUBLISH_PL_TIMEOUT_DEFAULT);
+	}
+	
+	public static final String GOSSIP_LOGGER = "deeco.gossip.logger";
+	/**
+	 * Get logger type of gossip requests. Value can be either {@code console}
+	 * for console logger or filename of output file.
+	 * 
+	 * @return Type of gossip request logger - {@code console} or filename.
+	 */
+	public static final String getGossipLogger() {
+		return System.getProperty(GOSSIP_LOGGER, null);
+	}
+	public static final String GOSSIP_FEATURES = "deeco.gossip.features";
+	public static final Collection<String> getGossipFeatures() {
+		String features = System.getProperty(GOSSIP_FEATURES, "");
+		return Arrays.asList(features.split(";"));
 	}
 	
 	private static double getDouble(String name, double def) {

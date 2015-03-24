@@ -3,8 +3,6 @@
  */
 package cz.cuni.mff.d3s.jdeeco.gossip.demo;
 
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 
 import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessorException;
@@ -38,7 +36,7 @@ import cz.cuni.mff.d3s.jdeeco.network.Network;
  */
 public class ChainTopology {
 
-	public static void main(String[] args) throws InstantiationException, IllegalAccessException, DEECoException, AnnotationProcessorException, FileNotFoundException {
+	public static void main(String[] args) throws InstantiationException, IllegalAccessException, DEECoException, AnnotationProcessorException {
 		
 		GossipProperties.initialize();
 		
@@ -77,15 +75,11 @@ public class ChainTopology {
 		links.add(new NetworkLink(4, 2));
 		MulticastDevice multicast = new MulticastDevice(3, links);
 		realm.addPlugin(multicast);
-		
-		PrintStream logStream = new PrintStream("chain.csv");
-		logStream.println("Node;Time;Action;Type;Data");
-		RequestLoggerPlugin logPlugin = new RequestLoggerPlugin(logStream);
-		
-		DEECoNode deeco1 = realm.createNode(1, logPlugin);
-		DEECoNode deeco3 = realm.createNode(3, logPlugin);
-		DEECoNode deeco4 = realm.createNode(4, logPlugin);
-		DEECoNode deeco2 = realm.createNode(2, logPlugin);
+			
+		DEECoNode deeco1 = realm.createNode(1);
+		DEECoNode deeco3 = realm.createNode(3);
+		DEECoNode deeco4 = realm.createNode(4);
+		DEECoNode deeco2 = realm.createNode(2);
 		
 		deeco1.deployComponent(new DemoComponent("D1"));
 		deeco1.deployEnsemble(DemoEnsemble.class);
@@ -100,7 +94,5 @@ public class ChainTopology {
 
 		/* WHEN simulation is performed */
 		realm.start(10000);
-		
-		logStream.close();
 	}
 }

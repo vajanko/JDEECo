@@ -3,6 +3,7 @@
  */
 package cz.cuni.mff.d3s.jdeeco.gossip;
 
+import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
@@ -29,13 +30,29 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	private CurrentTimeProvider timeProvider;
 	private Layer1 layer1;
 	private int nodeId;
-	private PrintStream outputStream;
 	
-	public RequestLoggerPlugin(PrintStream outputStream) {
-		this.outputStream = outputStream;
+	private static PrintStream outputStream = null;
+	public static void initOutputStream(PrintStream outputStream) {
+		RequestLoggerPlugin.outputStream = outputStream;
+		// print header
+		outputStream.println("Node;Time;Action;Type;Data");
 	}
-	public RequestLoggerPlugin() {
-		this(System.out);
+	public static void initOutputStream(String filename) throws FileNotFoundException {
+		initOutputStream(new PrintStream(filename));
+	}
+	public static void initOutputStream() {
+		if (outputStream != null)
+			return;		// this is a singleton instance
+		
+		String logger = GossipProperties.getGossipLogger();
+		if (logger.equalsIgnoreCase("console")) {
+			initOutputStream(System.out);
+		}
+		else {
+			try {
+				initOutputStream(logger);
+			} catch (FileNotFoundException e) { }
+		}
 	}
 	
 	private static String getMessageType(L2PacketType type) {
@@ -51,7 +68,7 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	private void printRequest(String action, L2PacketType type, Object data) {
 		long time = timeProvider.getCurrentMilliseconds();
 		String msgType = getMessageType(type);
-		outputStream.println(String.format("[%d];%4d;%s;%s;%s", nodeId, time, action, msgType, data));
+		outputStream.println(String.format("%d;%4d;%s;%s;%s", nodeId, time, action, msgType, data));
 	}
 	
 	/* (non-Javadoc)
@@ -101,8 +118,8 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 		// register L2 strategy
 		net.getL2().registerL2Strategy(this);
 		
-		//if (nodeId == 1)
-		//	System.out.println("Node;Time;Action;Type;Data");
+		// initialise stream for logger output
+		initOutputStream();
 	}
 	
 }
