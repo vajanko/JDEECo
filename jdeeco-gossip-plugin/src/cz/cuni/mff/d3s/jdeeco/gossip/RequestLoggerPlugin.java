@@ -3,6 +3,7 @@
  */
 package cz.cuni.mff.d3s.jdeeco.gossip;
 
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,6 +29,14 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	private CurrentTimeProvider timeProvider;
 	private Layer1 layer1;
 	private int nodeId;
+	private PrintStream outputStream;
+	
+	public RequestLoggerPlugin(PrintStream outputStream) {
+		this.outputStream = outputStream;
+	}
+	public RequestLoggerPlugin() {
+		this(System.out);
+	}
 	
 	private static String getMessageType(L2PacketType type) {
 		if (type.equals(L2PacketType.KNOWLEDGE))
@@ -42,7 +51,7 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	private void printRequest(String action, L2PacketType type, Object data) {
 		long time = timeProvider.getCurrentMilliseconds();
 		String msgType = getMessageType(type);
-		System.out.println(String.format("[%d];%4d;%s;%s;%s", nodeId, time, action, msgType, data));
+		outputStream.println(String.format("[%d];%4d;%s;%s;%s", nodeId, time, action, msgType, data));
 	}
 	
 	/* (non-Javadoc)
@@ -92,9 +101,8 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 		// register L2 strategy
 		net.getL2().registerL2Strategy(this);
 		
-		// TODO: this is a hack, remove it
-		if (nodeId == 1)
-			System.out.println("Node;Time;Action;Type;Data");
+		//if (nodeId == 1)
+		//	System.out.println("Node;Time;Action;Type;Data");
 	}
 	
 }

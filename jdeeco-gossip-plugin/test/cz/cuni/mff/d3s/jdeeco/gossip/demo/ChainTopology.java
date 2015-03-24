@@ -3,6 +3,8 @@
  */
 package cz.cuni.mff.d3s.jdeeco.gossip.demo;
 
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessorException;
@@ -36,7 +38,7 @@ import cz.cuni.mff.d3s.jdeeco.network.Network;
  */
 public class ChainTopology {
 
-	public static void main(String[] args) throws InstantiationException, IllegalAccessException, DEECoException, AnnotationProcessorException {
+	public static void main(String[] args) throws InstantiationException, IllegalAccessException, DEECoException, AnnotationProcessorException, FileNotFoundException {
 		
 		GossipProperties.initialize();
 		
@@ -50,6 +52,7 @@ public class ChainTopology {
 		realm.addPlugin(KnowledgeProvider.class);
 		realm.addPlugin(ReceptionBuffer.class);
 		
+		// print to console as well as to the file
 		realm.addPlugin(RequestLoggerPlugin.class);
 		
 		realm.addPlugin(SendPushedKNPlugin.class);
@@ -73,11 +76,16 @@ public class ChainTopology {
 		links.add(new NetworkLink(3, 4));
 		links.add(new NetworkLink(4, 2));
 		MulticastDevice multicast = new MulticastDevice(3, links);
+		realm.addPlugin(multicast);
 		
-		DEECoNode deeco1 = realm.createNode(1, multicast);
-		DEECoNode deeco3 = realm.createNode(3, multicast);
-		DEECoNode deeco4 = realm.createNode(4, multicast);
-		DEECoNode deeco2 = realm.createNode(2, multicast);
+		PrintStream logStream = new PrintStream("chain.csv");
+		logStream.println("Node;Time;Action;Type;Data");
+		RequestLoggerPlugin logPlugin = new RequestLoggerPlugin(logStream);
+		
+		DEECoNode deeco1 = realm.createNode(1, logPlugin);
+		DEECoNode deeco3 = realm.createNode(3, logPlugin);
+		DEECoNode deeco4 = realm.createNode(4, logPlugin);
+		DEECoNode deeco2 = realm.createNode(2, logPlugin);
 		
 		deeco1.deployComponent(new DemoComponent("D1"));
 		deeco1.deployEnsemble(DemoEnsemble.class);
@@ -92,5 +100,7 @@ public class ChainTopology {
 
 		/* WHEN simulation is performed */
 		realm.start(10000);
+		
+		logStream.close();
 	}
 }
