@@ -60,4 +60,12 @@ public class GossipHelper {
 	public static void initialize(DEECoSimulation sim, Collection<String> features) {
 		initPlugins(sim, features);
 	}
+	
+	public static double getDouble(String name, double def) {
+		String prop = System.getProperty(name, Double.toString(def));
+		
+		double value = Double.parseDouble(prop);
+		
+		return value;
+	}
 }

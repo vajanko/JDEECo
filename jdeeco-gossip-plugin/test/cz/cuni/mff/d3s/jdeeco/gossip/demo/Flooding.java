@@ -3,8 +3,6 @@
  */
 package cz.cuni.mff.d3s.jdeeco.gossip.demo;
 
-import java.util.ArrayList;
-
 import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessorException;
 import cz.cuni.mff.d3s.deeco.runners.DEECoSimulation;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoException;
@@ -12,11 +10,9 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoNode;
 import cz.cuni.mff.d3s.deeco.timer.DiscreteEventTimer;
 import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipHelper;
-import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
+import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoComponent;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoEnsemble;
-import cz.cuni.mff.d3s.jdeeco.gossip.device.MulticastDevice;
-import cz.cuni.mff.d3s.jdeeco.gossip.device.NetworkLink;
 
 /**
  * 
@@ -32,25 +28,13 @@ public class Flooding {
 	 * @throws AnnotationProcessorException 
 	 * @throws FileNotFoundException 
 	 */
-	public static void main(String[] args) throws InstantiationException, IllegalAccessException, DEECoException, AnnotationProcessorException {
-		GossipProperties.initialize("test/cz/cuni/mff/d3s/jdeeco/gossip/demo/Flooding.properties");
-		
+	public static void main(String[] args) throws InstantiationException, IllegalAccessException, DEECoException, AnnotationProcessorException {	
 		SimulationTimer simulationTimer = new DiscreteEventTimer();
 		DEECoSimulation realm = new DEECoSimulation(simulationTimer);
 		
 		GossipHelper.initialize(realm, "test/cz/cuni/mff/d3s/jdeeco/gossip/demo/Flooding.properties");
-		
-		// create a following topology
-		// 1 --- 3 --- 4 --- 2
-		// on node 1 and 2 are deployed components D1 and D2 respectively 
-			
-		ArrayList<NetworkLink> links = new ArrayList<NetworkLink>();
-		links.add(new NetworkLink(1, 3));
-		links.add(new NetworkLink(3, 4));
-		links.add(new NetworkLink(4, 2));
-		MulticastDevice multicast = new MulticastDevice(3, links);
-		realm.addPlugin(multicast);
-		
+		GossipPlugin.registerPlugin(realm);
+				
 		DEECoNode deeco1 = realm.createNode(1);
 		DEECoNode deeco3 = realm.createNode(3);
 		DEECoNode deeco4 = realm.createNode(4);

@@ -3,7 +3,6 @@ package cz.cuni.mff.d3s.jdeeco.gossip.task;
 import java.util.Collection;
 
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
-import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 
 /**
  * Broadcasts local knowledge data.
@@ -12,8 +11,14 @@ import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
  */
 public class SendPushedKNPlugin extends SendBaseKNPlugin {
 	
+	public static final String TASK_PERIOD = "deeco.sendPushedKN.period";
+	/**
+	 * Default value of knowledge broadcasting period in milliseconds.
+	 */
+	public static final long TASK_PERIOD_DEFAULT = 2000;
+	
 	public SendPushedKNPlugin() {
-		super(GossipProperties.getPublishKNPeriod());
+		super(Long.getLong(TASK_PERIOD, TASK_PERIOD_DEFAULT));
 	}
 	
 	/* (non-Javadoc)

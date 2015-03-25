@@ -13,7 +13,7 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
+import cz.cuni.mff.d3s.jdeeco.gossip.GossipHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
@@ -31,6 +31,12 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
  */
 public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 
+	public static final String REBROADCAST_PROBABILITY = "deeco.gossipRebroadcast.probability";
+	/**
+	 * Default value of knowledge rebroadcast probability when received by current node.
+	 */
+	public static final double REBROADCAST_PROBABILITY_DEFAULT = 0.5;
+	
 	private final Random generator = new Random();
 	private double probability;
 	private Layer2 networkLayer;
@@ -84,13 +90,15 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 	 */
 	@Override
 	public void init(DEECoContainer container) {
+		// initialise dependencies
 		this.knowledgeProvider = container.getPluginInstance(KnowledgeProvider.class);
 		this.messageBuffer = container.getPluginInstance(ReceptionBuffer.class);
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
 		// register L2 strategy
 		this.networkLayer.registerL2Strategy(this);
 		
-		this.probability = GossipProperties.getPublishProbability();
+		// config parameters
+		this.probability = GossipHelper.getDouble(REBROADCAST_PROBABILITY, REBROADCAST_PROBABILITY_DEFAULT);
 	}
 
 }

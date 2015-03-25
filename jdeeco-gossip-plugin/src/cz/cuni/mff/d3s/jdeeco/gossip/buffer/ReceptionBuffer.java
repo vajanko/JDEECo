@@ -14,7 +14,6 @@ import java.util.Map.Entry;
 
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 
 /**
  * Buffered collection of items which are passed between multiple nodes across
@@ -31,6 +30,12 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 */
 	public static final long MINUS_INFINITE = Long.MIN_VALUE;
 	
+	public static final String GLOBAL_TIMEOUT = "deeco.receptionBuffer.globalTimeout";
+	public static final long GLOBAL_TIMEOUT_DEFAULT = 20000;
+	
+	public static final String LOCAL_TIMEOUT = "deeco.receptionBuffer.localTimeout";
+	public static final long LOCAL_TIMEOUT_DEFAULT = 3000;
+	
 	/**
 	 * A collection of item IDs and associated information about item reception
 	 * by the current node and globally by nodes in the network.
@@ -46,6 +51,14 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 * and an update (request for reception) is required.
 	 */
 	private long localTimeout;
+	
+	/**
+	 * 
+	 */
+	public ReceptionBuffer() {
+		localTimeout = Long.getLong(LOCAL_TIMEOUT, LOCAL_TIMEOUT_DEFAULT);
+		globalTimeout = Long.getLong(GLOBAL_TIMEOUT, GLOBAL_TIMEOUT_DEFAULT);
+	}
 	
 	/**
 	 * Stores information about receiving a message with given {@code id} locally.
@@ -286,7 +299,6 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 */
 	@Override
 	public void init(DEECoContainer container) {
-		localTimeout = GossipProperties.getPublishKNTimeout();
-		globalTimeout = GossipProperties.getPushlishPLTimeout();
+		
 	}
 }

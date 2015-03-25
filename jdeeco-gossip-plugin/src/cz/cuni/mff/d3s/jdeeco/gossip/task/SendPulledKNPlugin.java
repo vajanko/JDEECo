@@ -8,17 +8,20 @@ import java.util.Collection;
 
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
-import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 
 /**
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
 public class SendPulledKNPlugin extends SendBaseKNPlugin {
-
+	public static final String TASK_PERIOD = "deeco.sendPulledKN.period";
+	/**
+	 * Default value of knowledge broadcasting period in milliseconds.
+	 */
+	public static final long TASK_PERIOD_DEFAULT = 2000;
+	
 	public SendPulledKNPlugin() {
-		// TODO: name this parameter properly
-		super(GossipProperties.getPublishHDPeriod());
+		super(Long.getLong(TASK_PERIOD, TASK_PERIOD_DEFAULT));
 	}
 
 	/* (non-Javadoc)

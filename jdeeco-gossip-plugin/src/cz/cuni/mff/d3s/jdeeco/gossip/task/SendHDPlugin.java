@@ -3,7 +3,6 @@ package cz.cuni.mff.d3s.jdeeco.gossip.task;
 import java.util.Collection;
 import java.util.Iterator;
 
-import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.HeaderPayload;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ItemHeader;
 import cz.cuni.mff.d3s.jdeeco.network.address.MANETBroadcastAddress;
@@ -18,8 +17,14 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.PacketHeader;
  */
 public class SendHDPlugin extends SendBasePlugin {
 	
+	public static final String TASK_PERIOD = "deeco.sendHD.period";
+	/**
+	 * Default value of message headers broadcasting period in milliseconds.
+	 */
+	public static final long TASK_PERIOD_DEFAULT = 2000;
+	
 	public SendHDPlugin() {
-		super(GossipProperties.getPublishHDPeriod());
+		super(Long.getLong(TASK_PERIOD, TASK_PERIOD_DEFAULT));
 	}
 	
 	/* (non-Javadoc)

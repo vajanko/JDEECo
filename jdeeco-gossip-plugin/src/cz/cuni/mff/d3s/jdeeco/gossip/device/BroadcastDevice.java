@@ -29,6 +29,10 @@ import cz.cuni.mff.d3s.jdeeco.network.l1.ReceivedInfo;
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
 public class BroadcastDevice implements DEECoPlugin {
+	
+	public static final String BROADCAST_DELAY = "deeco.broadcast.delay";
+	public static final int BROADCAST_DELAY_DEFAULT = 0;
+	
 	final int PACKET_SIZE = 128;
 	final long constantDelay;
 
@@ -125,7 +129,7 @@ public class BroadcastDevice implements DEECoPlugin {
 	 * Delivers packets immediately
 	 */
 	public BroadcastDevice() {
-		this(0);
+		this(Integer.getInteger(BROADCAST_DELAY, BROADCAST_DELAY_DEFAULT));
 	}
 
 	/**

@@ -2,7 +2,6 @@ package cz.cuni.mff.d3s.jdeeco.gossip.task;
 
 import java.util.Collection;
 
-import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.HeaderPayload;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ItemHeader;
 import cz.cuni.mff.d3s.jdeeco.network.address.MANETBroadcastAddress;
@@ -17,8 +16,11 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.PacketHeader;
  */
 public class SendPLPlugin extends SendBasePlugin {
 	
+	public static final String TASK_PERIOD = "deeco.sendPL.period";
+	public static final long TASK_PERIOD_DEFAULT = 1000;
+	
 	public SendPLPlugin() {
-		super(GossipProperties.getPublishPLPeriod());
+		super(Long.getLong(TASK_PERIOD, TASK_PERIOD_DEFAULT));
 	}
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.task.TimerTaskListener#at(long, java.lang.Object)

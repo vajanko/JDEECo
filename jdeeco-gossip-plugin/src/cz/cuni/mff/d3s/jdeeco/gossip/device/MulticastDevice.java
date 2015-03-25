@@ -31,6 +31,10 @@ import cz.cuni.mff.d3s.jdeeco.network.l1.ReceivedInfo;
  *
  */
 public class MulticastDevice implements DEECoPlugin {
+	
+	public static final String BROADCAST_DELAY = "deeco.broadcast.delay";
+	public static final int BROADCAST_DELAY_DEFAULT = 0;
+	
 	/**
 	 * Loop device used to provide broadcast device to layer 1
 	 */
@@ -133,7 +137,15 @@ public class MulticastDevice implements DEECoPlugin {
 	 * Constructs infrastructure loop-back with zero delay
 	 */
 	public MulticastDevice(Collection<NetworkLink> links) {
-		this(0, links);
+		this(Integer.getInteger(BROADCAST_DELAY, BROADCAST_DELAY_DEFAULT), links);
+	}
+	/**
+	 * 
+	 */
+	public MulticastDevice() {
+		this(new ArrayList<NetworkLink>());
+		
+		// TODO: initialise the network topology
 	}
 
 	/**

@@ -27,6 +27,9 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy;
  */
 public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlugin {
 	
+	public static final String LOGGER_TYPE = "deeco.requestLogger.type";
+	public static final String LOGGER_TYPE_DEFAULT = "console";
+	
 	private CurrentTimeProvider timeProvider;
 	private Layer1 layer1;
 	private int nodeId;
@@ -44,7 +47,7 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 		if (outputStream != null)
 			return;		// this is a singleton instance
 		
-		String logger = GossipProperties.getGossipLogger();
+		String logger = System.getProperty(LOGGER_TYPE, LOGGER_TYPE_DEFAULT);
 		if (logger.equalsIgnoreCase("console")) {
 			initOutputStream(System.out);
 		}
