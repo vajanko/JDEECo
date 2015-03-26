@@ -12,8 +12,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
+import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
+import cz.cuni.mff.d3s.jdeeco.network.Network;
+import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
+import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
+import cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy;
+import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
 
 /**
  * Buffered collection of items which are passed between multiple nodes across
@@ -23,7 +30,7 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class ReceptionBuffer implements DEECoPlugin {
+public class ReceptionBuffer implements L2Strategy, DEECoPlugin {
 	
 	/**
 	 * Minimal possible value of item reception.
@@ -70,10 +77,11 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 * 
 	 * @param id Unique message ID
 	 * @param time System or simulation time of message received by current node.
+	 * @param version Current message version
 	 */
-	public void receiveLocal(String id, long time) {
+	public void receiveLocal(String id, long time, long version) {
 		if (!buffer.containsKey(id)) {
-			buffer.put(id, new ItemInfo(time, time));
+			buffer.put(id, new ItemInfo(time, time, version));
 		}
 		else {
 			ItemInfo info = buffer.get(id); 
@@ -85,6 +93,8 @@ public class ReceptionBuffer implements DEECoPlugin {
 			// received somewhere in a future time.
 			if (info.globalReception < time)
 				info.globalReception = time;
+			if (info.version < version)
+				info.version = version;
 		}
 	}
 	/**
@@ -106,7 +116,7 @@ public class ReceptionBuffer implements DEECoPlugin {
 			// Our approach is that when a header of item never seen before is received
 			// we are waiting for PULL timeout and only then we sent the PULL request.
 			// It is probable that the item will be received meantime.
-			buffer.put(id, new ItemInfo(time, time));
+			buffer.put(id, new ItemInfo(time, time, MINUS_INFINITE));
 		}
 		else {
 			ItemInfo info = buffer.get(id);
@@ -124,7 +134,7 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 */
 	public void receivePull(String id, long time) {
 		if (!buffer.containsKey(id)) {
-			ItemInfo info = new ItemInfo(MINUS_INFINITE, time);
+			ItemInfo info = new ItemInfo(MINUS_INFINITE, time, MINUS_INFINITE);
 			info.pulled = true;
 			buffer.put(id, info);
 		}
@@ -197,6 +207,19 @@ public class ReceptionBuffer implements DEECoPlugin {
 			return MINUS_INFINITE;
 		return info.localReception;
 	}
+	/**
+	 * Gets last message version received locally identified by {@code id}
+	 * 
+	 * @param id Unique identifier of received message
+	 * @return Last message version of {@link #MINUS_INFINITE} if the message
+	 * was never received locally.
+	 */
+	public long getVersion(String id) {
+		ItemInfo info = buffer.get(id);
+		if (info == null)
+			return MINUS_INFINITE;
+		return info.version;
+	}
 	
 	/**
 	 * Removes all items from the buffer which are globally expired at 
@@ -259,6 +282,20 @@ public class ReceptionBuffer implements DEECoPlugin {
 	}
 	
 	/**
+	 * Gets indication whether message identified by given ID with provided
+	 * version can be received by the application, that is that the message
+	 * wasn't received already before.
+	 * 
+	 * @param id Unique message identifier.
+	 * @param version Current message version.
+	 * @return True if message can be received otherwise false.
+	 */
+	public boolean canReceive(String id, long version) {
+		ItemInfo info = buffer.get(id);
+		return info == null || info.version <= version;
+	}
+	
+	/**
 	 * A helper structure for holding information about item reception times.
 	 * Notice that this invariant should hold:
 	 * {@link #localReception} <= {@link #globalReception}, because when an item
@@ -278,12 +315,30 @@ public class ReceptionBuffer implements DEECoPlugin {
 		 * Invariant: {@link #localReception} <= {@link #globalReception}
 		 */
 		public long globalReception;
+		/**
+		 * Last message version received by the current node.
+		 */
+		public long version = 0;
 		
 		public boolean pulled = false;
 		
-		public ItemInfo(long localReception, long globalReception) {
+		public ItemInfo(long localReception, long globalReception, long version) {
 			this.localReception = localReception;
 			this.globalReception = globalReception;
+			this.version = version;
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy#processL2Packet(cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet)
+	 */
+	@Override
+	public void processL2Packet(L2Packet packet) {
+		if (packet.header.type.equals(L2PacketType.KNOWLEDGE)) {			
+			KnowledgeData kd = (KnowledgeData)packet.getObject();
+			KnowledgeMetaData meta = kd.getMetaData();
+			
+			receiveLocal(meta.componentId, meta.createdAt, meta.versionId);
 		}
 	}
 
@@ -292,13 +347,15 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 */
 	@Override
 	public List<Class<? extends DEECoPlugin>> getDependencies() {
-		return Arrays.asList();
+		return Arrays.asList(Network.class);
 	}
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#init(cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)
 	 */
 	@Override
 	public void init(DEECoContainer container) {
-		
+		// register L2 strategy
+		Layer2 networkLayer = container.getPluginInstance(Network.class).getL2();
+		networkLayer.registerL2Strategy(this);
 	}
 }

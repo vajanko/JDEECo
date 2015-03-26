@@ -37,7 +37,7 @@ public class SendPulledKNPlugin extends SendBaseKNPlugin {
 				
 				// this is necessary only when responding to PULL request on local data
 				KnowledgeMetaData meta = kd.getMetaData();
-				messageBuffer.receiveLocal(meta.componentId, meta.createdAt);
+				messageBuffer.receiveLocal(meta.componentId, meta.createdAt, meta.versionId);
 			}
 		}
 		

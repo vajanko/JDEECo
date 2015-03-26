@@ -127,10 +127,12 @@ public class KnowledgeProvider implements DEECoPlugin {
 		if (isLocalKnowledge) {
 			// local knowledge is always up-to-date therefore we use current time
 			createdAt = timeProvider.getCurrentMilliseconds();
+			versionId = timeProvider.getCurrentMilliseconds();
 		}
 		else {
 			// get time when replica knowledge data was last time received
 			createdAt = messageBuffer.getLocalReceptionTime(componentId);
+			versionId = messageBuffer.getVersion(componentId);
 		}
 		int hopCount = 1;
 		

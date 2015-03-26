@@ -18,7 +18,7 @@ public class ReceiveKNStrategy extends ReceiveBaseStrategy {
 	 */
 	@Override
 	public void processL2Packet(L2Packet packet) {
-		
+				
 		if (packet.header.type.equals(L2PacketType.KNOWLEDGE)) {
 			KnowledgeData kd = (KnowledgeData)packet.getObject();
 			
@@ -27,7 +27,7 @@ public class ReceiveKNStrategy extends ReceiveBaseStrategy {
 			// is lost and does not participate in the communication any more.
 			KnowledgeMetaData meta = kd.getMetaData();
 
-			messageBuffer.receiveLocal(meta.componentId, meta.createdAt);
+			messageBuffer.receiveLocal(meta.componentId, meta.createdAt, meta.versionId);
 		}
 	}
 }

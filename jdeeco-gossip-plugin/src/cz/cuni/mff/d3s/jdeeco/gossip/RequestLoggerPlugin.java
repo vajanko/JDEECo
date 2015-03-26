@@ -8,6 +8,7 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 
+import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
@@ -27,18 +28,26 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy;
  */
 public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlugin {
 	
-	public static final String LOGGER_TYPE = "deeco.requestLogger.type";
-	public static final String LOGGER_TYPE_DEFAULT = "console";
+	public static final String LOGGER_OUT = "deeco.requestLogger.out";
+	public static final String LOGGER_OUT_DEFAULT = "console";
+	public static final String LOGGER_ARG1 = "deeco.requestLogger.arg1";
+	public static final String LOGGER_ARG2 = "deeco.requestLogger.arg2";
+	public static final String LOGGER_ARG3 = "deeco.requestLogger.arg3";
 	
 	private CurrentTimeProvider timeProvider;
 	private Layer1 layer1;
 	private int nodeId;
 	
+	private String arg1;
+	private String arg2;
+	private String arg3;
+	private long lastKnowledgeUpdate = 0;
+	
 	private static PrintStream outputStream = null;
 	public static void initOutputStream(PrintStream outputStream) {
 		RequestLoggerPlugin.outputStream = outputStream;
 		// print header
-		outputStream.println("Node;Time;Action;Type;Data");
+		outputStream.println("Node;Time;Action;Type;Data;Arg1;Arg2;Arg3");
 	}
 	public static void initOutputStream(String filename) throws FileNotFoundException {
 		initOutputStream(new PrintStream(filename));
@@ -47,7 +56,7 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 		if (outputStream != null)
 			return;		// this is a singleton instance
 		
-		String logger = System.getProperty(LOGGER_TYPE, LOGGER_TYPE_DEFAULT);
+		String logger = System.getProperty(LOGGER_OUT, LOGGER_OUT_DEFAULT);
 		if (logger.equalsIgnoreCase("console")) {
 			initOutputStream(System.out);
 		}
@@ -71,7 +80,15 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	private void printRequest(String action, L2PacketType type, Object data) {
 		long time = timeProvider.getCurrentMilliseconds();
 		String msgType = getMessageType(type);
-		outputStream.println(String.format("%d;%4d;%s;%s;%s", nodeId, time, action, msgType, data));
+		
+		if (type.equals(L2PacketType.KNOWLEDGE)) {
+			arg2 = String.valueOf(time - lastKnowledgeUpdate);
+			KnowledgeData kd = (KnowledgeData)data;
+			lastKnowledgeUpdate = kd.getMetaData().createdAt;
+		}
+		
+		outputStream.println(String.format("%d;%4d;%s;%s;%s;%s;%s;%s", 
+				nodeId, time, action, msgType, data, arg1, arg2, arg3));
 	}
 	
 	/* (non-Javadoc)
@@ -123,6 +140,10 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 		
 		// initialise stream for logger output
 		initOutputStream();
+		
+		this.arg1 = System.getProperty(LOGGER_ARG1);
+		this.arg2 = System.getProperty(LOGGER_ARG2);
+		this.arg3 = System.getProperty(LOGGER_ARG3);
 	}
 	
 }
