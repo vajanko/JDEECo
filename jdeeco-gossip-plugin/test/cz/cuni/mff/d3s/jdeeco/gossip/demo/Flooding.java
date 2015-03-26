@@ -9,7 +9,7 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoException;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoNode;
 import cz.cuni.mff.d3s.deeco.timer.DiscreteEventTimer;
 import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
-import cz.cuni.mff.d3s.jdeeco.gossip.GossipHelper;
+import cz.cuni.mff.d3s.jdeeco.gossip.ConfigHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoComponent;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoEnsemble;
@@ -32,7 +32,7 @@ public class Flooding {
 		SimulationTimer simulationTimer = new DiscreteEventTimer();
 		DEECoSimulation realm = new DEECoSimulation(simulationTimer);
 		
-		GossipHelper.initialize(realm, "test/cz/cuni/mff/d3s/jdeeco/gossip/demo/Flooding.properties");
+		ConfigHelper.loadProperties("test/cz/cuni/mff/d3s/jdeeco/gossip/demo/Flooding.properties");
 		GossipPlugin.registerPlugin(realm);
 				
 		DEECoNode deeco1 = realm.createNode(1);

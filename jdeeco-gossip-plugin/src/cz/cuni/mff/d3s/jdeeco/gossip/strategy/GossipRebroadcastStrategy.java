@@ -13,7 +13,7 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.GossipHelper;
+import cz.cuni.mff.d3s.jdeeco.gossip.ConfigHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
@@ -98,7 +98,7 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 		this.networkLayer.registerL2Strategy(this);
 		
 		// config parameters
-		this.probability = GossipHelper.getDouble(REBROADCAST_PROBABILITY, REBROADCAST_PROBABILITY_DEFAULT);
+		this.probability = ConfigHelper.getDouble(REBROADCAST_PROBABILITY, REBROADCAST_PROBABILITY_DEFAULT);
 	}
 
 }
