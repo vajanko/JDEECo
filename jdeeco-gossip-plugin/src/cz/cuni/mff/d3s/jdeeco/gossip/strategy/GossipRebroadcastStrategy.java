@@ -67,6 +67,7 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 				
 				if (generator.nextDouble() < probability) {
 					// TODO: extract the packet and create a new one
+					// increment hop count ...
 					networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 				}
 			}

@@ -67,6 +67,7 @@ public class GossipPlugin implements DEECoPlugin {
 		
 		sim.addPlugin(Network.class);
 		sim.addPlugin(ReceptionBuffer.class);
+		sim.addPlugin(ReceiveKNStrategy.class);
 		sim.addPlugin(KnowledgeProvider.class);
 		
 		if (features.contains("logger")) {
@@ -82,7 +83,6 @@ public class GossipPlugin implements DEECoPlugin {
 			sim.addPlugin(SendHDPlugin.class);
 			sim.addPlugin(SendPLPlugin.class);
 			
-			sim.addPlugin(ReceiveKNStrategy.class);
 			sim.addPlugin(ReceiveHDStrategy.class);
 			sim.addPlugin(ReceivePLStrategy.class);
 		}

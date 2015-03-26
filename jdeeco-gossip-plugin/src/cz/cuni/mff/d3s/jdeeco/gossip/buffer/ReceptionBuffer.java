@@ -12,13 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
-import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
-import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy;
 import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
 
@@ -334,12 +331,12 @@ public class ReceptionBuffer implements L2Strategy, DEECoPlugin {
 	 */
 	@Override
 	public void processL2Packet(L2Packet packet) {
-		if (packet.header.type.equals(L2PacketType.KNOWLEDGE)) {			
+		/*if (packet.header.type.equals(L2PacketType.KNOWLEDGE)) {			
 			KnowledgeData kd = (KnowledgeData)packet.getObject();
 			KnowledgeMetaData meta = kd.getMetaData();
 			
 			receiveLocal(meta.componentId, meta.createdAt, meta.versionId);
-		}
+		}*/
 	}
 
 	/* (non-Javadoc)
