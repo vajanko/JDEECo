@@ -8,10 +8,13 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 
+import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManagerContainer;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
+import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
+import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.address.Address;
 import cz.cuni.mff.d3s.jdeeco.network.l1.L2PacketSender;
@@ -34,6 +37,8 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	public static final String LOGGER_ARG2 = "deeco.requestLogger.arg2";
 	public static final String LOGGER_ARG3 = "deeco.requestLogger.arg3";
 	
+	private KnowledgeManagerContainer kmContainer;
+	private ReceptionBuffer messageBuffer;
 	private CurrentTimeProvider timeProvider;
 	private Layer1 layer1;
 	private int nodeId;
@@ -82,8 +87,10 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 		String msgType = getMessageType(type);
 		
 		if (type.equals(L2PacketType.KNOWLEDGE)) {
-			arg2 = String.valueOf(time - lastKnowledgeUpdate);
 			KnowledgeData kd = (KnowledgeData)data;
+			arg2 = kd.getMetaData().componentId;
+			arg3 = String.valueOf(time - lastKnowledgeUpdate);
+			
 			lastKnowledgeUpdate = kd.getMetaData().createdAt;
 		}
 		
@@ -96,6 +103,17 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	 */
 	@Override
 	public void processL2Packet(L2Packet packet) {
+		if (packet.header.type.equals(L2PacketType.KNOWLEDGE)) {
+			KnowledgeData kd = (KnowledgeData)packet.getObject();
+			KnowledgeMetaData meta = kd.getMetaData();
+			
+			if (!messageBuffer.canReceive(meta.componentId, meta.versionId))
+				return;
+			
+			if (kmContainer.hasLocal(meta.componentId))
+				return;
+		}
+		
 		printRequest("RECV", packet.header.type, packet.getObject());
 	}
 	
@@ -117,7 +135,7 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	 */
 	@Override
 	public List<Class<? extends DEECoPlugin>> getDependencies() {
-		return Arrays.asList(Network.class);
+		return Arrays.asList(Network.class, ReceptionBuffer.class);
 	}
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#init(cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)
@@ -125,6 +143,8 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	@Override
 	public void init(DEECoContainer container) {
 		// dependencies
+		this.kmContainer = container.getRuntimeFramework().getContainer();
+		this.messageBuffer = container.getPluginInstance(ReceptionBuffer.class);
 		this.timeProvider = container.getRuntimeFramework().getScheduler().getTimer();
 		this.nodeId = container.getId();
 		
