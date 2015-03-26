@@ -40,6 +40,14 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 	private Layer2 networkLayer;
 	private ReceptionBuffer messageBuffer;
 	private KnowledgeProvider knowledgeProvider;
+	private String nodeId;
+	
+	protected KnowledgeData prepareForRebroadcast(KnowledgeData kd) {		
+		KnowledgeMetaData meta = kd.getMetaData().clone();
+		meta.sender = nodeId;
+		meta.hopCount++;
+		return new KnowledgeData(kd.getKnowledge(), kd.getSecuritySet(), kd.getAuthors(), meta);
+	}
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy#processL2Packet(cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet)
@@ -53,7 +61,8 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 			
 			if (messageBuffer.getPulledTag(meta.componentId)) {
 				// if knowledge was pulled it will be rebroadcasted
-				networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
+				L2Packet pck = new L2Packet(packet.header, prepareForRebroadcast(kd));
+				networkLayer.sendL2Packet(pck, MANETBroadcastAddress.BROADCAST);
 				messageBuffer.clearPulledTag(meta.componentId);
 			}
 			else {
@@ -66,9 +75,8 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 					return;
 				
 				if (generator.nextDouble() < probability) {
-					// TODO: extract the packet and create a new one
-					// increment hop count ...
-					networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
+					L2Packet pck = new L2Packet(packet.header, prepareForRebroadcast(kd));
+					networkLayer.sendL2Packet(pck, MANETBroadcastAddress.BROADCAST);
 				}
 			}
 		}
@@ -92,6 +100,7 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
 		// register L2 strategy
 		this.networkLayer.registerL2Strategy(this);
+		this.nodeId = String.valueOf(container.getId());
 		
 		// config parameters
 		this.probability = ConfigHelper.getDouble(REBROADCAST_PROBABILITY, REBROADCAST_PROBABILITY_DEFAULT);
