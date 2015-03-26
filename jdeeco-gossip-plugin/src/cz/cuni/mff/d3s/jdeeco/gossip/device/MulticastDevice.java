@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
@@ -32,8 +34,11 @@ import cz.cuni.mff.d3s.jdeeco.network.l1.ReceivedInfo;
  */
 public class MulticastDevice implements DEECoPlugin {
 	
-	public static final String BROADCAST_DELAY = "deeco.broadcast.delay";
-	public static final int BROADCAST_DELAY_DEFAULT = 0;
+	public static final String MULTICAST_DELAY = "deeco.multicast.delay";
+	public static final int MULTICAST_DELAY_DEFAULT = 0;
+	
+	public static final String MULTICAST_TOPOLOGY = "deeco.multicast.topology";
+	public static final String MULTICAST_TOPOLOGY_DEFAULT = "";
 	
 	/**
 	 * Loop device used to provide broadcast device to layer 1
@@ -137,7 +142,7 @@ public class MulticastDevice implements DEECoPlugin {
 	 * Constructs infrastructure loop-back with zero delay
 	 */
 	public MulticastDevice(Collection<NetworkLink> links) {
-		this(Integer.getInteger(BROADCAST_DELAY, BROADCAST_DELAY_DEFAULT), links);
+		this(Integer.getInteger(MULTICAST_DELAY, MULTICAST_DELAY_DEFAULT), links);
 	}
 	/**
 	 * 
@@ -145,7 +150,18 @@ public class MulticastDevice implements DEECoPlugin {
 	public MulticastDevice() {
 		this(new ArrayList<NetworkLink>());
 		
-		// TODO: initialise the network topology
+		String topology = System.getProperty(MULTICAST_TOPOLOGY, MULTICAST_TOPOLOGY_DEFAULT);
+		Matcher matcher = Pattern.compile("\\(([^\\)]+)\\)").matcher(topology);
+		int pos = -1;
+		while (matcher.find(pos + 1)) {
+			pos = matcher.start();
+			
+			String[] nodes = matcher.group(1).split(",", 2);
+			int node1 = Integer.parseInt(nodes[0]);
+			int node2 = Integer.parseInt(nodes[1]);
+			
+			this.links.add(new NetworkLink(node1, node2));
+		}
 	}
 
 	/**
