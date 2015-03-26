@@ -35,10 +35,10 @@ public class Gossip {
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, DEECoException, AnnotationProcessorException, FileNotFoundException {
 		ConfigHelper.loadProperties("test/cz/cuni/mff/d3s/jdeeco/gossip/demo/gossip.properties");
 		
-		//RequestLoggerPlugin.initOutputStream("logs/gossip.csv");
-		RequestLoggerPlugin.initOutputStream(System.out);
+		RequestLoggerPlugin.initOutputStream("logs/gossip.csv");
+		//RequestLoggerPlugin.initOutputStream(System.out);
 		
-		for (Double prob = 0.1; prob <= 0.1; prob += 0.1) {
+		for (Double prob = 0.5; prob <= 0.5; prob += 0.1) {
 			
 			System.getProperties().setProperty(GossipRebroadcastStrategy.REBROADCAST_PROBABILITY, prob.toString());
 			System.getProperties().setProperty(RequestLoggerPlugin.LOGGER_ARG1, prob.toString());
@@ -61,7 +61,7 @@ public class Gossip {
 			deeco3.deployEnsemble(DemoEnsemble.class);
 			deeco4.deployEnsemble(DemoEnsemble.class);
 	
-			realm.start(8000);
+			realm.start(10000);
 		}
 	}
 

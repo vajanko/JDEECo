@@ -46,7 +46,6 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	private String arg1;
 	private String arg2;
 	private String arg3;
-	private long lastKnowledgeUpdate = 0;
 	
 	private static PrintStream outputStream = null;
 	public static void initOutputStream(PrintStream outputStream) {
@@ -88,10 +87,11 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 		
 		if (type.equals(L2PacketType.KNOWLEDGE)) {
 			KnowledgeData kd = (KnowledgeData)data;
-			arg2 = kd.getMetaData().componentId;
-			arg3 = String.valueOf(time - lastKnowledgeUpdate);
-			
-			lastKnowledgeUpdate = kd.getMetaData().createdAt;
+			KnowledgeMetaData meta = kd.getMetaData();
+			arg2 = meta.componentId;
+			long lastUpdate = messageBuffer.getLocalReceptionTime(meta.componentId);
+			lastUpdate = lastUpdate == ReceptionBuffer.MINUS_INFINITE ? 0 : lastUpdate;
+			arg3 = String.valueOf(time - lastUpdate);
 		}
 		
 		outputStream.println(String.format("%d;%4d;%s;%s;%s;%s;%s;%s", 

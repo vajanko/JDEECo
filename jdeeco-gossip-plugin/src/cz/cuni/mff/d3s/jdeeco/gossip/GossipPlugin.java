@@ -66,8 +66,8 @@ public class GossipPlugin implements DEECoPlugin {
 		String features = System.getProperty(GOSSIP_FEATURES, GOSSIP_FEATURES_DEFAULT);
 		
 		sim.addPlugin(Network.class);
-		sim.addPlugin(ReceptionBuffer.class);
 		sim.addPlugin(ReceiveKNStrategy.class);
+		sim.addPlugin(ReceptionBuffer.class);
 		sim.addPlugin(KnowledgeProvider.class);
 		
 		if (features.contains("logger")) {
@@ -98,7 +98,7 @@ public class GossipPlugin implements DEECoPlugin {
 		else if (device.equalsIgnoreCase("multicast")) {
 			sim.addPlugin(new MulticastDevice());
 		}
-		
+
 		sim.addPlugin(GossipPlugin.class);
 	}
 
