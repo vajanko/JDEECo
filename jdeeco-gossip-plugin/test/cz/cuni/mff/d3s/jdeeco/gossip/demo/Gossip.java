@@ -61,7 +61,7 @@ public class Gossip {
 			deeco3.deployEnsemble(DemoEnsemble.class);
 			deeco4.deployEnsemble(DemoEnsemble.class);
 	
-			realm.start(10000);
+			realm.start(20000);
 		}
 	}
 

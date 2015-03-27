@@ -66,13 +66,8 @@ public class GossipPlugin implements DEECoPlugin {
 		String features = System.getProperty(GOSSIP_FEATURES, GOSSIP_FEATURES_DEFAULT);
 		
 		sim.addPlugin(Network.class);
-		sim.addPlugin(ReceiveKNStrategy.class);
 		sim.addPlugin(ReceptionBuffer.class);
 		sim.addPlugin(KnowledgeProvider.class);
-		
-		if (features.contains("logger")) {
-			sim.addPlugin(RequestLoggerPlugin.class);
-		}
 		
 		if (features.contains("push")) {
 			sim.addPlugin(SendPushedKNPlugin.class);
@@ -91,6 +86,10 @@ public class GossipPlugin implements DEECoPlugin {
 			sim.addPlugin(GossipRebroadcastStrategy.class);
 		}
 		
+		if (features.contains("logger")) {
+			sim.addPlugin(RequestLoggerPlugin.class);
+		}
+		
 		String device = System.getProperty(GOSSIP_DEVICE, GOSSIP_DEVICE_DEFAULT);
 		if (device.equalsIgnoreCase("broadcast")) {
 			sim.addPlugin(new BroadcastDevice());
@@ -100,6 +99,7 @@ public class GossipPlugin implements DEECoPlugin {
 		}
 
 		sim.addPlugin(GossipPlugin.class);
+		sim.addPlugin(ReceiveKNStrategy.class);
 	}
 
 }

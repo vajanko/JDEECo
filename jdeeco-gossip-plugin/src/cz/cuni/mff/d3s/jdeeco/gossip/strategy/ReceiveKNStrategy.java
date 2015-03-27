@@ -9,6 +9,7 @@ import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
+import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
 
@@ -79,5 +80,11 @@ public class ReceiveKNStrategy extends ReceiveBaseStrategy {
 		super.init(container);
 		
 		this.kmContainer = container.getRuntimeFramework().getContainer();
+		
+		Network net = container.getPluginInstance(Network.class);
+		L2Wrapper wrapper = new L2Wrapper(net.getL2(), this);
+		net.getL1().setL1DataProcessor(wrapper);
+		net.getL2().unregisterL2Strategy(this);
 	}
+	
 }
