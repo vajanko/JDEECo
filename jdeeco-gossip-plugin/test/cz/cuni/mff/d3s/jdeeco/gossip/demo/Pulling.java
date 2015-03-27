@@ -4,6 +4,7 @@
 package cz.cuni.mff.d3s.jdeeco.gossip.demo;
 
 import java.io.FileNotFoundException;
+import java.util.Locale;
 
 import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessorException;
 import cz.cuni.mff.d3s.deeco.runners.DEECoSimulation;
@@ -26,14 +27,15 @@ public class Pulling {
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, DEECoException, AnnotationProcessorException, FileNotFoundException {
 		ConfigHelper.loadProperties("test/cz/cuni/mff/d3s/jdeeco/gossip/demo/pulling.properties");
 		
-		RequestLoggerPlugin.initOutputStream("logs/pulling.csv");
+		//RequestLoggerPlugin.initOutputStream("logs/pulling.csv");
 		//RequestLoggerPlugin.initOutputStream(System.out);
 		
 		for (int i = 0; i <= 10; ++i) {
 			
-			Double prob = 0.1 * i;
-			System.getProperties().setProperty(GossipRebroadcastStrategy.REBROADCAST_PROBABILITY, prob.toString());
-			System.getProperties().setProperty(RequestLoggerPlugin.LOGGER_ARG1, prob.toString());
+			double prob = 0.1 * i;
+			String probStr = String.format(Locale.getDefault(), "%.2f", prob);
+			System.getProperties().setProperty(GossipRebroadcastStrategy.REBROADCAST_PROBABILITY, probStr);
+			System.getProperties().setProperty(RequestLoggerPlugin.LOGGER_ARG1, probStr);
 		
 			SimulationTimer simulationTimer = new DiscreteEventTimer();
 			DEECoSimulation realm = new DEECoSimulation(simulationTimer);
