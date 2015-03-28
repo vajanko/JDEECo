@@ -16,7 +16,7 @@ import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.device.BroadcastLoopback;
 import cz.cuni.mff.d3s.jdeeco.network.l2.strategy.KnowledgeInsertingStrategy;
-import cz.cuni.mff.d3s.jdeeco.publishing.DummyKnowledgePublisher;
+import cz.cuni.mff.d3s.jdeeco.publishing.DefaultKnowledgePublisher;
 
 /**
  * 
@@ -27,7 +27,7 @@ public class ConvoyTest {
 	@Rule
 	public final StandardOutputStreamLog log = new StandardOutputStreamLog();
 
-	public static void main(String[] args) throws AnnotationProcessorException, InterruptedException, DEECoException {
+	public static void main(String[] args) throws AnnotationProcessorException, InterruptedException, DEECoException, InstantiationException, IllegalAccessException {
 		ConvoyTest test = new ConvoyTest();
 
 		test.testConvoyLoopback();
@@ -39,25 +39,27 @@ public class ConvoyTest {
 	 * @throws AnnotationProcessorException
 	 * @throws InterruptedException
 	 * @throws DEECoException
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
 	@Test
-	public void testConvoyLoopback() throws AnnotationProcessorException, InterruptedException, DEECoException {
+	public void testConvoyLoopback() throws AnnotationProcessorException, InterruptedException, DEECoException, InstantiationException, IllegalAccessException {
 		/* create main application container */
 		SimulationTimer simulationTimer = new DiscreteEventTimer(); // also "new WallTimeSchedulerNotifier()"
 		DEECoSimulation realm = new DEECoSimulation(simulationTimer);
-
-		BroadcastLoopback loopback = new BroadcastLoopback();
-
+		realm.addPlugin(new BroadcastLoopback());
+		realm.addPlugin(Network.class);
+		realm.addPlugin(DefaultKnowledgePublisher.class);
+		realm.addPlugin(KnowledgeInsertingStrategy.class);
+		
 		/* create first deeco node */
-		DEECoNode deeco1 = realm.createNode(new Network(), new DummyKnowledgePublisher(),
-				new KnowledgeInsertingStrategy(), loopback);
+		DEECoNode deeco1 = realm.createNode(1);
 		/* deploy components and ensembles */
 		deeco1.deployComponent(new Leader());
 		deeco1.deployEnsemble(ConvoyEnsemble.class);
 
 		/* create second deeco node */
-		DEECoNode deeco2 = realm.createNode(new Network(), new DummyKnowledgePublisher(),
-				new KnowledgeInsertingStrategy(), loopback);
+		DEECoNode deeco2 = realm.createNode(2);
 		/* deploy components and ensembles */
 		deeco2.deployComponent(new Follower());
 		deeco2.deployEnsemble(ConvoyEnsemble.class);
