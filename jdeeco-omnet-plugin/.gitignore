@@ -1,2 +1,5 @@
 /target/
 /.classpath
+/*.dll
+/logs/
+/results/
