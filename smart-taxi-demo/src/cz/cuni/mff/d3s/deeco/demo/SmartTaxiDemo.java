@@ -8,7 +8,6 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoException;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoNode;
 import cz.cuni.mff.d3s.jdeeco.gossip.ConfigHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoComponent;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoEnsemble;
 import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTSimulation;
@@ -31,8 +30,6 @@ public class SmartTaxiDemo {
 		
 		ConfigHelper.loadProperties("config/gossip.properties");
 		
-		RequestLoggerPlugin.initOutputStream("logs/demo.csv");
-		
 		OMNeTSimulation omnet = new OMNeTSimulation();
 		
 		// Create main application container
@@ -48,7 +45,6 @@ public class SmartTaxiDemo {
 		}
 		
 		sim.start(10000);
-
 	}
 
 }
