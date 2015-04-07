@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 public class OMNeTConfigGenerator {
@@ -64,7 +65,7 @@ public class OMNeTConfigGenerator {
 		content.append(String.format("**.numNodes = %d%n", nodes.size()));
 				
 		// Add time limit
-		content.append(String.format("sim-time-limit = %fs%n", (double)limit / 1000));
+		content.append(String.format(Locale.getDefault(), "sim-time-limit = %fs%n", (double)limit / 1000));
 		
 		// Add nodes
 		int counter = 0;
