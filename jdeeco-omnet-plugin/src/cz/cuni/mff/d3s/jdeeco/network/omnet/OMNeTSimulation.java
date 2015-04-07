@@ -17,13 +17,16 @@ import cz.cuni.mff.d3s.jdeeco.network.address.IPAddress;
 
 public class OMNeTSimulation implements DEECoPlugin {
 	
+	public static final String OMNET_CONFIG = "deeco.omnetSimulation.config";
+	/**
+	 * Default path to omnet configuration file
+	 */
+	public static final String OMNET_CONFIG_DEFAULT = "omnetpp.ini";
+	
 	private String omnetConfigFile;
 	
 	public OMNeTSimulation() {
-		this(OMNeTConfigGenerator.DEFAULT_CONTENT);
-	}
-	public OMNeTSimulation(String configFile) {
-		this.omnetConfigFile = configFile;
+		this.omnetConfigFile = System.getProperty(OMNET_CONFIG, OMNET_CONFIG_DEFAULT);
 	}
 	
 	class OMNeTTimerProvider implements SimulationTimer {
