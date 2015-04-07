@@ -1,9 +1,9 @@
 /**
  * 
  */
-package cz.cuni.mff.d3s.jdeeco.gossip.demo;
+package cz.cuni.mff.d3s.jdeeco.gossip.omnet;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Locale;
 
 import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessorException;
@@ -17,44 +17,33 @@ import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoComponent;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoEnsemble;
-import cz.cuni.mff.d3s.jdeeco.gossip.device.MulticastDevice;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.GossipRebroadcastStrategy;
+import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTSimulation;
 
 /**
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class Grid {
+public class Omnet {
 
 	/**
 	 * @param args
+	 * @throws IOException 
 	 * @throws DEECoException 
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
-	 * @throws FileNotFoundException 
 	 * @throws AnnotationProcessorException 
 	 */
-	public static void main(String[] args) throws InstantiationException, IllegalAccessException, DEECoException, FileNotFoundException, AnnotationProcessorException {
-		ConfigHelper.loadProperties("test/cz/cuni/mff/d3s/jdeeco/gossip/demo/grid.properties");
+	public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, DEECoException, AnnotationProcessorException {
 		
-		RequestLoggerPlugin.initOutputStream("logs/grid.csv");
+		// this is wonderful !!!
+		Locale.setDefault(Locale.getDefault());
 		
-		int size = 4;
-		final int nodes = size * size;
+		ConfigHelper.loadProperties("test/cz/cuni/mff/d3s/jdeeco/gossip/omnet/omnet.properties");
 		
-		StringBuilder top = new StringBuilder();
-		for (int i = 0; i < size; ++i) {
-			for (int j = 0; j < size; ++j) {
-				int n = i * size + j + 1;
-				
-				if (n + 1 <= (i + 1 ) * size)
-					top.append(String.format("(%d,%d)", n, n + 1));
-				if (n + size <= nodes)
-					top.append(String.format("(%d,%d)", n, n + size));
-			}
-		}
-		//System.out.println(top.toString());
-		System.getProperties().setProperty(MulticastDevice.MULTICAST_TOPOLOGY, top.toString());
+		RequestLoggerPlugin.initOutputStream("logs/omnet.csv");
+		
+		final int nodes = 3;
 		
 		for (Double prob = 0.1 ; prob <= 1.0; prob += 0.1) {
 			
@@ -62,17 +51,24 @@ public class Grid {
 			System.getProperties().setProperty(GossipRebroadcastStrategy.REBROADCAST_PROBABILITY, probStr);
 			System.getProperties().setProperty(RequestLoggerPlugin.LOGGER_ARG1, probStr);
 		
-			SimulationTimer simulationTimer = new DiscreteEventTimer();
-			DEECoSimulation realm = new DEECoSimulation(simulationTimer);
-			GossipPlugin.registerPlugin(realm);
+			OMNeTSimulation omnet = new OMNeTSimulation();
 			
-			for (int i = 1; i <= nodes; ++i) {
-				DEECoNode node = realm.createNode(i);
+			// Create main application container
+			DEECoSimulation sim = new DEECoSimulation(omnet.getTimer());
+			GossipPlugin.registerPlugin(sim);
+			sim.addPlugin(omnet);
+			
+			for (int i = 0; i < nodes; ++i) {
+				DEECoNode node = sim.createNode(i);
 				node.deployComponent(new DemoComponent("D" + String.valueOf(i)));
 				node.deployEnsemble(DemoEnsemble.class);
 			}
-	
-			realm.start(10000);
+			
+			sim.start(10000);
+			//System.out.println("\n\n###\n");
 		}
+		
+		
 	}
+
 }

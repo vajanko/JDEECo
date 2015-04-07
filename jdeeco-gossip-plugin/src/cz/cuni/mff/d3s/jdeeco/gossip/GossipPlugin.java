@@ -24,6 +24,7 @@ import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
 import cz.cuni.mff.d3s.jdeeco.network.marshaller.MarshallerRegistry;
 import cz.cuni.mff.d3s.jdeeco.network.marshaller.SerializingMarshaller;
+import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTBroadcastDevice;
 
 /**
  * 
@@ -96,6 +97,9 @@ public class GossipPlugin implements DEECoPlugin {
 		}
 		else if (device.equalsIgnoreCase("multicast")) {
 			sim.addPlugin(new MulticastDevice());
+		}
+		else if (device.equals("omnet")) {
+			sim.addPlugin(OMNeTBroadcastDevice.class);
 		}
 
 		sim.addPlugin(GossipPlugin.class);
