@@ -3,6 +3,8 @@
  */
 package cz.cuni.mff.d3s.jdeeco.matsim;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
 
 import org.matsim.core.config.groups.QSimConfigGroup;
@@ -27,12 +29,19 @@ public class MatsimSimulationTimer implements SimulationTimer, MobsimBeforeSimSt
 	private long currentTime;
 	private long simulationStep;
 	
+	private List<TimerEventListener> listeners = new ArrayList<TimerEventListener>();
+	
 	/**
 	 * 
 	 */
 	public MatsimSimulationTimer(Controler controler) {
 		this.controler = controler;
 		this.controler.getMobsimListeners().add(this);
+		this.listeners.add(this);
+	}
+	
+	public void register(TimerEventListener listener) {
+		this.listeners.add(listener);
 	}
 	
 	/* (non-Javadoc)
@@ -103,8 +112,11 @@ public class MatsimSimulationTimer implements SimulationTimer, MobsimBeforeSimSt
 	public void notifyMobsimBeforeSimStep(MobsimBeforeSimStepEvent e) {
 		// convert (double) seconds to (long) milliseconds
 		this.currentTime = sTOms(e.getSimulationTime()); 
-		// fire callbacks which should be executed at "currentTime"
-		this.at(currentTime);
+		// fire callbacks which should be executed at "currentTime" as well as any
+		// registered listeners
+		for (TimerEventListener listener : this.listeners)
+			listener.at(currentTime);
+		//this.at(currentTime);
 	}
 	
 	private static long sTOms(double s) {

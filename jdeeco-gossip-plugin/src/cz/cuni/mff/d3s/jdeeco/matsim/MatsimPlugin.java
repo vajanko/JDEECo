@@ -12,6 +12,7 @@ import org.matsim.core.mobsim.qsim.QSim;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
+import cz.cuni.mff.d3s.deeco.timer.TimerEventListener;
 
 /**
  * Plugin enabling MATSim simulation. Use only one instance of this plugin. 
@@ -46,6 +47,15 @@ public class MatsimPlugin implements DEECoPlugin {
 	public SimulationTimer getTimer() {
 		return timer;
 	}
+	/**
+	 * Registers timer listener which will be called at each simulation step
+	 * 
+	 * @param listener Instance of listener to be registered.
+	 */
+	public void register(TimerEventListener listener) {
+		this.timer.register(listener);
+	}
+	
 	/**
 	 * Start simulation with given duration time in milliseconds.
 	 * 
