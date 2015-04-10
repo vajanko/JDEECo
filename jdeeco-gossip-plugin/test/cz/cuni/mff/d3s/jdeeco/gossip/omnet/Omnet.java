@@ -18,7 +18,9 @@ import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoComponent;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoEnsemble;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.GossipRebroadcastStrategy;
+import cz.cuni.mff.d3s.jdeeco.matsim.MatsimPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTSimulation;
+import cz.cuni.mff.d3s.jdeeco.omnet.MatsimOmnetAdapter;
 
 /**
  * 
@@ -44,31 +46,28 @@ public class Omnet {
 		RequestLoggerPlugin.initOutputStream("logs/omnet.csv");
 		
 		final int nodes = 3;
+		final double prob = 0.5;
+			
+		String probStr = String.format(Locale.getDefault(), "%.2f", prob);
+		System.getProperties().setProperty(GossipRebroadcastStrategy.REBROADCAST_PROBABILITY, probStr);
+		System.getProperties().setProperty(RequestLoggerPlugin.LOGGER_ARG1, probStr);
+	
+		MatsimPlugin matsim = new MatsimPlugin("config/matsim/config2.xml");
+		OMNeTSimulation omnet = new OMNeTSimulation();
 		
-		for (Double prob = 0.1 ; prob <= 1.0; prob += 0.1) {
-			
-			String probStr = String.format(Locale.getDefault(), "%.2f", prob);
-			System.getProperties().setProperty(GossipRebroadcastStrategy.REBROADCAST_PROBABILITY, probStr);
-			System.getProperties().setProperty(RequestLoggerPlugin.LOGGER_ARG1, probStr);
+		DEECoSimulation sim = new DEECoSimulation(matsim.getTimer());
+		GossipPlugin.registerPlugin(sim);
+		sim.addPlugin(matsim);
+		sim.addPlugin(omnet);
+		sim.addPlugin(MatsimOmnetAdapter.class);
 		
-			OMNeTSimulation omnet = new OMNeTSimulation();
-			
-			// Create main application container
-			DEECoSimulation sim = new DEECoSimulation(omnet.getTimer());
-			GossipPlugin.registerPlugin(sim);
-			sim.addPlugin(omnet);
-			
-			for (int i = 0; i < nodes; ++i) {
-				DEECoNode node = sim.createNode(i);
-				node.deployComponent(new DemoComponent("D" + String.valueOf(i)));
-				node.deployEnsemble(DemoEnsemble.class);
-			}
-			
-			sim.start(10000);
-			//System.out.println("\n\n###\n");
+		for (int i = 0; i < nodes; ++i) {
+			DEECoNode node = sim.createNode(i);
+			node.deployComponent(new DemoComponent("D" + String.valueOf(i)));
+			node.deployEnsemble(DemoEnsemble.class);
 		}
 		
-		
+		sim.start(10000);
 	}
 
 }

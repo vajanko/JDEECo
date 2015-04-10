@@ -11,6 +11,7 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.simulation.omnet.OMNeTNative;
 import cz.cuni.mff.d3s.deeco.timer.TimerEventListener;
 import cz.cuni.mff.d3s.jdeeco.core.Position;
+import cz.cuni.mff.d3s.jdeeco.core.PositionTranslator;
 import cz.cuni.mff.d3s.jdeeco.matsim.AgentSensor;
 import cz.cuni.mff.d3s.jdeeco.matsim.MatsimAgentPlugin;
 import cz.cuni.mff.d3s.jdeeco.matsim.MatsimPlugin;
@@ -24,7 +25,7 @@ public class MatsimOmnetAdapter implements DEECoPlugin, TimerEventListener {
 
 	private int nodeId;
 	private AgentSensor sensor;
-	private MatsimOmnetPositionTranslator translator;
+	private PositionTranslator translator;
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#getDependencies()

@@ -75,7 +75,7 @@ public class GossipPlugin implements DEECoPlugin {
 		}
 		
 		if (features.contains("pull")) {
-			//sim.addPlugin(SendPulledKNPlugin.class);
+			sim.addPlugin(SendPulledKNPlugin.class);
 			sim.addPlugin(SendHDPlugin.class);
 			sim.addPlugin(SendPLPlugin.class);
 			
