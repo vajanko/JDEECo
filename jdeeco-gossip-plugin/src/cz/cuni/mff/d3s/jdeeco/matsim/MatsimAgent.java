@@ -3,44 +3,32 @@
  */
 package cz.cuni.mff.d3s.jdeeco.matsim;
 
-import java.util.Arrays;
 import java.util.List;
 
-import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.TransportMode;
-import org.matsim.api.core.v01.network.Link;
-import org.matsim.api.core.v01.network.Network;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.api.core.v01.population.Route;
 import org.matsim.core.basic.v01.IdImpl;
-import org.matsim.core.controler.Controler;
 import org.matsim.core.mobsim.framework.MobsimDriverAgent;
-import org.matsim.core.mobsim.qsim.QSim;
-import org.matsim.core.mobsim.qsim.QSimUtils;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
 import org.matsim.core.population.routes.NetworkRoute;
-
-import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
-import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 
 /**
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class DeecoAgent implements MobsimDriverAgent, DEECoPlugin {
-
-	private Id personId;
+public class MatsimAgent implements MobsimDriverAgent {
 	
+	private Person person;
 	private MobsimVehicle vehicle;
 	private Id vehicleId;
 	
 	private State state;
 	private String mode;
-	private Person person;
 	
 	private int currentPlanIndex;		// index of currently performing plan activity or leg
 	
@@ -51,12 +39,24 @@ public class DeecoAgent implements MobsimDriverAgent, DEECoPlugin {
 	private Id nextLink;
 	private transient Id destLink;
 	
-	private Controler controler;
+	/**
+	 * 
+	 */
+	public MatsimAgent(Person person) {
+		this.person = person;
+		this.state = State.ACTIVITY;
+		this.mode = TransportMode.car;
+		this.currentPlanIndex = 0;
+		
+		Activity act = (Activity)getCurrentPlanElement();
+		this.currentLink = act.getLinkId();
+		
+		this.vehicleId = new IdImpl(getId() + "-vehicle");
+	}
 	
 	private PlanElement getCurrentPlanElement() {
 		return person.getSelectedPlan().getPlanElements().get(currentPlanIndex);
 	}
-	
 	private void continueWithNextPlanElement(double now) {
 		currentPlanIndex++;
 		
@@ -83,56 +83,6 @@ public class DeecoAgent implements MobsimDriverAgent, DEECoPlugin {
 			currentRouteIndex = 0;
 			destLink = currentRoute.getEndLinkId();
 		}
-	}
-	
-	/**
-	 * 
-	 */
-	public DeecoAgent(Id personId) {
-		this.personId = personId;
-		this.state = State.ACTIVITY;
-		this.mode = TransportMode.car;
-		
-		this.currentPlanIndex = 0;
-	}
-	
-	public Coord getCurrentCoord() {
-		Network net = controler.getNetwork();
-		Link link = net.getLinks().get(currentLink);
-		if (link == null)
-			return null;
-		
-		return link.getCoord();
-	}
-	
-	/* (non-Javadoc)
-	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#getDependencies()
-	 */
-	@Override
-	public List<Class<? extends DEECoPlugin>> getDependencies() {
-		return Arrays.asList(MatsimPlugin.class);
-	}
-	/* (non-Javadoc)
-	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#init(cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)
-	 */
-	@Override
-	public void init(DEECoContainer container) {
-		MatsimPlugin matsim = container.getPluginInstance(MatsimPlugin.class);
-		
-		this.controler = matsim.getControler();
-		this.person = controler.getPopulation().getPersons().get(personId);
-		Activity act = (Activity)getCurrentPlanElement();
-		this.currentLink = act.getLinkId();
-		
-		MobsimVehicle vehicle = QSimUtils.createDefaultVehicle(new IdImpl(personId + "-vehicle"));
-		vehicle.addPassenger(this);
-		this.vehicleId = vehicle.getId();
-		
-		QSim sim = matsim.getSimulation();
-		sim.addParkedVehicle(vehicle, currentLink);
-		
-		// this must be called as last
-		sim.insertAgentIntoMobsim(this);
 	}
 	
 	/* (non-Javadoc)
@@ -218,7 +168,7 @@ public class DeecoAgent implements MobsimDriverAgent, DEECoPlugin {
 	 */
 	@Override
 	public Id getId() {
-		return personId;
+		return person.getId();
 	}
 	/* (non-Javadoc)
 	 * @see org.matsim.core.mobsim.framework.DriverAgent#chooseNextLinkId()

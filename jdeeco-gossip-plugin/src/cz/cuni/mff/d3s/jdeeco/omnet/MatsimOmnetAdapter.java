@@ -5,63 +5,60 @@ package cz.cuni.mff.d3s.jdeeco.omnet;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-
-import org.matsim.api.core.v01.Coord;
-import org.matsim.api.core.v01.Id;
 
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
-import cz.cuni.mff.d3s.deeco.simulation.matsim.MATSimOMNetCoordinatesTranslator;
-import cz.cuni.mff.d3s.deeco.simulation.matsim.MATSimOutput;
-import cz.cuni.mff.d3s.deeco.simulation.matsim.MATSimRouter;
-import cz.cuni.mff.d3s.deeco.simulation.matsim.MatsimOutputStrategy;
 import cz.cuni.mff.d3s.deeco.simulation.omnet.OMNeTNative;
-import cz.cuni.mff.d3s.jdeeco.matsim.MATSimSimulation;
+import cz.cuni.mff.d3s.deeco.timer.TimerEventListener;
+import cz.cuni.mff.d3s.jdeeco.core.Position;
+import cz.cuni.mff.d3s.jdeeco.matsim.AgentSensor;
+import cz.cuni.mff.d3s.jdeeco.matsim.MatsimAgentPlugin;
+import cz.cuni.mff.d3s.jdeeco.matsim.MatsimPlugin;
+import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTSimulation;
 
 /**
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class MatsimOmnetAdapter implements DEECoPlugin, MatsimOutputStrategy {
+public class MatsimOmnetAdapter implements DEECoPlugin, TimerEventListener {
 
-	private MATSimOMNetCoordinatesTranslator translator;
-	private MATSimRouter router;
 	private int nodeId;
-	
-	/* (non-Javadoc)
-	 * @see cz.cuni.mff.d3s.deeco.simulation.matsim.MatsimReceiverStrategy#processMatsimData(java.util.Map)
-	 */
-	@Override
-	public void processMatsimData(Map<Id, MATSimOutput> data) {
-		for (MATSimOutput output : data.values()) {
-			
-			// get current matsim node position ...
-			Coord matsimPos = router.getLink(output.currentLinkId).getCoord();
-			// ... and translates to omnet coordinates
-			Coord omnetPos = translator.fromMATSimToOMNet(matsimPos);
-			
-			OMNeTNative.nativeSetPosition(nodeId, omnetPos.getX(), omnetPos.getY(), 0);
-		}
-	}
+	private AgentSensor sensor;
+	private MatsimOmnetPositionTranslator translator;
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#getDependencies()
 	 */
 	@Override
 	public List<Class<? extends DEECoPlugin>> getDependencies() {
-		return Arrays.asList(MATSimSimulation.class);
+		// even those OMNeTSimulation class is not necessary directly this plugin is
+		// useless without omnet
+		return Arrays.asList(MatsimPlugin.class, MatsimAgentPlugin.class, OMNeTSimulation.class);
 	}
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#init(cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)
 	 */
 	@Override
 	public void init(DEECoContainer container) {
-		MATSimSimulation sim = container.getPluginInstance(MATSimSimulation.class);
-		sim.getMatsimOutputProvider().register(this);
+		MatsimPlugin matsim = container.getPluginInstance(MatsimPlugin.class);
+		matsim.register(this);
 		
-		this.translator = new MATSimOMNetCoordinatesTranslator(sim.getController().getNetwork());
-		this.router = sim.getRouter();
+		MatsimAgentPlugin agent = container.getPluginInstance(MatsimAgentPlugin.class);
+		this.sensor = agent.getAgentSensor();
+		
+		this.translator = new MatsimOmnetPositionTranslator(matsim.getControler().getNetwork());
+
 		this.nodeId = container.getId();		
+	}
+	
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.timer.TimerEventListener#at(long)
+	 */
+	@Override
+	public void at(long time) {
+		// translate manet to omnet
+		Position pos = translator.translate(sensor.getPosition());
+		// modify omnet node
+		OMNeTNative.nativeSetPosition(nodeId, pos.x, pos.y, 0);
 	}
 }
