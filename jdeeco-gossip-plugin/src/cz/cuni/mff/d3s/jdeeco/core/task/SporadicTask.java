@@ -1,4 +1,4 @@
-package cz.cuni.mff.d3s.jdeeco.gossip.task;
+package cz.cuni.mff.d3s.jdeeco.core.task;
 
 import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
 import cz.cuni.mff.d3s.deeco.task.TimerTask;
