@@ -1,4 +1,5 @@
 /**
+ * MATSim integration to jDEECo
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */

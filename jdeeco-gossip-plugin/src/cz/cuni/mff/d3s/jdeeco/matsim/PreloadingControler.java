@@ -17,7 +17,9 @@ import org.matsim.population.algorithms.XY2Links;
 public class PreloadingControler extends Controler {
 
 	/**
-	 * @param configFileName
+	 * Creates a new instance of matsim controler and loads config data.
+	 * 
+	 * @param configFileName Absolute or relative path to matsim config.xml file.
 	 */
 	public PreloadingControler(String configFileName) {
 		super(configFileName);
