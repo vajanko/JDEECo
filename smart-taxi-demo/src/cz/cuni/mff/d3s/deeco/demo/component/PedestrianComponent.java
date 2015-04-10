@@ -1,29 +1,33 @@
 /**
  * 
  */
-package cz.cuni.mff.d3s.jdeeco.gossip.common;
+package cz.cuni.mff.d3s.deeco.demo.component;
 
 import cz.cuni.mff.d3s.deeco.annotations.Component;
 import cz.cuni.mff.d3s.deeco.annotations.In;
 import cz.cuni.mff.d3s.deeco.annotations.PeriodicScheduling;
 import cz.cuni.mff.d3s.deeco.annotations.Process;
+import cz.cuni.mff.d3s.jdeeco.matsim.MATSimVehicle;
 
 /**
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
 @Component
-public class DemoComponent {
-	public String id;
+public class PedestrianComponent extends ActorComponent {
 	
-	
-	public DemoComponent(String id) {
-		this.id = id;
+	/**
+	 * 
+	 */
+	public PedestrianComponent(String id, MATSimVehicle vehiclePlugin) {
+		super(id, vehiclePlugin);
 	}
 	
 	@Process
-	@PeriodicScheduling(period=1000)
+	@PeriodicScheduling(period = 1000)
 	public static void process(@In("id") String id) {
-		System.out.println("I am " + id);
+		
 	}
+	
+	
 }
