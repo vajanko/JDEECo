@@ -17,11 +17,11 @@ import cz.cuni.mff.d3s.jdeeco.network.address.IPAddress;
 
 public class OMNeTSimulation implements DEECoPlugin {
 	
-	public static final String OMNET_CONFIG = "deeco.omnetSimulation.config";
+	public static final String OMNET_CONFIG = "deeco.omnet.config";
 	/**
-	 * Default path to omnet configuration file
+	 * Default path to OMNeT configuration file
 	 */
-	public static final String OMNET_CONFIG_DEFAULT = "omnetpp.ini";
+	public static final String OMNET_CONFIG_DEFAULT = "config/omnet/omnetpp.ini";
 	
 	private String omnetConfigFile;
 	
