@@ -22,4 +22,8 @@ public class MatsimOutputProvider {
 		this.outputs.clear();
 		this.outputs.putAll(outputs);
 	}
+	
+	public void updateOutput(Integer nodeId, MatsimOutput output) {
+		this.outputs.put(nodeId, output);
+	}
 }

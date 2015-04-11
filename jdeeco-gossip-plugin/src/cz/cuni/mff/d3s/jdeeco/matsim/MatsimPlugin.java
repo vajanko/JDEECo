@@ -56,7 +56,12 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener {
 		this.exchanger = exchanger;
 	}
 	public void registerPlugin(MatsimAgentPlugin plugin) {
+		// put to collection of known plugin agents
 		this.agentPlugins.put(plugin.getNodeId(), plugin);
+		// setup initial outputs - so that outputs will be initialise before first simulation step
+		MatsimAgent agent = plugin.getAgent();
+		MatsimOutput out = new MatsimOutput(agent.getId(), agent.getCurrentLinkId(), agent.getState());
+		outputs.updateOutput(plugin.getNodeId(), out);
 	}
 	public MatsimAgentPlugin getPlugin(Integer nodeId) {
 		return this.agentPlugins.get(nodeId);

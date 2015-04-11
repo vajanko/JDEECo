@@ -25,10 +25,9 @@ import cz.cuni.mff.d3s.deeco.timer.TimerEventListener;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class MatsimTimer implements SimulationTimer, MobsimBeforeSimStepListener, MobsimInitializedListener /*, TimerEventListener*/ {
+public class MatsimTimer implements SimulationTimer, MobsimBeforeSimStepListener, MobsimInitializedListener {
 
 	private Controler controler;
-	//private TreeSet<SimulationCallback> callbacks = new TreeSet<SimulationCallback>();
 	
 	private long startTime;
 	private long currentTime;
@@ -43,36 +42,11 @@ public class MatsimTimer implements SimulationTimer, MobsimBeforeSimStepListener
 	public MatsimTimer(Controler controler) {
 		this.controler = controler;
 		this.controler.getMobsimListeners().add(this);
-		//this.listeners.add(this);
 	}
 	
 	public void registerStepListener(TimerEventListener listener) {
 		this.stepListeners.add(listener);
 	}
-	
-//	/* (non-Javadoc)
-//	 * @see cz.cuni.mff.d3s.deeco.timer.TimerEventListener#at(long)
-//	 */
-//	@Override
-//	public void at(long time) {
-//		while (!callbacks.isEmpty()) {
-//			// process all callback in this matsim step
-//			SimulationCallback cb = callbacks.first();
-//			
-//			// deeco scheduler is expecting the simulation started at time 00:00
-//			// if simulation starts at a different time such as 06:00 am the scheduler will
-//			// execute all periodic events from 00:00 to 06:00
-//			if (cb.getAbsoluteTime() > time - startTime + simulationStep)
-//				break;	// this call back will be called in the next simulation step
-//			
-//			// remove first
-//			callbacks.pollFirst();
-//			
-//			// execute callback at the time of deeco scheduler
-//			cb.execute(cb.getAbsoluteTime());
-//		}
-//	}
-
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.timer.Timer#notifyAt(long, cz.cuni.mff.d3s.deeco.timer.TimerEventListener, cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)

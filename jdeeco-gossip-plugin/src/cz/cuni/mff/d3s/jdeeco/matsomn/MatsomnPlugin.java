@@ -35,20 +35,21 @@ import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTSimulation;
  */
 public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 	
-	public static final String MATSIM_CONFIG = "deeco.matsim.config";
-	/**
-	 * Default path to MATSim configuration file
-	 */
-	public static final String MATSIM_CONFIG_DEFAULT = "config/matsim/config.xml";
-	
 	private MatsimPlugin matsim;
-	private OMNeTSimulation omnet;
+	//private OMNeTSimulation omnet;
 	// synchronises data between matsim and omnet simulations
 	private Exchanger<Object> exchanger;
 	// custom simulation timer for hybrid simulation with two threads
-	private MatsomnTimer timer = new MatsomnTimer();
+	private MatsomnTimer timer;
 	// translates matsim coordinates to omnet coordinates
 	private MatsomnPositionTranslator translator;
+	
+	/**
+	 * 
+	 */
+	public MatsomnPlugin(SimulationTimer matsimTimer, SimulationTimer omnetTimer) {
+		this.timer = new MatsomnTimer(matsimTimer, omnetTimer);
+	}
 
 	public SimulationTimer getTimer() {
 		return timer;
@@ -107,10 +108,6 @@ public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 			this.exchanger = new Exchanger<Object>();
 			this.matsim.setExchanger(exchanger);
 			
-			this.omnet = container.getPluginInstance(OMNeTSimulation.class);
-			
-			this.timer.init(omnet.getTimer(), matsim.getTimer());
-			
 			Controler controler = matsim.getControler();
 			
 			// create translator for matsim coordinate system 
@@ -125,7 +122,7 @@ public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 	
 	public static void registerPlugin(DEECoSimulation sim) {		
 		sim.addPlugin(OMNeTBroadcastDevice.class);
-		sim.addPlugin(new OMNeTSimulation());
-		sim.addPlugin(new MatsimPlugin());
+		//sim.addPlugin(new OMNeTSimulation());
+		//sim.addPlugin(new MatsimPlugin());
 	}
 }

@@ -17,7 +17,7 @@ public class MatsomnTimer implements SimulationTimer {
 	private SimulationTimer matsimTimer;
 	private SimulationTimer omnetTimer;
 	
-	public void init(SimulationTimer omnetTimer, SimulationTimer matsimTimer) {
+	public MatsomnTimer(SimulationTimer matsimTimer, SimulationTimer omnetTimer) {
 		this.omnetTimer = omnetTimer;
 		this.matsimTimer = matsimTimer;
 	}
