@@ -21,6 +21,7 @@ import cz.cuni.mff.d3s.deeco.annotations.TriggerOnChange;
 import cz.cuni.mff.d3s.deeco.demo.TaxiApplication;
 import cz.cuni.mff.d3s.deeco.simulation.matsim.MATSimRouter;
 import cz.cuni.mff.d3s.deeco.task.ParamHolder;
+import cz.cuni.mff.d3s.jdeeco.core.Position;
 import cz.cuni.mff.d3s.jdeeco.matsim.MATSimVehicle;
 import cz.cuni.mff.d3s.jdeeco.matsim.old.roadtrains.Actuator;
 import cz.cuni.mff.d3s.jdeeco.matsim.old.roadtrains.ActuatorType;

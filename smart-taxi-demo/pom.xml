@@ -12,5 +12,10 @@
   		<artifactId>jdeeco-gossip-plugin</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
+  	<dependency>
+  		<groupId>cz.cuni.mff.d3s.jdeeco</groupId>
+  		<artifactId>cz.cuni.mff.d3s.jdeeco.matsim</artifactId>
+  		<version>3.0.0</version>
+  	</dependency>
   </dependencies>
 </project>
