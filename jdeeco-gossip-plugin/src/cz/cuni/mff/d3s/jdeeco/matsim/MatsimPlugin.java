@@ -52,11 +52,9 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener {
 		this.timer = new MatsimTimer(controler);
 		this.timer.registerStepListener(this);
 	}
-	public MatsimPlugin(Exchanger<Object> exchanger) {
-		this();
+	public void setExchanger(Exchanger<Object> exchanger) {
 		this.exchanger = exchanger;
 	}
-	
 	public void registerPlugin(MatsimAgentPlugin plugin) {
 		this.agentPlugins.put(plugin.getNodeId(), plugin);
 	}

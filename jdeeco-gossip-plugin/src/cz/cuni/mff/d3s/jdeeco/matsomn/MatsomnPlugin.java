@@ -10,6 +10,7 @@ import java.util.concurrent.Exchanger;
 
 import org.matsim.core.controler.Controler;
 
+import cz.cuni.mff.d3s.deeco.runners.DEECoSimulation;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
@@ -23,6 +24,7 @@ import cz.cuni.mff.d3s.jdeeco.matsim.AgentSensor;
 import cz.cuni.mff.d3s.jdeeco.matsim.MatsimHelper;
 import cz.cuni.mff.d3s.jdeeco.matsim.MatsimOutput;
 import cz.cuni.mff.d3s.jdeeco.matsim.MatsimPlugin;
+import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTBroadcastDevice;
 import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTSimulation;
 
 /**
@@ -47,12 +49,6 @@ public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 	private MatsomnTimer timer = new MatsomnTimer();
 	// translates matsim coordinates to omnet coordinates
 	private MatsomnPositionTranslator translator;
-	
-	public MatsomnPlugin() { }
-	public MatsomnPlugin(Exchanger<Object> exchanger) {
-		this();
-		this.exchanger = exchanger;
-	}
 
 	public SimulationTimer getTimer() {
 		return timer;
@@ -108,6 +104,9 @@ public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 		if (this.matsim == null) {
 			// only initialize once
 			this.matsim = container.getPluginInstance(MatsimPlugin.class);
+			this.exchanger = new Exchanger<Object>();
+			this.matsim.setExchanger(exchanger);
+			
 			this.omnet = container.getPluginInstance(OMNeTSimulation.class);
 			
 			this.timer.init(omnet.getTimer(), matsim.getTimer());
@@ -122,5 +121,11 @@ public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 			Scheduler scheduler = container.getRuntimeFramework().getScheduler();
 			scheduler.addTask(new PeriodicTask(scheduler, this, MatsimHelper.sTOms(period)));
 		}
+	}
+	
+	public static void registerPlugin(DEECoSimulation sim) {		
+		sim.addPlugin(OMNeTBroadcastDevice.class);
+		sim.addPlugin(new OMNeTSimulation());
+		sim.addPlugin(new MatsimPlugin());
 	}
 }
