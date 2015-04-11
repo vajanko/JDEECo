@@ -23,21 +23,25 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
  */
 public class MatsimAgentPlugin implements DEECoPlugin {
 
+	private int nodeId;
 	private Id personId;
 	
 	private MatsimAgent agent;
 	private MatsimAgentSensor agentSensor;
 	private Controler controler;
 
-	/**
-	 * 
-	 */
 	public MatsimAgentPlugin(Id personId) {
 		this.personId = personId;
 	}
 	
-	public AgentSensor getAgentSensor() {
+	public int getNodeId() {
+		return nodeId;
+	}
+	public AgentSensor getSensor() {
 		return agentSensor;
+	}
+	public MatsimAgent getAgent() {
+		return agent;
 	}
 	
 	/* (non-Javadoc)
@@ -52,12 +56,15 @@ public class MatsimAgentPlugin implements DEECoPlugin {
 	 */
 	@Override
 	public void init(DEECoContainer container) {
-		MatsimPlugin matsim = container.getPluginInstance(MatsimPlugin.class);
+		this.nodeId = container.getId();
 		
+		MatsimPlugin matsim = container.getPluginInstance(MatsimPlugin.class);
 		this.controler = matsim.getControler();
 		
 		Person person = controler.getPopulation().getPersons().get(personId);
+		
 		this.agent = new MatsimAgent(person);
+		this.agentSensor = new MatsimAgentSensor(container.getId(), controler.getNetwork(), matsim.getOutputProvider());
 		
 		MobsimVehicle vehicle = QSimUtils.createDefaultVehicle(new IdImpl(agent.getPlannedVehicleId().toString()));
 		vehicle.addPassenger(agent);
@@ -65,9 +72,10 @@ public class MatsimAgentPlugin implements DEECoPlugin {
 		QSim sim = matsim.getSimulation();
 		sim.addParkedVehicle(vehicle, agent.getCurrentLinkId());
 		
-		this.agentSensor = new MatsimAgentSensor(controler, agent);
-		
-		// this must be called as last
+		// this method must be called as last on sim object
 		sim.insertAgentIntoMobsim(agent);
+		
+		// register this plugin to matsim simulation
+		matsim.registerPlugin(this);
 	}
 }

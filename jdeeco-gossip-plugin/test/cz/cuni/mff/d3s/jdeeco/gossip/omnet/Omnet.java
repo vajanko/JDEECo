@@ -10,8 +10,6 @@ import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessorException;
 import cz.cuni.mff.d3s.deeco.runners.DEECoSimulation;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoException;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoNode;
-import cz.cuni.mff.d3s.deeco.timer.DiscreteEventTimer;
-import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
 import cz.cuni.mff.d3s.jdeeco.gossip.ConfigHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
@@ -20,7 +18,6 @@ import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoEnsemble;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.GossipRebroadcastStrategy;
 import cz.cuni.mff.d3s.jdeeco.matsim.MatsimPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTSimulation;
-import cz.cuni.mff.d3s.jdeeco.omnet.MatsimOmnetAdapter;
 
 /**
  * 
@@ -52,14 +49,13 @@ public class Omnet {
 		System.getProperties().setProperty(GossipRebroadcastStrategy.REBROADCAST_PROBABILITY, probStr);
 		System.getProperties().setProperty(RequestLoggerPlugin.LOGGER_ARG1, probStr);
 	
-		MatsimPlugin matsim = new MatsimPlugin("config/matsim/config2.xml");
+		MatsimPlugin matsim = new MatsimPlugin();
 		OMNeTSimulation omnet = new OMNeTSimulation();
 		
 		DEECoSimulation sim = new DEECoSimulation(matsim.getTimer());
 		GossipPlugin.registerPlugin(sim);
 		sim.addPlugin(matsim);
 		sim.addPlugin(omnet);
-		sim.addPlugin(MatsimOmnetAdapter.class);
 		
 		for (int i = 0; i < nodes; ++i) {
 			DEECoNode node = sim.createNode(i);

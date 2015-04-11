@@ -4,7 +4,11 @@
 package cz.cuni.mff.d3s.jdeeco.matsim;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.Exchanger;
 
 import org.matsim.core.controler.Controler;
 import org.matsim.core.mobsim.qsim.QSim;
@@ -19,14 +23,24 @@ import cz.cuni.mff.d3s.deeco.timer.TimerEventListener;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class MatsimPlugin implements DEECoPlugin {
+public class MatsimPlugin implements DEECoPlugin, TimerEventListener {
+	public static final String MATSIM_CONFIG = "deeco.matsim.config";
+	/**
+	 * Default path to MATSim configuration file
+	 */
+	public static final String MATSIM_CONFIG_DEFAULT = "config/matsim/config.xml";
 
 	private Controler controler;
 	private QSim simulation;
-	private MatsimSimulationTimer timer;
+	private MatsimTimer timer;
 	
-	public MatsimPlugin(String configFile) {
+	private Exchanger<Object> exchanger;
+	private MatsimOutputProvider outputs = new MatsimOutputProvider();
+	private Map<Integer, MatsimAgentPlugin> agentPlugins = new HashMap<Integer, MatsimAgentPlugin>();
+	
+	public MatsimPlugin() {
 		// create controller
+		String configFile = System.getProperty(MATSIM_CONFIG, MATSIM_CONFIG_DEFAULT);
 		this.controler = new PreloadingControler(configFile);
 		this.controler.setOverwriteFiles(true);
 		
@@ -35,7 +49,34 @@ public class MatsimPlugin implements DEECoPlugin {
 		
 		this.simulation = (QSim)mobsimFactory.createMobsim(controler.getScenario(), controler.getEvents());
 		
-		this.timer = new MatsimSimulationTimer(controler);
+		this.timer = new MatsimTimer(controler);
+		this.timer.registerStepListener(this);
+	}
+	public MatsimPlugin(Exchanger<Object> exchanger) {
+		this();
+		this.exchanger = exchanger;
+	}
+	
+	public void registerPlugin(MatsimAgentPlugin plugin) {
+		this.agentPlugins.put(plugin.getNodeId(), plugin);
+	}
+	public MatsimAgentPlugin getPlugin(Integer nodeId) {
+		return this.agentPlugins.get(nodeId);
+	}
+	/**
+	 * Gets matsim agent ID with associated output data
+	 * @return
+	 */
+	private Map<Integer, MatsimOutput> getOutputs() {
+		HashMap<Integer, MatsimOutput> outputs = new HashMap<Integer, MatsimOutput>();
+		
+		for (Entry<Integer, MatsimAgentPlugin> entry : agentPlugins.entrySet()) {
+			MatsimAgent agent = entry.getValue().getAgent();
+			MatsimOutput out = new MatsimOutput(agent.getId(), agent.getCurrentLinkId(), agent.getState());
+			outputs.put(entry.getKey(), out);
+		}
+		
+		return outputs;
 	}
 	
 	public Controler getControler() {
@@ -47,13 +88,8 @@ public class MatsimPlugin implements DEECoPlugin {
 	public SimulationTimer getTimer() {
 		return timer;
 	}
-	/**
-	 * Registers timer listener which will be called at each simulation step
-	 * 
-	 * @param listener Instance of listener to be registered.
-	 */
-	public void register(TimerEventListener listener) {
-		this.timer.register(listener);
+	public MatsimOutputProvider getOutputProvider() {
+		return outputs;
 	}
 	
 	/**
@@ -65,6 +101,28 @@ public class MatsimPlugin implements DEECoPlugin {
 		timer.start(duration);
 	}
 	
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.deeco.timer.TimerEventListener#at(long)
+	 */
+	@Override
+	public void at(long time) {
+		// executes at each simulation step
+		
+		// there are two modes of matsim simulation:
+		// 1) single matsim simulation - only one thread, matsim updates its outputs itself
+		// 2) multiple threads (together with oment) - matsim exchanges its outputs with the other thread
+		if (exchanger != null) {
+			try {
+				/*Object inputs =*/ exchanger.exchange(getOutputs());
+				// TODO: process inputs
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		else {
+			this.outputs.updateOutputs(getOutputs());
+		}
+	}
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#getDependencies()
@@ -78,6 +136,6 @@ public class MatsimPlugin implements DEECoPlugin {
 	 */
 	@Override
 	public void init(DEECoContainer container) {
-		
+		// nothing to initialise
 	}
 }

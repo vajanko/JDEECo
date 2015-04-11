@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cz.cuni.mff.d3s.jdeeco.omnet;
+package cz.cuni.mff.d3s.jdeeco.matsomn;
 
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.network.Network;
@@ -15,14 +15,14 @@ import cz.cuni.mff.d3s.jdeeco.core.PositionTranslator;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class MatsimOmnetPositionTranslator implements PositionTranslator {
+public class MatsomnPositionTranslator implements PositionTranslator {
 
 	private final Position trans;
 	
 	/**
 	 * 
 	 */
-	public MatsimOmnetPositionTranslator(Network network) {
+	public MatsomnPositionTranslator(Network network) {
 		// calculate position of the edge nodes
 		double minX = 0.0;
 		double minY = 0.0;
