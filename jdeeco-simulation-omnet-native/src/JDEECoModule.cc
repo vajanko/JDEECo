@@ -120,7 +120,9 @@ JDEECoModule* JDEECoModule::findModule(JNIEnv *env, jint id) {
 }
 
 void JDEECoModule::clearAll() {
-	// TODO: Memory leak here?
+	// delete allocated items first, then remove them from the collection
+	for (auto it = jDEECoModules.begin(); it != jDEECoModules.end(); ++it)
+		delete it->second;
 	jDEECoModules.clear();
 }
 

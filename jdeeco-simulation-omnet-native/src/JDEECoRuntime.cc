@@ -33,7 +33,9 @@ void JDEECoRuntime::addRuntime(JDEECoRuntime* runtime) {
 }
 
 void JDEECoRuntime::clearAll() {
-	// TODO: Memory leak here?
+	// delete allocated items first, then remove them from the collection
+	for (auto it = jDEECoRuntimes.begin(); it != jDEECoRuntimes.end(); ++it)
+		delete it->second;
 	jDEECoRuntimes.clear();
 }
 
