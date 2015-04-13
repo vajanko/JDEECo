@@ -39,19 +39,19 @@ public class OmnetTest {
 		
 		double prob = 0.5;
 
-		//for (int si = 0; si < 1; ++si) {
+		for (int si = 0; si < 2; ++si) {
 			String probStr = String.format(Locale.getDefault(), "%.2f", prob);
 			System.getProperties().setProperty(GossipRebroadcastStrategy.REBROADCAST_PROBABILITY, probStr);
 			System.getProperties().setProperty(RequestLoggerPlugin.LOGGER_ARG1, probStr);
 			
 			OMNeTSimulation omnet = new OMNeTSimulation();
 			DEECoSimulation sim = new DEECoSimulation(omnet.getTimer());
-			sim.addPlugin(omnet);
 			sim.addPlugin(OMNeTBroadcastDevice.class);
+			sim.addPlugin(omnet);
 			
 			GossipPlugin.registerPlugin(sim);
 			
-			final int nodes = 2;
+			final int nodes = 3;
 			for (int i = 0; i < nodes; ++i) {				
 				DEECoNode node = sim.createNode(i);
 				node.deployComponent(new DemoComponent("D" + i));
@@ -59,7 +59,7 @@ public class OmnetTest {
 			}
 			
 			sim.start(10 * 1000);
-		//}
+		}
 	}
 
 }

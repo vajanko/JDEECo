@@ -19,6 +19,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoEnsemble;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.GossipRebroadcastStrategy;
+import cz.cuni.mff.d3s.jdeeco.matsim.AgentSensor;
 import cz.cuni.mff.d3s.jdeeco.matsim.MatsimAgentPlugin;
 import cz.cuni.mff.d3s.jdeeco.matsim.MatsimPlugin;
 import cz.cuni.mff.d3s.jdeeco.matsomn.MatsomnPlugin;
@@ -61,11 +62,13 @@ public class MatsimOmnetTest {
 			final int nodes = 3;
 			for (int i = 1; i <= nodes; ++i) {
 				
-				Id id = new IdImpl(i);
-				MatsimAgentPlugin matsomnAgent = new MatsimAgentPlugin(id);			// MATSim agent with associated person
+//				Id id = new IdImpl(i);
+//				MatsimAgentPlugin matsomnAgent = new MatsimAgentPlugin(id);			// MATSim agent with associated person
 				
-				DEECoNode node = sim.createNode(i, matsomnAgent);
-				node.deployComponent(new SensorComponent("D" + String.valueOf(i), matsomnAgent.getSensor()));
+				AgentSensor sensor = matsim.createAgentSensor(i);
+				
+				DEECoNode node = sim.createNode(i);
+				node.deployComponent(new SensorComponent("D" + String.valueOf(i), sensor));
 				node.deployEnsemble(DemoEnsemble.class);
 			}
 			
