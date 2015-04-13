@@ -28,7 +28,7 @@ public class MatsimAgent implements MobsimDriverAgent {
 	private Id vehicleId;
 	
 	private State state;
-	private String mode;
+	//private String mode;
 	
 	private int currentPlanIndex;		// index of currently performing plan activity or leg
 	
@@ -45,7 +45,7 @@ public class MatsimAgent implements MobsimDriverAgent {
 	public MatsimAgent(Person person) {
 		this.person = person;
 		this.state = State.ACTIVITY;
-		this.mode = TransportMode.car;
+		//this.mode = TransportMode.car;
 		this.currentPlanIndex = 0;
 		
 		Activity act = (Activity)getCurrentPlanElement();
@@ -140,7 +140,11 @@ public class MatsimAgent implements MobsimDriverAgent {
 	 */
 	@Override
 	public String getMode() {
-		return mode;
+		PlanElement elem = getCurrentPlanElement();
+		if (elem instanceof Leg)
+			return ((Leg)elem).getMode();
+		
+		return null;
 	}
 	/* (non-Javadoc)
 	 * @see org.matsim.core.mobsim.framework.MobsimAgent#notifyArrivalOnLinkByNonNetworkMode(org.matsim.api.core.v01.Id)
