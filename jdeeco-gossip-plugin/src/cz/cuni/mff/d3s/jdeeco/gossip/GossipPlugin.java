@@ -35,7 +35,7 @@ public class GossipPlugin implements DEECoPlugin {
 	public static final String GOSSIP_FEATURES = "deeco.gossip.features";
 	public static final String GOSSIP_FEATURES_DEFAULT = "";
 	public static final String GOSSIP_DEVICE = "deeco.gossip.device";
-	public static final String GOSSIP_DEVICE_DEFAULT = "broadcast";
+	public static final String GOSSIP_DEVICE_DEFAULT = "";
 	
 	
 	/* (non-Javadoc)
