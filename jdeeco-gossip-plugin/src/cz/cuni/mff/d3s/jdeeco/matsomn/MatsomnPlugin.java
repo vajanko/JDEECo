@@ -3,11 +3,14 @@
  */
 package cz.cuni.mff.d3s.jdeeco.matsomn;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Exchanger;
 
+import org.matsim.api.core.v01.Id;
 import org.matsim.core.controler.Controler;
 
 import cz.cuni.mff.d3s.deeco.runners.DEECoSimulation;
@@ -43,6 +46,8 @@ public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 	private MatsomnTimer timer;
 	// translates matsim coordinates to omnet coordinates
 	private MatsomnPositionTranslator translator;
+	// 
+	private Collection<AgentSensor> matsimSensors = new ArrayList<AgentSensor>();
 	
 	/**
 	 * 
@@ -65,18 +70,16 @@ public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 		if (exchanger != null) {
 			try {
 				Object data = exchanger.exchange(null);
-				Map<Integer, MatsimOutput> outputs = (Map<Integer, MatsimOutput>)data;
+				Map<Id, MatsimOutput> outputs = (Map<Id, MatsimOutput>)data;
 				
 				// it is important that matsim outputs are updated from this thread
 				matsim.getOutputProvider().updateOutputs(outputs);
 				
 				// update omnet nodes positions
-				for (Integer nodeId : outputs.keySet()) {
-					AgentSensor sensor = matsim.getPlugin(nodeId).getSensor();
+				for (AgentSensor sensor : this.matsimSensors) {
 					Position pos = translator.translate(sensor.getPosition());
-					OMNeTNative.nativeSetPosition(nodeId, pos.x, pos.y, 0);
+					OMNeTNative.nativeSetPosition(sensor.getNodeId(), pos.x, pos.y, 0);
 				}
-				
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -118,6 +121,9 @@ public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 			Scheduler scheduler = container.getRuntimeFramework().getScheduler();
 			scheduler.addTask(new PeriodicTask(scheduler, this, MatsimHelper.sTOms(period)));
 		}
+		
+		AgentSensor sensor = matsim.createAgentSensor(container.getId());
+		this.matsimSensors.add(sensor);
 	}
 	
 	public static void registerPlugin(DEECoSimulation sim) {		

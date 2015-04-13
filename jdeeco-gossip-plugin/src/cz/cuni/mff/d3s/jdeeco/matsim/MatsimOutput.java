@@ -12,15 +12,13 @@ import org.matsim.core.mobsim.framework.MobsimAgent.State;
  */
 public class MatsimOutput {
 	
-	public Id agentId;
 	public Id currentLinkId;
 	public State state;
 	
 	/**
 	 * 
 	 */
-	public MatsimOutput(Id agentId, Id currentLinkId, State state) {
-		this.agentId = agentId;
+	public MatsimOutput(Id currentLinkId, State state) {
 		this.currentLinkId = currentLinkId;
 		this.state = state;
 	}

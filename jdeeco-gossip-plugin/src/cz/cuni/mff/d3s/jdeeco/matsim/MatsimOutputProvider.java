@@ -6,24 +6,26 @@ package cz.cuni.mff.d3s.jdeeco.matsim;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.matsim.api.core.v01.Id;
+
 /**
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
 public class MatsimOutputProvider {
 	
-	private Map<Integer, MatsimOutput> outputs = new HashMap<Integer, MatsimOutput>();
+	private Map<Id, MatsimOutput> outputs = new HashMap<Id, MatsimOutput>();
 	
-	public MatsimOutput getOutput(Integer nodeId) {
-		return outputs.get(nodeId);
+	public MatsimOutput getOutput(Id id) {
+		return outputs.get(id);
 	}
 	
-	public void updateOutputs(Map<Integer, MatsimOutput> outputs) {
+	public void updateOutputs(Map<Id, MatsimOutput> outputs) {
 		this.outputs.clear();
 		this.outputs.putAll(outputs);
 	}
 	
-	public void updateOutput(Integer nodeId, MatsimOutput output) {
-		this.outputs.put(nodeId, output);
+	public void updateOutput(Id id, MatsimOutput output) {
+		this.outputs.put(id, output);
 	}
 }

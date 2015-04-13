@@ -5,10 +5,6 @@ package cz.cuni.mff.d3s.jdeeco.matsim;
 
 import java.util.ArrayList;
 import java.util.List;
-//import java.util.TreeSet;
-
-
-
 
 import org.matsim.core.config.groups.QSimConfigGroup;
 import org.matsim.core.controler.Controler;
@@ -111,7 +107,7 @@ public class MatsimTimer implements SimulationTimer, MobsimBeforeSimStepListener
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void notifyMobsimInitialized(MobsimInitializedEvent e) {
+	public void notifyMobsimInitialized(MobsimInitializedEvent e) {	
 		synchronized (this) {
 			this.notify();
 		}

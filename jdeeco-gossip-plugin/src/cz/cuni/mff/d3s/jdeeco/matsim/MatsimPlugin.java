@@ -3,14 +3,19 @@
  */
 package cz.cuni.mff.d3s.jdeeco.matsim;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.Exchanger;
 
+import org.matsim.api.core.v01.Id;
 import org.matsim.core.controler.Controler;
+import org.matsim.core.mobsim.framework.MobsimAgent;
+import org.matsim.core.mobsim.framework.events.MobsimInitializedEvent;
+import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
 
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
@@ -23,7 +28,7 @@ import cz.cuni.mff.d3s.deeco.timer.TimerEventListener;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class MatsimPlugin implements DEECoPlugin, TimerEventListener {
+public class MatsimPlugin implements DEECoPlugin, TimerEventListener, MobsimInitializedListener {
 	public static final String MATSIM_CONFIG = "deeco.matsim.config";
 	/**
 	 * Default path to MATSim configuration file
@@ -36,7 +41,9 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener {
 	
 	private Exchanger<Object> exchanger;
 	private MatsimOutputProvider outputs = new MatsimOutputProvider();
-	private Map<Integer, MatsimAgentPlugin> agentPlugins = new HashMap<Integer, MatsimAgentPlugin>();
+	//private Map<Integer, MatsimAgentPlugin> agentPlugins = new HashMap<Integer, MatsimAgentPlugin>();
+	
+	private Collection<MatsimAgent> agents = new ArrayList<MatsimAgent>();
 	
 	public MatsimPlugin() {
 		// create controller
@@ -47,6 +54,8 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener {
 		SingletonQSimFactory mobsimFactory = new SingletonQSimFactory();
 		this.controler.addMobsimFactory("qsim", mobsimFactory);
 		
+		this.controler.getMobsimListeners().add(this);
+		
 		this.simulation = (QSim)mobsimFactory.createMobsim(controler.getScenario(), controler.getEvents());
 		
 		this.timer = new MatsimTimer(controler);
@@ -55,28 +64,17 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener {
 	public void setExchanger(Exchanger<Object> exchanger) {
 		this.exchanger = exchanger;
 	}
-	public void registerPlugin(MatsimAgentPlugin plugin) {
-		// put to collection of known plugin agents
-		this.agentPlugins.put(plugin.getNodeId(), plugin);
-		// setup initial outputs - so that outputs will be initialise before first simulation step
-		MatsimAgent agent = plugin.getAgent();
-		MatsimOutput out = new MatsimOutput(agent.getId(), agent.getCurrentLinkId(), agent.getState());
-		outputs.updateOutput(plugin.getNodeId(), out);
-	}
-	public MatsimAgentPlugin getPlugin(Integer nodeId) {
-		return this.agentPlugins.get(nodeId);
-	}
 	/**
 	 * Gets matsim agent ID with associated output data
 	 * @return
 	 */
-	private Map<Integer, MatsimOutput> getOutputs() {
-		HashMap<Integer, MatsimOutput> outputs = new HashMap<Integer, MatsimOutput>();
+	private Map<Id, MatsimOutput> getOutputs() {
 		
-		for (Entry<Integer, MatsimAgentPlugin> entry : agentPlugins.entrySet()) {
-			MatsimAgent agent = entry.getValue().getAgent();
-			MatsimOutput out = new MatsimOutput(agent.getId(), agent.getCurrentLinkId(), agent.getState());
-			outputs.put(entry.getKey(), out);
+		HashMap<Id, MatsimOutput> outputs = new HashMap<Id, MatsimOutput>();
+		
+		for (MatsimAgent agent : this.agents) {
+			MatsimOutput out = new MatsimOutput(agent.getCurrentLinkId(), agent.getState());
+			outputs.put(agent.getId(), out);
 		}
 		
 		return outputs;
@@ -93,6 +91,10 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener {
 	}
 	public MatsimOutputProvider getOutputProvider() {
 		return outputs;
+	}
+	public AgentSensor createAgentSensor(int nodeId) {
+		MatsimAgentSensor sensor = new MatsimAgentSensor(nodeId, controler.getNetwork(), outputs);
+		return sensor;
 	}
 	
 	/**
@@ -125,6 +127,24 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener {
 		else {
 			this.outputs.updateOutputs(getOutputs());
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener#notifyMobsimInitialized(org.matsim.core.mobsim.framework.events.MobsimInitializedEvent)
+	 */
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void notifyMobsimInitialized(MobsimInitializedEvent e) {
+		
+		for (MobsimAgent ma : this.simulation.getAgents()) {
+			MatsimAgent agent = (MatsimAgent)ma;
+			if (agent != null) {
+				this.agents.add(agent);
+			}
+		}
+		
+		// update with initial values
+		this.outputs.updateOutputs(getOutputs());
 	}
 	
 	/* (non-Javadoc)

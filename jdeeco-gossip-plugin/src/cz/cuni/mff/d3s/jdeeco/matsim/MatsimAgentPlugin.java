@@ -10,6 +10,7 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.basic.v01.IdImpl;
 import org.matsim.core.controler.Controler;
+import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.mobsim.qsim.QSimUtils;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
@@ -61,21 +62,21 @@ public class MatsimAgentPlugin implements DEECoPlugin {
 		MatsimPlugin matsim = container.getPluginInstance(MatsimPlugin.class);
 		this.controler = matsim.getControler();
 		
-		Person person = controler.getPopulation().getPersons().get(personId);
+		//Person person = controler.getPopulation().getPersons().get(personId);
 		
-		this.agent = new MatsimAgent(person);
+		//this.agent = new MatsimAgent(person);
 		this.agentSensor = new MatsimAgentSensor(container.getId(), controler.getNetwork(), matsim.getOutputProvider());
 		
-		MobsimVehicle vehicle = QSimUtils.createDefaultVehicle(new IdImpl(agent.getPlannedVehicleId().toString()));
-		vehicle.addPassenger(agent);
+		//MobsimVehicle vehicle = QSimUtils.createDefaultVehicle(new IdImpl(agent.getPlannedVehicleId().toString()));
+		//vehicle.addPassenger(agent);
 		
-		QSim sim = matsim.getSimulation();
-		sim.addParkedVehicle(vehicle, agent.getCurrentLinkId());
+		//sim.addParkedVehicle(vehicle, agent.getCurrentLinkId());
+		//sim.addAgentSource(agentSource);
 		
 		// this method must be called as last on sim object
-		sim.insertAgentIntoMobsim(agent);
+		//sim.insertAgentIntoMobsim(agent);
 		
 		// register this plugin to matsim simulation
-		matsim.registerPlugin(this);
+		//matsim.registerPlugin(this);
 	}
 }
