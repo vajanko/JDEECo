@@ -6,8 +6,6 @@ package cz.cuni.mff.d3s.jdeeco.matsim;
 import java.util.List;
 
 import org.matsim.api.core.v01.Id;
-import org.matsim.api.core.v01.TransportMode;
-import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
@@ -15,21 +13,22 @@ import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.api.core.v01.population.Route;
 import org.matsim.core.basic.v01.IdImpl;
+import org.matsim.core.mobsim.framework.HasPerson;
 import org.matsim.core.mobsim.framework.MobsimDriverAgent;
+import org.matsim.core.mobsim.framework.MobsimPassengerAgent;
+import org.matsim.core.mobsim.framework.PlanAgent;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
 import org.matsim.core.mobsim.qsim.interfaces.Netsim;
 import org.matsim.core.population.routes.NetworkRoute;
 import org.matsim.core.utils.misc.PopulationUtils;
 
-import com.sun.corba.se.impl.orbutil.graph.Node;
-
 /**
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class MatsimAgent implements MobsimDriverAgent {
+public class MatsimAgent implements MobsimDriverAgent, MobsimPassengerAgent, HasPerson, PlanAgent, DeecoAgent {
 	
-	//private Person person;
+	private Person person;
 	private Id personId;
 	private Plan plan;
 	private MobsimVehicle vehicle;
@@ -51,7 +50,7 @@ public class MatsimAgent implements MobsimDriverAgent {
 	 * 
 	 */
 	public MatsimAgent(Person person, Netsim simulation) {
-		//this.person = person;
+		this.person = person;
 		this.personId = person.getId();
 		this.plan = PopulationUtils.unmodifiablePlan(person.getSelectedPlan());
 		this.state = State.ACTIVITY;
@@ -60,6 +59,8 @@ public class MatsimAgent implements MobsimDriverAgent {
 		Activity act = (Activity)getCurrentPlanElement();
 		this.currentLink = act.getLinkId();
 		
+		//Object car_avail = person.getCustomAttributes().get("car_avail");
+		
 		//this.vehicleId = new IdImpl(getId() + "-vehicle");
 		//PlanElement elem = getCurrentPlanElement();
 		//Activity act = (Activity)elem;
@@ -67,15 +68,15 @@ public class MatsimAgent implements MobsimDriverAgent {
 //		NetworkRoute route = (NetworkRoute)leg.getRoute();
 //		if (route != null)
 //			this.vehicleId = route.getVehicleId();
-		this.vehicleId = this.getId();
+		this.vehicleId = new IdImpl(1);// this.getId();		
 	}
 	
-	private PlanElement getCurrentPlanElement() {
-		return plan.getPlanElements().get(currentPlanIndex);
-	}
-	private PlanElement getNextPlanElement() {
-		return plan.getPlanElements().get(currentPlanIndex + 1);
-	}
+//	private PlanElement getCurrentPlanElement() {
+//		return plan.getPlanElements().get(currentPlanIndex);
+//	}
+//	private PlanElement getNextPlanElement() {
+//		return plan.getPlanElements().get(currentPlanIndex + 1);
+//	}
 	private void continueWithNextPlanElement(double now) {
 		currentPlanIndex++;
 		
@@ -259,5 +260,40 @@ public class MatsimAgent implements MobsimDriverAgent {
 //		
 //		// assume that agent id is the vehicle id if nothing else is given
 //		return vehicleId;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.matsim.core.mobsim.framework.PlanAgent#getCurrentPlanElement()
+	 */
+	@Override
+	public PlanElement getCurrentPlanElement() {
+		return plan.getPlanElements().get(currentPlanIndex);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.matsim.core.mobsim.framework.PlanAgent#getNextPlanElement()
+	 */
+	@Override
+	public PlanElement getNextPlanElement() {
+		if (currentPlanIndex < plan.getPlanElements().size())
+			return plan.getPlanElements().get(currentPlanIndex + 1);
+		else
+			return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.matsim.core.mobsim.framework.PlanAgent#getSelectedPlan()
+	 */
+	@Override
+	public Plan getSelectedPlan() {
+		return this.plan;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.matsim.core.mobsim.framework.HasPerson#getPerson()
+	 */
+	@Override
+	public Person getPerson() {
+		return this.person;
 	}
 }
