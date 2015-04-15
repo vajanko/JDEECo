@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cz.cuni.mff.d3s.jdeeco.matsim;
+package cz.cuni.mff.d3s.jdeeco.matsim.transit;
 
 import java.util.List;
 
@@ -13,6 +13,9 @@ import org.matsim.pt.transitSchedule.api.TransitLine;
 import org.matsim.pt.transitSchedule.api.TransitRoute;
 import org.matsim.pt.transitSchedule.api.TransitRouteStop;
 import org.matsim.pt.transitSchedule.api.TransitStopFacility;
+
+import cz.cuni.mff.d3s.jdeeco.matsim.DeecoAgent;
+import cz.cuni.mff.d3s.jdeeco.matsim.MatsimTransitAgent;
 
 
 /**

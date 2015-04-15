@@ -9,6 +9,7 @@ import org.matsim.core.mobsim.qsim.agents.AgentFactory;
 import org.matsim.core.mobsim.qsim.interfaces.Netsim;
 
 /**
+ * Creates extended agents for standard QSim simulation which are connected to deeco component.
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
