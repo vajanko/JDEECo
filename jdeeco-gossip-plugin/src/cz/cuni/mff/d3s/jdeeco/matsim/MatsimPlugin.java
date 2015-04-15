@@ -36,14 +36,12 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener, MobsimInit
 	public static final String MATSIM_CONFIG_DEFAULT = "config/matsim/config.xml";
 
 	private Controler controler;
-	private QSim simulation;
 	private MatsimTimer timer;
 	
 	private Exchanger<Object> exchanger;
 	private MatsimOutputProvider outputs = new MatsimOutputProvider();
-	//private Map<Integer, MatsimAgentPlugin> agentPlugins = new HashMap<Integer, MatsimAgentPlugin>();
 	
-	private Collection<MatsimAgent> agents = new ArrayList<MatsimAgent>();
+	private Collection<MobsimAgent> agents = new ArrayList<MobsimAgent>();
 	
 	public MatsimPlugin() {
 		// create controller
@@ -51,12 +49,10 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener, MobsimInit
 		this.controler = new PreloadingControler(configFile);
 		this.controler.setOverwriteFiles(true);
 		
-		SingletonQSimFactory mobsimFactory = new SingletonQSimFactory();
+		DeecoQSimFactory mobsimFactory = new DeecoQSimFactory();
 		this.controler.addMobsimFactory("qsim", mobsimFactory);
 		
 		this.controler.getMobsimListeners().add(this);
-		
-		this.simulation = (QSim)mobsimFactory.createMobsim(controler.getScenario(), controler.getEvents());
 		
 		this.timer = new MatsimTimer(controler);
 		this.timer.registerStepListener(this);
@@ -72,7 +68,7 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener, MobsimInit
 		
 		HashMap<Id, MatsimOutput> outputs = new HashMap<Id, MatsimOutput>();
 		
-		for (MatsimAgent agent : this.agents) {
+		for (MobsimAgent agent : this.agents) {
 			MatsimOutput out = new MatsimOutput(agent.getCurrentLinkId(), agent.getState());
 			outputs.put(agent.getId(), out);
 		}
@@ -82,9 +78,6 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener, MobsimInit
 	
 	public Controler getControler() {
 		return controler;
-	}
-	public QSim getSimulation() {
-		return simulation;
 	}
 	public SimulationTimer getTimer() {
 		return timer;
@@ -136,9 +129,11 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener, MobsimInit
 	@Override
 	public void notifyMobsimInitialized(MobsimInitializedEvent e) {
 		
-		for (MobsimAgent ma : this.simulation.getAgents()) {
-			MatsimAgent agent = (MatsimAgent)ma;
-			if (agent != null) {
+		QSim simulation = (QSim)e.getQueueSimulation();
+		
+		// get deeco agents from the simulation
+		for (MobsimAgent agent : simulation.getAgents()) {
+			if (agent instanceof DeecoAgent) {
 				this.agents.add(agent);
 			}
 		}
