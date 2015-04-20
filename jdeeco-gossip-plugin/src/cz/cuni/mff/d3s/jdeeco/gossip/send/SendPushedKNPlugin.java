@@ -1,4 +1,4 @@
-package cz.cuni.mff.d3s.jdeeco.gossip.task;
+package cz.cuni.mff.d3s.jdeeco.gossip.send;
 
 import java.util.Collection;
 
