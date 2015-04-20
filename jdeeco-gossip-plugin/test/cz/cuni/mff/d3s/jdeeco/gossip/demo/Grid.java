@@ -35,9 +35,10 @@ public class Grid {
 	 * @throws AnnotationProcessorException 
 	 */
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, DEECoException, FileNotFoundException, AnnotationProcessorException {
-		ConfigHelper.loadProperties("test/cz/cuni/mff/d3s/jdeeco/gossip/demo/grid.properties");
 		
-		RequestLoggerPlugin.initOutputStream("logs/grid.csv");
+		ConfigHelper.loadProperties("test/cz/cuni/mff/d3s/jdeeco/gossip/demo/grid-pull-passive.properties");
+		
+		//RequestLoggerPlugin.initOutputStream("logs/grid.csv");
 		
 		int size = 4;
 		final int nodes = size * size;
@@ -53,7 +54,7 @@ public class Grid {
 					top.append(String.format("(%d,%d)", n, n + size));
 			}
 		}
-		//System.out.println(top.toString());
+		
 		System.getProperties().setProperty(MulticastDevice.MULTICAST_TOPOLOGY, top.toString());
 		
 		for (Double prob = 0.1 ; prob <= 1.0; prob += 0.1) {
