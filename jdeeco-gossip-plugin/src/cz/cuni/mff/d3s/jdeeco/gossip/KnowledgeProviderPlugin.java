@@ -23,6 +23,7 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
 import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
+import cz.cuni.mff.d3s.jdeeco.core.KnowledgeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 
 /**
@@ -31,7 +32,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class KnowledgeProvider implements DEECoPlugin {
+public class KnowledgeProviderPlugin implements DEECoPlugin, KnowledgeProvider {
 	
 	private ReceptionBuffer messageBuffer;
 	private KnowledgeManagerContainer kmContainer;
