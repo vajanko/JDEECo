@@ -31,7 +31,7 @@ public class SendPLPlugin extends SendBasePlugin {
 		PacketHeader header = new PacketHeader(L2PacketType.PULL_REQUEST);
 		
 		// check whether there are some missing or outdated messages and if yes send a PULL request
-		Collection<ItemHeader> missingMessages = messageBuffer.getLocallyObsoleteItems(time);
+		Collection<ItemHeader> missingMessages = receptionBuffer.getLocallyObsoleteItems(time);
 		
 		// remove local knowledge from the request
 		if (!missingMessages.isEmpty()) {

@@ -25,7 +25,7 @@ public class ReceiveHDStrategy extends ReceiveBaseStrategy {
 			HeaderPayload messages = (HeaderPayload)packet.getObject();
 			
 			for (ItemHeader header : messages.getHeaders()) {
-				messageBuffer.receiveGlobal(header.id, header.timestamp);
+				receptionBuffer.receiveGlobal(header.id, header.timestamp);
 			}
 		}
 	}

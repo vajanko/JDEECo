@@ -37,7 +37,7 @@ public class SendHDPlugin extends SendBasePlugin {
 		
 		// get messages received by current node or messages received by other nodes
 		// which notified about these messages
-		Collection<ItemHeader> headers = messageBuffer.getRecentItems(time);
+		Collection<ItemHeader> headers = receptionBuffer.getRecentItems(time);
 		
 		// remove headers of messages sent from current node
 		// it is not necessary to send them because the message itself will be broadcasted

@@ -38,7 +38,7 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 	private final Random generator = new Random();
 	private double probability;
 	private Layer2 networkLayer;
-	private ReceptionBuffer messageBuffer;
+	private ReceptionBuffer receptionBuffer;
 	private KnowledgeProviderPlugin knowledgeProvider;
 	private String nodeId;
 	
@@ -59,11 +59,11 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 			KnowledgeData kd = (KnowledgeData)packet.getObject();
 			KnowledgeMetaData meta = kd.getMetaData();
 			
-			if (messageBuffer.getPulledTag(meta.componentId)) {
+			if (receptionBuffer.getPulledTag(meta.componentId)) {
 				// if knowledge was pulled it will be rebroadcasted
 				L2Packet pck = new L2Packet(packet.header, prepareForRebroadcast(kd));
 				networkLayer.sendL2Packet(pck, MANETBroadcastAddress.BROADCAST);
-				messageBuffer.clearPulledTag(meta.componentId);
+				receptionBuffer.clearPulledTag(meta.componentId);
 			}
 			else {
 				// do not rebroadcast when receive own local knowledge
@@ -71,7 +71,7 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 					return;
 				
 				// do not rebroadcast older versions than currently available
-				if (!messageBuffer.canReceive(meta.componentId, meta.versionId))
+				if (!receptionBuffer.canReceive(meta.componentId, meta.versionId))
 					return;
 				
 				if (generator.nextDouble() < probability) {
@@ -96,7 +96,7 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 	public void init(DEECoContainer container) {
 		// initialise dependencies
 		this.knowledgeProvider = container.getPluginInstance(KnowledgeProviderPlugin.class);
-		this.messageBuffer = container.getPluginInstance(ReceptionBuffer.class);
+		this.receptionBuffer = container.getPluginInstance(ReceptionBuffer.class);
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
 		// register L2 strategy
 		this.networkLayer.registerL2Strategy(this);

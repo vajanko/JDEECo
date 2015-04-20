@@ -30,19 +30,19 @@ public class SendPulledKNPlugin extends SendBaseKNPlugin {
 	@Override
 	protected Collection<KnowledgeData> getKnowledgeData(long currentTime) {
 		ArrayList<KnowledgeData> result = new ArrayList<KnowledgeData>();
-		for (String id : messageBuffer.getPulledItems()) {
+		for (String id : receptionBuffer.getPulledItems()) {
 			KnowledgeData kd = knowledgeProvider.getComponentKnowledge(id);
 			if (kd != null) {
 				result.add(kd);
 				
 				// this is necessary only when responding to PULL request on local data
 				KnowledgeMetaData meta = kd.getMetaData();
-				messageBuffer.receiveLocal(meta.componentId, meta.createdAt, meta.versionId);
+				receptionBuffer.receiveLocal(meta.componentId, meta.createdAt, meta.versionId);
 			}
 		}
 		
 		for (KnowledgeData kd : result) {
-			messageBuffer.clearPulledTag(kd.getMetaData().componentId);
+			receptionBuffer.clearPulledTag(kd.getMetaData().componentId);
 		}
 		
 		return result;

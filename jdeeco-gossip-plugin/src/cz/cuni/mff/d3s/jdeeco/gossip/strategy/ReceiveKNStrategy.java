@@ -53,7 +53,7 @@ public class ReceiveKNStrategy extends ReceiveBaseStrategy {
 			KnowledgeMetaData meta = kd.getMetaData();
 			
 			// check whether not received more than once
-			if (!messageBuffer.canReceive(meta.componentId, meta.versionId))
+			if (!receptionBuffer.canReceive(meta.componentId, meta.versionId))
 				return;
 			
 			if (!kmContainer.hasLocal(meta.componentId)) {
@@ -68,7 +68,7 @@ public class ReceiveKNStrategy extends ReceiveBaseStrategy {
 			}
 			
 			// update current version (as well as time) of message received locally
-			messageBuffer.receiveLocal(meta.componentId, meta.createdAt, meta.versionId);
+			receptionBuffer.receiveLocal(meta.componentId, meta.createdAt, meta.versionId);
 		}
 	}
 	

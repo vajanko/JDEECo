@@ -34,7 +34,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
  */
 public class KnowledgeProviderPlugin implements DEECoPlugin, KnowledgeProvider {
 	
-	private ReceptionBuffer messageBuffer;
+	private ReceptionBuffer receptionBuffer;
 	private KnowledgeManagerContainer kmContainer;
 	private CurrentTimeProvider timeProvider;
 	private String nodeId;
@@ -132,8 +132,8 @@ public class KnowledgeProviderPlugin implements DEECoPlugin, KnowledgeProvider {
 		}
 		else {
 			// get time when replica knowledge data was last time received
-			createdAt = messageBuffer.getLocalReceptionTime(componentId);
-			versionId = messageBuffer.getVersion(componentId);
+			createdAt = receptionBuffer.getLocalReceptionTime(componentId);
+			versionId = receptionBuffer.getVersion(componentId);
 		}
 		int hopCount = 1;
 		
@@ -182,7 +182,7 @@ public class KnowledgeProviderPlugin implements DEECoPlugin, KnowledgeProvider {
 	 */
 	@Override
 	public void init(DEECoContainer container) {
-		this.messageBuffer = container.getPluginInstance(ReceptionBuffer.class);
+		this.receptionBuffer = container.getPluginInstance(ReceptionBuffer.class);
 		RuntimeFramework runtime = container.getRuntimeFramework();
 		this.kmContainer = runtime.getContainer();
 		this.timeProvider = runtime.getScheduler().getTimer();

@@ -22,7 +22,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
 public abstract class SendBasePlugin implements TimerTaskListener, DEECoPlugin {
 	
 	protected KnowledgeProviderPlugin knowledgeProvider;
-	protected ReceptionBuffer messageBuffer;
+	protected ReceptionBuffer receptionBuffer;
 	protected Layer2 networkLayer;
 	private long period;
 	
@@ -59,7 +59,7 @@ public abstract class SendBasePlugin implements TimerTaskListener, DEECoPlugin {
 	@Override
 	public void init(DEECoContainer container) {
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
-		this.messageBuffer = container.getPluginInstance(ReceptionBuffer.class);
+		this.receptionBuffer = container.getPluginInstance(ReceptionBuffer.class);
 		this.knowledgeProvider = container.getPluginInstance(KnowledgeProviderPlugin.class);
 		
 		// run PULL knowledge gossip task

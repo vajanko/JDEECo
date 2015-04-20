@@ -22,7 +22,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
  */
 public abstract class ReceiveBaseStrategy implements L2Strategy, DEECoPlugin {
 
-	protected ReceptionBuffer messageBuffer;
+	protected ReceptionBuffer receptionBuffer;
 		
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy#processL2Packet(cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet)
@@ -42,7 +42,7 @@ public abstract class ReceiveBaseStrategy implements L2Strategy, DEECoPlugin {
 	 */
 	@Override
 	public void init(DEECoContainer container) {
-		this.messageBuffer = container.getPluginInstance(ReceptionBuffer.class);
+		this.receptionBuffer = container.getPluginInstance(ReceptionBuffer.class);
 		
 		// register L2 strategy
 		Layer2 networkLayer = container.getPluginInstance(Network.class).getL2();

@@ -40,7 +40,7 @@ public abstract class SendBaseKNPlugin extends SendBasePlugin {
 			
 			// ... and stores information about last knowledge version
 			KnowledgeMetaData meta = data.getMetaData();
-			messageBuffer.receiveLocal(meta.componentId, meta.createdAt, meta.versionId);
+			receptionBuffer.receiveLocal(meta.componentId, meta.createdAt, meta.versionId);
 		}
 	}
 }

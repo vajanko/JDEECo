@@ -39,7 +39,7 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	public static final String LOGGER_ARG3 = "deeco.requestLogger.arg3";
 	
 	private KnowledgeManagerContainer kmContainer;
-	private ReceptionBuffer messageBuffer;
+	private ReceptionBuffer receptionBuffer;
 	private CurrentTimeProvider timeProvider;
 	private Layer1 layer1;
 	
@@ -105,7 +105,7 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 			KnowledgeData kd = (KnowledgeData)data;
 			KnowledgeMetaData meta = kd.getMetaData();
 			this.componentId = meta.componentId;
-			long lastUpdate = messageBuffer.getLocalReceptionTime(meta.componentId);
+			long lastUpdate = receptionBuffer.getLocalReceptionTime(meta.componentId);
 			lastUpdate = lastUpdate == ReceptionBuffer.MINUS_INFINITE ? 0 : lastUpdate;
 			this.knowledgeAge = time - lastUpdate;
 			this.isSource = meta.componentId.endsWith(meta.sender);
@@ -131,7 +131,7 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 			KnowledgeData kd = (KnowledgeData)packet.getObject();
 			KnowledgeMetaData meta = kd.getMetaData();
 			
-			if (!messageBuffer.canReceive(meta.componentId, meta.versionId))
+			if (!receptionBuffer.canReceive(meta.componentId, meta.versionId))
 				return;
 			
 			if (kmContainer.hasLocal(meta.componentId))
@@ -168,7 +168,7 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	public void init(DEECoContainer container) {
 		// dependencies
 		this.kmContainer = container.getRuntimeFramework().getContainer();
-		this.messageBuffer = container.getPluginInstance(ReceptionBuffer.class);
+		this.receptionBuffer = container.getPluginInstance(ReceptionBuffer.class);
 		this.timeProvider = container.getRuntimeFramework().getScheduler().getTimer();
 		this.nodeId = container.getId();
 		

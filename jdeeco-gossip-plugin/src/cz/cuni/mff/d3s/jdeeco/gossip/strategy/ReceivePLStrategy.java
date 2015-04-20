@@ -37,7 +37,7 @@ public class ReceivePLStrategy extends ReceiveBaseStrategy {
 				//	local reception stays unchanged and a max value will be taken for
 				//	the global reception.
 				//	this knowledge will be PULLed as well
-				messageBuffer.receivePull(header.id, header.timestamp);
+				receptionBuffer.receivePull(header.id, header.timestamp);
 				//messageBuffer.receiveGlobal(header.id, header.timestamp);
 				
 				// make this knowledge as PULLed, will be broadcasted when present
