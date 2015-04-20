@@ -89,6 +89,10 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener, MobsimInit
 		MatsimAgentSensor sensor = new MatsimAgentSensor(nodeId, controler.getNetwork(), outputs);
 		return sensor;
 	}
+	public AgentSensor createAgentSensor(int nodeId, String agentId) {
+		MatsimAgentSensor sensor = new MatsimAgentSensor(nodeId, agentId, controler.getNetwork(), outputs);
+		return sensor;
+	}
 	
 	/**
 	 * Start simulation with given duration time in milliseconds.
@@ -111,7 +115,7 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener, MobsimInit
 		// 2) multiple threads (together with oment) - matsim exchanges its outputs with the other thread
 		if (exchanger != null) {
 			try {
-				/*Object inputs =*/ exchanger.exchange(getOutputs());
+				/*Object inputs =*/ exchanger.exchange(getOutputs());//, 5, TimeUnit.SECONDS);
 				// TODO: process inputs
 			} catch (InterruptedException e) {
 				e.printStackTrace();

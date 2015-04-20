@@ -13,7 +13,6 @@ import java.util.concurrent.Exchanger;
 import org.matsim.api.core.v01.Id;
 import org.matsim.core.controler.Controler;
 
-import cz.cuni.mff.d3s.deeco.runners.DEECoSimulation;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
@@ -27,7 +26,6 @@ import cz.cuni.mff.d3s.jdeeco.matsim.AgentSensor;
 import cz.cuni.mff.d3s.jdeeco.matsim.MatsimHelper;
 import cz.cuni.mff.d3s.jdeeco.matsim.MatsimOutput;
 import cz.cuni.mff.d3s.jdeeco.matsim.MatsimPlugin;
-import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTBroadcastDevice;
 import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTSimulation;
 
 /**
@@ -48,6 +46,8 @@ public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 	private MatsomnPositionTranslator translator;
 	// 
 	private Collection<AgentSensor> matsimSensors = new ArrayList<AgentSensor>();
+	// number of MATSim - OMNeT exchanges
+	private long stepCount;
 	
 	/**
 	 * 
@@ -69,7 +69,7 @@ public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 		// exchange data between threads
 		if (exchanger != null) {
 			try {
-				Object data = exchanger.exchange(null);
+				Object data = exchanger.exchange(null);//, 5, TimeUnit.SECONDS);
 				Map<Id, MatsimOutput> outputs = (Map<Id, MatsimOutput>)data;
 				
 				// it is important that matsim outputs are updated from this thread
@@ -120,15 +120,11 @@ public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 			double period = controler.getConfig().getQSimConfigGroup().getTimeStepSize();
 			Scheduler scheduler = container.getRuntimeFramework().getScheduler();
 			scheduler.addTask(new PeriodicTask(scheduler, this, MatsimHelper.sTOms(period)));
+			
+			this.timer.setSimulationStep(MatsimHelper.sTOms(period));
 		}
 		
 		AgentSensor sensor = matsim.createAgentSensor(container.getId());
 		this.matsimSensors.add(sensor);
-	}
-	
-	public static void registerPlugin(DEECoSimulation sim) {		
-		sim.addPlugin(OMNeTBroadcastDevice.class);
-		//sim.addPlugin(new OMNeTSimulation());
-		//sim.addPlugin(new MatsimPlugin());
 	}
 }

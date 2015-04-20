@@ -12,21 +12,29 @@ import org.matsim.core.basic.v01.IdImpl;
 import cz.cuni.mff.d3s.jdeeco.core.Position;
 
 /**
+ * Provides data about MATSim agent to deeco runtime.
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
 public class MatsimAgentSensor implements AgentSensor {
 	
-	private Id id;
+	private Id agentId;
 	private int nodeId;
 	private Network network;
 	private MatsimOutputProvider outputs;
 	
 	/**
-	 * 
+	 * Creates a new instance of agent sensor where node ID is considered to be the same as
+	 * MATSim agent ID.
 	 */
 	public MatsimAgentSensor(int nodeId, Network network, MatsimOutputProvider outputs) {
-		this.id = new IdImpl(nodeId);
+		this(nodeId, String.valueOf(nodeId), network, outputs);
+	}
+	/**
+	 * Creates a new instance of agent sensor with specific MATSim agent ID.
+	 */
+	public MatsimAgentSensor(int nodeId, String agentId, Network network, MatsimOutputProvider outputs) {
+		this.agentId = new IdImpl(agentId);
 		this.nodeId = nodeId;
 		this.outputs = outputs;
 		this.network = network;
@@ -45,7 +53,7 @@ public class MatsimAgentSensor implements AgentSensor {
 	 */
 	@Override
 	public Position getPosition() {
-		MatsimOutput out = outputs.getOutput(id);
+		MatsimOutput out = outputs.getOutput(agentId);
 		Link link = network.getLinks().get(out.currentLinkId);
 		Coord co = link.getCoord();
 		return new Position(co.getX(), co.getY());
