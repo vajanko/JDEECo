@@ -11,7 +11,11 @@ import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
 import cz.cuni.mff.d3s.jdeeco.core.task.PeriodicTask;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProviderPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
+import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegister;
+import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegisterPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
+import cz.cuni.mff.d3s.jdeeco.network.address.Address;
+import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
 import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
 
 /**
@@ -21,9 +25,10 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
  */
 public abstract class SendBasePlugin implements TimerTaskListener, DEECoPlugin {
 	
+	protected AddressRegister addressRegister;
 	protected KnowledgeProviderPlugin knowledgeProvider;
 	protected ReceptionBuffer receptionBuffer;
-	protected Layer2 networkLayer;
+	private Layer2 networkLayer;
 	private long period;
 	
 	/**
@@ -31,6 +36,17 @@ public abstract class SendBasePlugin implements TimerTaskListener, DEECoPlugin {
 	 */
 	public SendBasePlugin(long period) {
 		this.period = period;
+	}
+	
+	/**
+	 * Send packet to all known addresses.
+	 * 
+	 * @param packet Packet to be sent.
+	 */
+	protected void sendPacket(L2Packet packet) {
+		for (Address address : this.addressRegister.getAddresses()) {
+			this.networkLayer.sendL2Packet(packet, address);
+		}
 	}
 		
 	/* (non-Javadoc)
@@ -51,7 +67,7 @@ public abstract class SendBasePlugin implements TimerTaskListener, DEECoPlugin {
 	 */
 	@Override
 	public List<Class<? extends DEECoPlugin>> getDependencies() {
-		return Arrays.asList(Network.class, ReceptionBuffer.class, KnowledgeProviderPlugin.class);
+		return Arrays.asList(Network.class, ReceptionBuffer.class, KnowledgeProviderPlugin.class, AddressRegisterPlugin.class);
 	}
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#init(cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)
@@ -61,6 +77,7 @@ public abstract class SendBasePlugin implements TimerTaskListener, DEECoPlugin {
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
 		this.receptionBuffer = container.getPluginInstance(ReceptionBuffer.class);
 		this.knowledgeProvider = container.getPluginInstance(KnowledgeProviderPlugin.class);
+		this.addressRegister = container.getPluginInstance(AddressRegisterPlugin.class).getRegister();
 		
 		// run PULL knowledge gossip task
 		Scheduler scheduler = container.getRuntimeFramework().getScheduler();

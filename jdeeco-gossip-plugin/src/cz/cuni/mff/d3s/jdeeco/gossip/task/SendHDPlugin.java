@@ -5,7 +5,6 @@ import java.util.Iterator;
 
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.HeaderPayload;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ItemHeader;
-import cz.cuni.mff.d3s.jdeeco.network.address.MANETBroadcastAddress;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
 import cz.cuni.mff.d3s.jdeeco.network.l2.PacketHeader;
@@ -52,7 +51,7 @@ public class SendHDPlugin extends SendBasePlugin {
 			HeaderPayload data = new HeaderPayload(headers);
 			L2Packet packet = new L2Packet(header, data);
 
-			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
+			sendPacket(packet);
 		}
 	}
 }

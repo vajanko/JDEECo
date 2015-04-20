@@ -7,7 +7,6 @@ import java.util.Collection;
 
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
-import cz.cuni.mff.d3s.jdeeco.network.address.MANETBroadcastAddress;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
 import cz.cuni.mff.d3s.jdeeco.network.l2.PacketHeader;
@@ -35,8 +34,8 @@ public abstract class SendBaseKNPlugin extends SendBasePlugin {
 			PacketHeader header = new PacketHeader(L2PacketType.KNOWLEDGE);
 			L2Packet packet = new L2Packet(header, data);
 			
-			// broadcast knowledge ...
-			networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
+			// send knowledge ...
+			sendPacket(packet);
 			
 			// ... and stores information about last knowledge version
 			KnowledgeMetaData meta = data.getMetaData();
