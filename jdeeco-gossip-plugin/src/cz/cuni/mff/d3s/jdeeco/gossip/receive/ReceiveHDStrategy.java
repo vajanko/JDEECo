@@ -1,4 +1,4 @@
-package cz.cuni.mff.d3s.jdeeco.gossip.strategy;
+package cz.cuni.mff.d3s.jdeeco.gossip.receive;
 
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.HeaderPayload;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ItemHeader;

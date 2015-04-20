@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cz.cuni.mff.d3s.jdeeco.gossip.strategy;
+package cz.cuni.mff.d3s.jdeeco.gossip.receive;
 
 import java.util.Arrays;
 import java.util.List;

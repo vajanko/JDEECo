@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cz.cuni.mff.d3s.jdeeco.gossip.strategy;
+package cz.cuni.mff.d3s.jdeeco.gossip.receive;
 
 import cz.cuni.mff.d3s.jdeeco.network.l2.L1DataProcessor;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
