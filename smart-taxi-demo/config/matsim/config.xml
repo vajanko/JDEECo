@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<!DOCTYPE config SYSTEM "http://www.matsim.org/files/dtd/config_v1.dtd">
+<config>
+
+  <!-- defines transport infrastructure -->
+	<module name="network">
+		<param name="inputNetworkFile" value="config/matsim/network.xml" />
+	</module>
+  
+  <module name="controler">
+		<param name="outputDirectory" value="./output" />
+		<param name="eventsFileFormat" value="xml" />
+		<param name="firstIteration" value="0" />
+		<param name="lastIteration" value="100" />
+    <param name="mobsim" value="qsim"/>
+	</module>
+  
+  <module name="qsim">
+    <param name="startTime" value="00:00:00" />
+    <param name="endTime" value="00:00:10" /> <!-- this value is setup from code -->
+  </module>
+
+  <module name="plans">
+		<param name="inputPlansFile" value="config/matsim/plans.xml" />
+	</module>
+  <!--
+	
+
+	<module name="planCalcScore" >
+		<param name="activityType_0" value="h" />
+		<param name="activityType_1" value="w" />
+		<param name="activityTypicalDuration_0" value="12:00:00" />
+		<param name="activityTypicalDuration_1" value="08:00:00" />
+	</module>-->
+
+
+</config>

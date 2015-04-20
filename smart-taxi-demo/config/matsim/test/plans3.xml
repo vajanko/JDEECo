@@ -1,0 +1,61 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plans SYSTEM "http://www.matsim.org/files/dtd/plans_v4.dtd">
+<plans>
+<person id="1" car_avail="never">
+		<plan selected="yes">
+			<act type="h" link="11" x="1050" y="1050" end_time="06:00:00" />
+			<leg mode="pt">
+			</leg>
+			<act type="w" link="33" x="3950.0" y="1050.0" end_time="06:01:00" />
+			<leg mode="pt">
+			</leg>
+			<act type="w" link="32" x="2050.0" y="2960.0" end_time="06:02:10" />
+			<leg mode="pt">
+			</leg>
+			<act type="h" link="11" x="1050.0" y="1050.0" />
+		</plan>
+
+	</person>
+
+<!--<person id="1">
+	<plan>
+		<act type="h" x="-25000" y="0" link="1" end_time="06:00" />
+		<leg mode="pt">
+			<route>2 7 12</route>
+		</leg>
+		<act type="w" x="10000" y="0" link="20" dur="00:01" />
+		<leg mode="pt">
+			<route>13 14 15 1</route>
+		</leg>
+		<act type="h" x="-25000" y="0" link="1" />
+	</plan>
+</person>
+ 
+<person id="2" car_avail="never">
+	<plan>
+		<act type="h" x="-25000" y="0" link="1" end_time="06:01" />
+		<leg mode="pt">
+			<route>2 7 12</route>
+		</leg>
+		<act type="w" x="10000" y="0" link="20" dur="00:00:30" />
+		<leg mode="pt">
+			<route>13 14 15 1</route>
+		</leg>
+		<act type="h" x="-25000" y="0" link="1" />
+	</plan>
+</person>
+
+<person id="3" car_avail="never">
+	<plan>
+		<act type="h" x="-25000" y="0" link="1" end_time="06:02" />
+		<leg mode="car">
+			<route>2 7 12</route>
+		</leg>
+		<act type="w" x="10000" y="0" link="20" dur="00:00:10" />
+		<leg mode="car">
+			<route>13 14 15 1</route>
+		</leg>
+		<act type="h" x="-25000" y="0" link="1" />
+	</plan>
+</person>-->
+</plans>

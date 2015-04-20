@@ -24,6 +24,7 @@ import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
 import cz.cuni.mff.d3s.jdeeco.network.marshaller.MarshallerRegistry;
 import cz.cuni.mff.d3s.jdeeco.network.marshaller.SerializingMarshaller;
+//import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTBroadcastDevice;
 
 /**
  * 
@@ -34,7 +35,7 @@ public class GossipPlugin implements DEECoPlugin {
 	public static final String GOSSIP_FEATURES = "deeco.gossip.features";
 	public static final String GOSSIP_FEATURES_DEFAULT = "";
 	public static final String GOSSIP_DEVICE = "deeco.gossip.device";
-	public static final String GOSSIP_DEVICE_DEFAULT = "broadcast";
+	public static final String GOSSIP_DEVICE_DEFAULT = "";
 	
 	
 	/* (non-Javadoc)
@@ -97,6 +98,9 @@ public class GossipPlugin implements DEECoPlugin {
 		else if (device.equalsIgnoreCase("multicast")) {
 			sim.addPlugin(new MulticastDevice());
 		}
+//		else if (device.equals("omnet")) {
+//			sim.addPlugin(OMNeTBroadcastDevice.class);
+//		}
 
 		sim.addPlugin(GossipPlugin.class);
 		sim.addPlugin(ReceiveKNStrategy.class);

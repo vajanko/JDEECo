@@ -12,7 +12,7 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoException;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoNode;
 import cz.cuni.mff.d3s.deeco.timer.DiscreteEventTimer;
 import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
-import cz.cuni.mff.d3s.jdeeco.gossip.ConfigHelper;
+import cz.cuni.mff.d3s.jdeeco.core.ConfigHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoComponent;
@@ -35,12 +35,13 @@ public class Grid {
 	 * @throws AnnotationProcessorException 
 	 */
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, DEECoException, FileNotFoundException, AnnotationProcessorException {
-		ConfigHelper.loadProperties("test/cz/cuni/mff/d3s/jdeeco/gossip/demo/grid.properties");
 		
-		RequestLoggerPlugin.initOutputStream("logs/grid.csv");
+		ConfigHelper.loadProperties("test/cz/cuni/mff/d3s/jdeeco/gossip/demo/grid-pull-passive.properties");
+		
+		//RequestLoggerPlugin.initOutputStream("logs/grid.csv");
 		
 		int size = 4;
-		int nodes = size * size;
+		final int nodes = size * size;
 		
 		StringBuilder top = new StringBuilder();
 		for (int i = 0; i < size; ++i) {
@@ -53,7 +54,7 @@ public class Grid {
 					top.append(String.format("(%d,%d)", n, n + size));
 			}
 		}
-		//System.out.println(top.toString());
+		
 		System.getProperties().setProperty(MulticastDevice.MULTICAST_TOPOLOGY, top.toString());
 		
 		for (Double prob = 0.1 ; prob <= 1.0; prob += 0.1) {

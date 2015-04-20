@@ -12,7 +12,7 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoException;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoNode;
 import cz.cuni.mff.d3s.deeco.timer.DiscreteEventTimer;
 import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
-import cz.cuni.mff.d3s.jdeeco.gossip.ConfigHelper;
+import cz.cuni.mff.d3s.jdeeco.core.ConfigHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoComponent;

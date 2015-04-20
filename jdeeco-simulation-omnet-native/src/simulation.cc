@@ -68,6 +68,9 @@ static void verifyIntTypes() {
 }
 
 void simulate(const char * envName, const char * confFile) {
+
+	static int init = 0;
+
 	cStaticFlag dummy;
 	//
 	// SETUP
@@ -97,33 +100,31 @@ void simulate(const char * envName, const char * confFile) {
 		bootconfig->setConfigurationReader(inifile);
 		bootconfig->activateConfig("General", 0);
 
+		if (!init) {
 		//load libs
-		std::vector<std::string> libs = bootconfig->getAsFilenames(
-				CFGID_LOAD_LIBS);
+		std::vector<std::string> libs = bootconfig->getAsFilenames(CFGID_LOAD_LIBS);
 		for (int k = 0; k < (int) libs.size(); k++) {
 			::printf("Loading %s ...\n", libs[k].c_str());
 			loadExtensionLibrary(libs[k].c_str());
+		}
 		}
 
 		//
 		// Create custom configuration object, if needed.
 		//
-		std::string configclass = bootconfig->getAsString(
-				CFGID_CONFIGURATION_CLASS);
+		std::string configclass = bootconfig->getAsString(CFGID_CONFIGURATION_CLASS);
 		if (configclass.empty()) {
 			configobject = bootconfig;
 		} else {
 			// create custom configuration object
-			CREATE_BY_CLASSNAME(configobject, configclass.c_str(),
-					cConfigurationEx, "configuration");
+			CREATE_BY_CLASSNAME(configobject, configclass.c_str(), cConfigurationEx, "configuration");
 			configobject->initializeFrom(bootconfig);
 			configobject->activateConfig("General", 0);
 			delete bootconfig;
 			bootconfig = NULL;
 
 			// load libs from this config as well
-			std::vector<std::string> libs = configobject->getAsFilenames(
-					CFGID_LOAD_LIBS);
+			std::vector<std::string> libs = configobject->getAsFilenames(CFGID_LOAD_LIBS);
 			for (int k = 0; k < (int) libs.size(); k++)
 				loadExtensionLibrary(libs[k].c_str());
 		}
@@ -144,12 +145,12 @@ void simulate(const char * envName, const char * confFile) {
 		const char * appname = envName;
 		if (appname == NULL || opp_strcmp(appname, "") == 0)
 			appname = configobject->getAsString(CFGID_USER_INTERFACE).c_str();
+
 		cOmnetAppRegistration *appreg = NULL;
 		if (!(appname == NULL || opp_strcmp(appname, "") == 0)) {
 			// look up specified user interface
 			appreg =
-					static_cast<cOmnetAppRegistration *>(omnetapps.getInstance()->lookup(
-							appname));
+					static_cast<cOmnetAppRegistration *>(omnetapps.getInstance()->lookup(appname));
 			if (!appreg) {
 				::printf(
 						"\n"
@@ -211,6 +212,6 @@ void simulate(const char * envName, const char * confFile) {
 	enums.clear();
 	classDescriptors.clear();
 	configOptions.clear();
-	omnetapps.clear();
+	//omnetapps.clear();
 	CodeFragments::executeAll(CodeFragments::SHUTDOWN);
 }

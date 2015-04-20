@@ -6,6 +6,7 @@ MIXIM_DIR ?= ${OMNETPP_ROOT}/../mixim
 OMNETPP_SRC_DIR ?= ${OMNETPP_ROOT}/src
 OMNETPP_INCL_DIR ?= ${OMNETPP_INCL_DIR}/include
 
+MINGW_LIB_DIR = ${OMNETPP_ROOT}/tools/win32/mingw32/bin
 
 CONFIGFILE = ${OMNETPP_ROOT}/Makefile.inc
 include $(CONFIGFILE)
@@ -70,12 +71,17 @@ install:
 	cp ${MIXIM_DIR}/out/gcc-release/src/libmixim.dll libs/release
 	
 	# gcc
-	cp ${OMNETPP_ROOT}/tools/win32/mingw64/bin/libgcc_s_seh-1.dll libs/debug
-	cp ${OMNETPP_ROOT}/tools/win32/mingw64/bin/libgcc_s_seh-1.dll libs/release
-	cp ${OMNETPP_ROOT}/tools/win32/mingw64/bin/libstdc++-6.dll libs/debug
-	cp ${OMNETPP_ROOT}/tools/win32/mingw64/bin/libstdc++-6.dll libs/release
-	cp ${OMNETPP_ROOT}/tools/win32/mingw64/bin/libwinpthread-1.dll libs/debug
-	cp ${OMNETPP_ROOT}/tools/win32/mingw64/bin/libwinpthread-1.dll libs/release
+	cp ${MINGW_LIB_DIR}/libgcc_s_dw2-1.dll libs/debug
+	cp ${MINGW_LIB_DIR}/libgcc_s_dw2-1.dll libs/release
+	cp ${MINGW_LIB_DIR}/libstdc++-6.dll libs/debug
+	cp ${MINGW_LIB_DIR}/libstdc++-6.dll libs/release
+	cp ${MINGW_LIB_DIR}/libwinpthread-1.dll libs/debug
+	cp ${MINGW_LIB_DIR}/libwinpthread-1.dll libs/release
+	
+	cp ${MINGW_LIB_DIR}/libxml2-2.dll libs/debug
+	cp ${MINGW_LIB_DIR}/libxml2-2.dll libs/release
+	cp ${MINGW_LIB_DIR}/zlib1.dll libs/debug
+	cp ${MINGW_LIB_DIR}/zlib1.dll libs/release
 	
 	# ned files
 	echo 'cd ${INET_DIR}/src; find -name "*.ned" -exec cp --parents {} $(shell pwd)/libs/ned/inet ";"' | sh

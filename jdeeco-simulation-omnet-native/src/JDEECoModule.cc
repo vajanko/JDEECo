@@ -120,7 +120,6 @@ JDEECoModule* JDEECoModule::findModule(JNIEnv *env, jint id) {
 }
 
 void JDEECoModule::clearAll() {
-	// TODO: Memory leak here?
 	jDEECoModules.clear();
 }
 

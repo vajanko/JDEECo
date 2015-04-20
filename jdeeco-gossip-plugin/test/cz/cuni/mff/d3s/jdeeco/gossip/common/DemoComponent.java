@@ -24,6 +24,6 @@ public class DemoComponent {
 	@Process
 	@PeriodicScheduling(period=1000)
 	public static void process(@In("id") String id) {
-		
+		//System.out.println("I am " + id);
 	}
 }

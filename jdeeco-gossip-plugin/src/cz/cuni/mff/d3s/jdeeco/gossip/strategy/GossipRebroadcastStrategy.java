@@ -11,7 +11,7 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.ConfigHelper;
+import cz.cuni.mff.d3s.jdeeco.core.ConfigHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
