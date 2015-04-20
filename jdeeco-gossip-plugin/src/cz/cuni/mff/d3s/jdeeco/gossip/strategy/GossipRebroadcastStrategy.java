@@ -12,7 +12,7 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.jdeeco.core.ConfigHelper;
-import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
+import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProviderPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.address.MANETBroadcastAddress;
@@ -39,7 +39,7 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 	private double probability;
 	private Layer2 networkLayer;
 	private ReceptionBuffer messageBuffer;
-	private KnowledgeProvider knowledgeProvider;
+	private KnowledgeProviderPlugin knowledgeProvider;
 	private String nodeId;
 	
 	protected KnowledgeData prepareForRebroadcast(KnowledgeData kd) {		
@@ -87,7 +87,7 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 	 */
 	@Override
 	public List<Class<? extends DEECoPlugin>> getDependencies() {
-		return Arrays.asList(Network.class, ReceptionBuffer.class, KnowledgeProvider.class);
+		return Arrays.asList(Network.class, ReceptionBuffer.class, KnowledgeProviderPlugin.class);
 	}
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#init(cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)
@@ -95,7 +95,7 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 	@Override
 	public void init(DEECoContainer container) {
 		// initialise dependencies
-		this.knowledgeProvider = container.getPluginInstance(KnowledgeProvider.class);
+		this.knowledgeProvider = container.getPluginInstance(KnowledgeProviderPlugin.class);
 		this.messageBuffer = container.getPluginInstance(ReceptionBuffer.class);
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
 		// register L2 strategy

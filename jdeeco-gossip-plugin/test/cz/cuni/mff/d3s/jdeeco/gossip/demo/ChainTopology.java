@@ -13,7 +13,7 @@ import cz.cuni.mff.d3s.deeco.timer.DiscreteEventTimer;
 import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipProperties;
-import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
+import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProviderPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoComponent;
@@ -46,7 +46,7 @@ public class ChainTopology {
 		realm.addPlugin(Network.class);
 		
 		realm.addPlugin(GossipPlugin.class);
-		realm.addPlugin(KnowledgeProvider.class);
+		realm.addPlugin(KnowledgeProviderPlugin.class);
 		realm.addPlugin(ReceptionBuffer.class);
 		
 		// print to console as well as to the file

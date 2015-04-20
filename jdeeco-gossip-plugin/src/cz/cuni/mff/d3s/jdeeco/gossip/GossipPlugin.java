@@ -68,7 +68,7 @@ public class GossipPlugin implements DEECoPlugin {
 		
 		sim.addPlugin(Network.class);
 		sim.addPlugin(ReceptionBuffer.class);
-		sim.addPlugin(KnowledgeProvider.class);
+		sim.addPlugin(KnowledgeProviderPlugin.class);
 		
 		if (features.contains("push")) {
 			sim.addPlugin(SendPushedKNPlugin.class);

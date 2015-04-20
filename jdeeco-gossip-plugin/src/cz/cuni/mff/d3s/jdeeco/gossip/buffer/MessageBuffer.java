@@ -74,6 +74,6 @@ public class MessageBuffer implements DEECoPlugin {
 	 */
 	@Override
 	public void init(DEECoContainer container) {
-		
+		this.buffer.clear();
 	}
 }

@@ -9,7 +9,7 @@ import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
 import cz.cuni.mff.d3s.deeco.task.TimerTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
 import cz.cuni.mff.d3s.jdeeco.core.task.PeriodicTask;
-import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProvider;
+import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProviderPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
@@ -21,7 +21,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
  */
 public abstract class SendBasePlugin implements TimerTaskListener, DEECoPlugin {
 	
-	protected KnowledgeProvider knowledgeProvider;
+	protected KnowledgeProviderPlugin knowledgeProvider;
 	protected ReceptionBuffer messageBuffer;
 	protected Layer2 networkLayer;
 	private long period;
@@ -51,7 +51,7 @@ public abstract class SendBasePlugin implements TimerTaskListener, DEECoPlugin {
 	 */
 	@Override
 	public List<Class<? extends DEECoPlugin>> getDependencies() {
-		return Arrays.asList(Network.class, ReceptionBuffer.class, KnowledgeProvider.class);
+		return Arrays.asList(Network.class, ReceptionBuffer.class, KnowledgeProviderPlugin.class);
 	}
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#init(cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)
@@ -60,7 +60,7 @@ public abstract class SendBasePlugin implements TimerTaskListener, DEECoPlugin {
 	public void init(DEECoContainer container) {
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
 		this.messageBuffer = container.getPluginInstance(ReceptionBuffer.class);
-		this.knowledgeProvider = container.getPluginInstance(KnowledgeProvider.class);
+		this.knowledgeProvider = container.getPluginInstance(KnowledgeProviderPlugin.class);
 		
 		// run PULL knowledge gossip task
 		Scheduler scheduler = container.getRuntimeFramework().getScheduler();
