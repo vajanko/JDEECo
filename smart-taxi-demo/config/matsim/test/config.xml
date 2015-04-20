@@ -23,12 +23,23 @@
     <param name="startTime" value="06:00:00" />
     <param name="endTime" value="06:20:00" /> <!-- this value is setup from code -->
     <param name="mainMode" value="car" />
-    <param name="vehicleBehavior" value="teleport" />
+    <param name="vehicleBehavior" value="wait" />
 	</module>
   
-  <!--<module name="scenario">
-    <param name="useTransit" value="true">
-  </module>-->
+  <module name="scenario">
+    <param name="useTransit" value="true" />
+    <param name="useVehicles" value="true" />   <!-- private vehicles ???-->
+  </module>
+  
+  <module name="transit">
+		<param name="transitScheduleFile" value="config/matsim/test/schedule.xml" />
+		<param name="vehiclesFile" value="config/matsim/test/vehicles.xml" />
+		<param name="transitModes" value="pt" />
+	</module>
+  
+  <module name="changeLegMode">
+    <param name="modes" value="car,pt" />
+  </module>
 
 	<module name="planCalcScore" >
 		<param name="lateArrival" value="-18" />

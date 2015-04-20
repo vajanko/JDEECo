@@ -7,7 +7,8 @@ import cz.cuni.mff.d3s.deeco.annotations.Component;
 import cz.cuni.mff.d3s.deeco.annotations.In;
 import cz.cuni.mff.d3s.deeco.annotations.PeriodicScheduling;
 import cz.cuni.mff.d3s.deeco.annotations.Process;
-import cz.cuni.mff.d3s.jdeeco.matsim.MATSimVehicle;
+import cz.cuni.mff.d3s.jdeeco.core.Position;
+import cz.cuni.mff.d3s.jdeeco.matsim.AgentSensor;
 
 /**
  * 
@@ -19,13 +20,15 @@ public class DriverComponent extends ActorComponent {
 	/**
 	 * 
 	 */
-	public DriverComponent(String id, MATSimVehicle vehiclePlugin) {
-		super(id, vehiclePlugin);
+	public DriverComponent(String id, AgentSensor sensor) {
+		super(id, sensor);
 	}
 
 	@Process
 	@PeriodicScheduling(period = 1000)
-	private static void process(@In("id") String id) {
-		
+	public static void process(
+			@In("id") String id, 
+			@In("position") Position position) {
+		//System.out.println(String.format("%s: %s", id, position));
 	}
 }

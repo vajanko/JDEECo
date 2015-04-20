@@ -6,9 +6,6 @@ package cz.cuni.mff.d3s.deeco.measurement;
 import java.io.IOException;
 import java.util.Locale;
 
-import org.matsim.api.core.v01.Id;
-import org.matsim.core.basic.v01.IdImpl;
-
 import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessorException;
 import cz.cuni.mff.d3s.deeco.demo.component.SensorComponent;
 import cz.cuni.mff.d3s.deeco.runners.DEECoSimulation;
@@ -20,9 +17,9 @@ import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoEnsemble;
 import cz.cuni.mff.d3s.jdeeco.gossip.strategy.GossipRebroadcastStrategy;
 import cz.cuni.mff.d3s.jdeeco.matsim.AgentSensor;
-import cz.cuni.mff.d3s.jdeeco.matsim.MatsimAgentPlugin;
 import cz.cuni.mff.d3s.jdeeco.matsim.MatsimPlugin;
 import cz.cuni.mff.d3s.jdeeco.matsomn.MatsomnPlugin;
+import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTBroadcastDevice;
 import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTSimulation;
 
 /**
@@ -34,7 +31,7 @@ public class MatsimOmnetTest {
 		// this is wonderful !!!
 		Locale.setDefault(Locale.getDefault());
 		
-		ConfigHelper.loadProperties("config/test.properties");
+		ConfigHelper.loadProperties("config/generated.properties");
 		
 		double prob = 0.5;
 		if (args.length > 0)
@@ -55,15 +52,12 @@ public class MatsimOmnetTest {
 			sim.addPlugin(matsim);
 			sim.addPlugin(omnet);
 			sim.addPlugin(matsomn);
+			sim.addPlugin(OMNeTBroadcastDevice.class);
 			
-			MatsomnPlugin.registerPlugin(sim);
 			GossipPlugin.registerPlugin(sim);
 			
-			final int nodes = 3;
+			final int nodes = 10;
 			for (int i = 1; i <= nodes; ++i) {
-				
-//				Id id = new IdImpl(i);
-//				MatsimAgentPlugin matsomnAgent = new MatsimAgentPlugin(id);			// MATSim agent with associated person
 				
 				AgentSensor sensor = matsim.createAgentSensor(i);
 				
@@ -72,7 +66,7 @@ public class MatsimOmnetTest {
 				node.deployEnsemble(DemoEnsemble.class);
 			}
 			
-			sim.start(10 * 60 * 1000);
+			sim.start(20 * 60 * 1000);
 		}
 	}
 }

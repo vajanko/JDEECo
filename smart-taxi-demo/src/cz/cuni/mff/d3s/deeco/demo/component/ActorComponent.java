@@ -3,30 +3,15 @@
  */
 package cz.cuni.mff.d3s.deeco.demo.component;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.matsim.api.core.v01.Coord;
-import org.matsim.api.core.v01.Id;
-
 import cz.cuni.mff.d3s.deeco.annotations.In;
 import cz.cuni.mff.d3s.deeco.annotations.Local;
 import cz.cuni.mff.d3s.deeco.annotations.Out;
 import cz.cuni.mff.d3s.deeco.annotations.PeriodicScheduling;
 import cz.cuni.mff.d3s.deeco.annotations.PlaysRole;
 import cz.cuni.mff.d3s.deeco.annotations.Process;
-import cz.cuni.mff.d3s.deeco.annotations.TriggerOnChange;
-import cz.cuni.mff.d3s.deeco.demo.TaxiApplication;
-import cz.cuni.mff.d3s.deeco.simulation.matsim.MATSimRouter;
 import cz.cuni.mff.d3s.deeco.task.ParamHolder;
 import cz.cuni.mff.d3s.jdeeco.core.Position;
-import cz.cuni.mff.d3s.jdeeco.matsim.MATSimVehicle;
-import cz.cuni.mff.d3s.jdeeco.matsim.old.roadtrains.Actuator;
-import cz.cuni.mff.d3s.jdeeco.matsim.old.roadtrains.ActuatorType;
-import cz.cuni.mff.d3s.jdeeco.matsim.old.roadtrains.Sensor;
-import cz.cuni.mff.d3s.jdeeco.matsim.old.roadtrains.SensorType;
+import cz.cuni.mff.d3s.jdeeco.matsim.AgentSensor;
 
 /**
  * Base class for all components in the demo.
@@ -36,53 +21,30 @@ import cz.cuni.mff.d3s.jdeeco.matsim.old.roadtrains.SensorType;
 @PlaysRole(PositionAware.class)
 public abstract class ActorComponent {
 	public String id;
-	public Coord position;
-	public Id currentLink;
-	
-	public String currentStation;
-	public Collection<String> passingStations;
-	public String nextStation;
+	public Position position;
 	
 	@Local
-	public Map<String, Position> others = new HashMap<String, Position>();
-	
-	@Local
-	protected TaxiApplication application = new TaxiApplication();
-	
-	@Local
-	public Actuator<List<Id> > routeActuator;
-	@Local
-	public Actuator<Double> speedActuator;
-	@Local
-	public Sensor<Id> currentLinkSensor;
-	@Local
-	public MATSimRouter router;
+	public AgentSensor sensor;
 	
 	/**
 	 * 
 	 */
-	public ActorComponent(String id, MATSimVehicle vehiclePlugin) {
+	public ActorComponent(String id, AgentSensor sensor) {
 		this.id = id;
-		this.router = vehiclePlugin.getSimulation().getRouter();
-		this.routeActuator = vehiclePlugin.getActuatorProvider().createActuator(ActuatorType.ROUTE);
-		this.speedActuator = vehiclePlugin.getActuatorProvider().createActuator(ActuatorType.SPEED);
-		this.currentLinkSensor = vehiclePlugin.getSensorProvider().createSensor(SensorType.CURRENT_LINK);
+		this.position = new Position();
+		this.sensor = sensor;
 	}
 	
 	@Process
-	@PeriodicScheduling(period = 3600 * 1000)
-	public static void processSensors(
+	@PeriodicScheduling(period = 1000)
+	public static void updatePosition(
 			@In("id") String id,
-			@In("router") MATSimRouter router,
-			@In("currentLinkSensor") Sensor<Id> currentLinkSensor,
-			
-			@Out("currentLink") ParamHolder<Id> currentLink,
-			@Out("position") ParamHolder<Coord> position) {
+			@In("sensor") AgentSensor sensor,
+			@Out("position") ParamHolder<Position> position) {
 		
-		currentLink.value = currentLinkSensor.read();
-		position.value = router.getLink(currentLink.value).getCoord();
+		position.value = sensor.getPosition();
 		
-		System.out.println(id + ": " + position.value.toString());
+		//System.out.println(id + ": " + position.value.toString());
 	}
 	
 	/**
