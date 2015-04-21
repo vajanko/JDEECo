@@ -17,14 +17,12 @@ import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveHDStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveKNStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceivePLStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.send.SendHDPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.send.SendKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.send.SendPLPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.send.SendPulledKNPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.send.SendPushedKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
 import cz.cuni.mff.d3s.jdeeco.network.marshaller.MarshallerRegistry;
 import cz.cuni.mff.d3s.jdeeco.network.marshaller.SerializingMarshaller;
-//import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTBroadcastDevice;
 
 /**
  * 
@@ -71,7 +69,7 @@ public class GossipPlugin implements DEECoPlugin {
 		sim.addPlugin(KnowledgeProviderPlugin.class);
 		
 		if (features.contains("push")) {
-			sim.addPlugin(SendPushedKNPlugin.class);
+			sim.addPlugin(SendKNPlugin.class);
 		}
 		
 		if (features.contains("pull")) {
@@ -98,9 +96,6 @@ public class GossipPlugin implements DEECoPlugin {
 		else if (device.equalsIgnoreCase("multicast")) {
 			sim.addPlugin(new MulticastDevice());
 		}
-//		else if (device.equals("omnet")) {
-//			sim.addPlugin(OMNeTBroadcastDevice.class);
-//		}
 
 		sim.addPlugin(GossipPlugin.class);
 		sim.addPlugin(ReceiveKNStrategy.class);

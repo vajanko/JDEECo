@@ -21,10 +21,10 @@ import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveHDStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveKNStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceivePLStrategy;
+import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegisterPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.send.SendHDPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.send.SendKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.send.SendPLPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.send.SendPulledKNPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.send.SendPushedKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 
 /**
@@ -48,11 +48,11 @@ public class Launcher {
 		realm.addPlugin(GossipPlugin.class);
 		realm.addPlugin(KnowledgeProviderPlugin.class);
 		realm.addPlugin(ReceptionBuffer.class);
+		realm.addPlugin(AddressRegisterPlugin.class);
 		
 		realm.addPlugin(RequestLoggerPlugin.class);
 		
-		realm.addPlugin(SendPushedKNPlugin.class);
-		realm.addPlugin(SendPulledKNPlugin.class);
+		realm.addPlugin(SendKNPlugin.class);
 		realm.addPlugin(SendHDPlugin.class);
 		realm.addPlugin(SendPLPlugin.class);
 		

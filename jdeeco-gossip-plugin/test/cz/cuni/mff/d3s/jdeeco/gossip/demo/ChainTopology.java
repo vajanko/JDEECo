@@ -25,8 +25,8 @@ import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveHDStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveKNStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceivePLStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.send.SendHDPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.send.SendKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.send.SendPLPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.send.SendPushedKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 
 /**
@@ -52,8 +52,7 @@ public class ChainTopology {
 		// print to console as well as to the file
 		realm.addPlugin(RequestLoggerPlugin.class);
 		
-		realm.addPlugin(SendPushedKNPlugin.class);
-		//realm.addPlugin(SendPulledKNPlugin.class);
+		realm.addPlugin(SendKNPlugin.class);
 		realm.addPlugin(SendHDPlugin.class);
 		realm.addPlugin(SendPLPlugin.class);
 		

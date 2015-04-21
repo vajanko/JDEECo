@@ -5,6 +5,7 @@ package cz.cuni.mff.d3s.jdeeco.gossip.send;
 
 import java.util.Collection;
 
+import cz.cuni.mff.d3s.jdeeco.gossip.RecipientSelector;
 import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegister;
 import cz.cuni.mff.d3s.jdeeco.network.address.Address;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
