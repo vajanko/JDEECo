@@ -19,4 +19,9 @@ public class MANETBroadcastAddress extends Address {
 	public String getAddress() {
 		return address;
 	}
+	
+	@Override
+	public String toString() {
+		return address;
+	}
 }
