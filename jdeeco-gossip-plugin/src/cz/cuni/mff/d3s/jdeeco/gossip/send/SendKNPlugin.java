@@ -29,6 +29,9 @@ public class SendKNPlugin extends SendBasePlugin {
 	public void setKnowledgeSource(KnowledgeSource knowledgeSource) {
 		this.knowledgeSource = knowledgeSource;
 	}
+	public KnowledgeSource getKnowledgeSource() {
+		return this.knowledgeSource;
+	}
 	
 	public SendKNPlugin() {
 		super(Long.getLong(TASK_PERIOD, TASK_PERIOD_DEFAULT));

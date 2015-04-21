@@ -58,6 +58,6 @@ public class GrouperClientComponent {
 		
 		groupMembers.clear();
 		
-		//System.out.println(id + " - register: " + register);
+		System.out.println(id + " - register: " + register);
 	}
 }

@@ -48,10 +48,24 @@ public class AddressRegister {
 	/**
 	 * Get collection of all addresses currently stored in the register.
 	 * 
-	 * @return Collection if addresses.
+	 * @return Collection of addresses.
 	 */
 	public Collection<Address> getAddresses() {
 		return register;
+	}
+	/**
+	 * Get collection of all addresses currently stored in the registry as
+	 * string values.
+	 * 
+	 * @return Collection of addresses as strings.
+	 */
+	public Collection<String> getStrings() {
+		HashSet<String> res = new HashSet<String>();
+		for (Address adr : this.register) {
+			res.add(adr.toString());
+		}
+		
+		return res;
 	}
 	/**
 	 * Remove all addresses from the current register.
