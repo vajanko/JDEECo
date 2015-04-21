@@ -22,4 +22,12 @@ public class KnowledgeDataHelper {
 		}
 		throw new KnowledgeNotFoundException();
 	}
+	
+	public static KnowledgePath getPath(KnowledgeData data, String path) {
+		for (KnowledgePath kp : data.getKnowledge().getKnowledgePaths()) {
+			if (kp.toString().equals(path))
+				return kp;
+		}
+		return null;
+	}
 }
