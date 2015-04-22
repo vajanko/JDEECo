@@ -34,11 +34,10 @@ public class GrouperClientPlugin implements DEECoPlugin {
 	@Override
 	public void init(DEECoContainer container) {	
 		AddressRegister addressRegister = container.getPluginInstance(AddressRegisterPlugin.class).getRegister();
-		String nodeAddress = String.valueOf(container.getId());
 		
 		try {
 			
-			container.deployComponent(new GrouperClientComponent(nodeAddress, addressRegister));
+			container.deployComponent(new GrouperClientComponent(container.getId(), addressRegister));
 			container.deployEnsemble(GrouperClientEnsemble.class);
 			
 		} catch (AnnotationProcessorException | DuplicateEnsembleDefinitionException e) {

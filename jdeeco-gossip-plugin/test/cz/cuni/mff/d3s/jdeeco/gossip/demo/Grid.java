@@ -69,7 +69,7 @@ public class Grid {
 			
 			for (int i = 1; i <= nodes; ++i) {
 				DEECoNode node = realm.createNode(i);
-				node.deployComponent(new DemoComponent("D" + String.valueOf(i)));
+				node.deployComponent(new DemoComponent(i));
 				node.deployEnsemble(DemoEnsemble.class);
 			}
 	

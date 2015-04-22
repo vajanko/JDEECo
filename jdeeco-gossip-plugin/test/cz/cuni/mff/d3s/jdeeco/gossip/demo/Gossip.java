@@ -52,10 +52,10 @@ public class Gossip {
 			DEECoNode deeco4 = realm.createNode(4);
 			DEECoNode deeco2 = realm.createNode(2);
 			
-			deeco1.deployComponent(new DemoComponent("D1"));
+			deeco1.deployComponent(new DemoComponent(1));
 			deeco1.deployEnsemble(DemoEnsemble.class);
 			
-			deeco2.deployComponent(new DemoComponent("D2"));
+			deeco2.deployComponent(new DemoComponent(2));
 			deeco2.deployEnsemble(DemoEnsemble.class);
 			
 			deeco3.deployEnsemble(DemoEnsemble.class);

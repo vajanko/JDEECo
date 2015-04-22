@@ -11,6 +11,7 @@ import cz.cuni.mff.d3s.deeco.annotations.In;
 import cz.cuni.mff.d3s.deeco.annotations.Local;
 import cz.cuni.mff.d3s.deeco.annotations.TriggerOnChange;
 import cz.cuni.mff.d3s.deeco.annotations.Process;
+import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegister;
 import cz.cuni.mff.d3s.jdeeco.grouper.GrouperRole;
 import cz.cuni.mff.d3s.jdeeco.network.address.IPAddress;
@@ -35,8 +36,8 @@ public class GrouperClientComponent {
 	 */
 	@Local public AddressRegister register;
 	
-	public GrouperClientComponent(String address, AddressRegister register) {
-		this.id = address;
+	public GrouperClientComponent(int nodeId, AddressRegister register) {
+		this.id = AddressHelper.encodeID("GS", nodeId);
 		this.groupMembers = new HashSet<String>();
 		this.register = register;
 	}

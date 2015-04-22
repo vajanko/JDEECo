@@ -65,13 +65,13 @@ public class Launcher {
 		/* create first deeco node */
 		DEECoNode deeco1 = realm.createNode(1);
 		/* deploy components and ensembles */
-		deeco1.deployComponent(new DemoComponent("D1"));
+		deeco1.deployComponent(new DemoComponent(1));
 		deeco1.deployEnsemble(DemoEnsemble.class);
 
 		/* create second deeco node */
 		DEECoNode deeco2 = realm.createNode(2);
 		/* deploy components and ensembles */
-		deeco2.deployComponent(new DemoComponent("D2"));
+		deeco2.deployComponent(new DemoComponent(2));
 		deeco2.deployEnsemble(DemoEnsemble.class);
 
 		/* WHEN simulation is performed */

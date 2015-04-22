@@ -46,14 +46,14 @@ public class Pulling {
 			DEECoNode deeco3 = realm.createNode(3);
 			DEECoNode deeco4 = realm.createNode(4);
 			
-			deeco1.deployComponent(new DemoComponent("D1"));
+			deeco1.deployComponent(new DemoComponent(1));
 			deeco1.deployEnsemble(DemoEnsemble.class);
 			
 			deeco2.deployEnsemble(DemoEnsemble.class);
 			deeco3.deployEnsemble(DemoEnsemble.class);
 			
 			deeco4.deployEnsemble(DemoEnsemble.class);
-			deeco4.deployComponent(new DemoComponent("D4"));
+			deeco4.deployComponent(new DemoComponent(4));
 	
 			realm.start(10000);
 		}

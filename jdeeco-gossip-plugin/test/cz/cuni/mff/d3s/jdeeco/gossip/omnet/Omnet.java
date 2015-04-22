@@ -59,7 +59,7 @@ public class Omnet {
 		
 		for (int i = 0; i < nodes; ++i) {
 			DEECoNode node = sim.createNode(i);
-			node.deployComponent(new DemoComponent("D" + String.valueOf(i)));
+			node.deployComponent(new DemoComponent(i));
 			node.deployEnsemble(DemoEnsemble.class);
 		}
 		

@@ -25,4 +25,12 @@ public class KnowledgePartition {
 	public KnowledgePartition(String fieldName) {
 		this.fieldName = fieldName;
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return String.format("field: %s", fieldName);
+	}
 }

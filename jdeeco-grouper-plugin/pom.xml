@@ -38,5 +38,10 @@
   		<artifactId>junit</artifactId>
   		<version>4.12</version>
   	</dependency>
+  	<dependency>
+  		<groupId>jdeeco-gossip-plugin</groupId>
+  		<artifactId>jdeeco-gossip-plugin</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
   </dependencies>
 </project>

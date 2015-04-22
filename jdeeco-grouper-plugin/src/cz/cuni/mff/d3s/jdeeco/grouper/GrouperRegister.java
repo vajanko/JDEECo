@@ -26,7 +26,8 @@ public class GrouperRegister {
 	public void add(Object partitionValue, Address address) {
 		AddressRegister reg = this.register.get(partitionValue);
 		if (reg == null) {
-			reg = this.register.put(partitionValue, new AddressRegister());
+			reg = new AddressRegister();
+			this.register.put(partitionValue, reg);
 			
 			// grouper address is automatically added to the partition key belongs to its range
 			if (this.range.inRange(partitionValue))
@@ -57,5 +58,13 @@ public class GrouperRegister {
 	public GrouperRegister(Address address, GrouperRange range) {
 		this.address = address;
 		this.range = range;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return String.format("address: %s, %s, register: %s", address, range, register);
 	}
 }

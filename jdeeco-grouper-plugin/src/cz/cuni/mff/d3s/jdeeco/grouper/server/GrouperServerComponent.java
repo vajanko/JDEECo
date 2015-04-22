@@ -12,6 +12,7 @@ import cz.cuni.mff.d3s.deeco.annotations.Local;
 import cz.cuni.mff.d3s.deeco.annotations.PeriodicScheduling;
 import cz.cuni.mff.d3s.deeco.annotations.Process;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
+import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
 import cz.cuni.mff.d3s.jdeeco.core.KnowledgeProvider;
 import cz.cuni.mff.d3s.jdeeco.grouper.GrouperPartitions;
 import cz.cuni.mff.d3s.jdeeco.grouper.GrouperRange;
@@ -19,7 +20,6 @@ import cz.cuni.mff.d3s.jdeeco.grouper.GrouperRegister;
 import cz.cuni.mff.d3s.jdeeco.grouper.GrouperRole;
 import cz.cuni.mff.d3s.jdeeco.grouper.KnowledgePartition;
 import cz.cuni.mff.d3s.jdeeco.network.address.Address;
-import cz.cuni.mff.d3s.jdeeco.network.address.IPAddress;
 
 /**
  * 
@@ -49,8 +49,8 @@ public class GrouperServerComponent {
 	/**
 	 * 
 	 */
-	public GrouperServerComponent(IPAddress address, GrouperRange range, GrouperPartitions partitions, GrouperRegister register, KnowledgeProvider knowledgeProvider) {
-		this.id = address.ipAddress;
+	public GrouperServerComponent(int nodeId, GrouperRange range, GrouperPartitions partitions, GrouperRegister register, KnowledgeProvider knowledgeProvider) {
+		this.id = AddressHelper.encodeID("GS", nodeId);
 		this.range = range;
 		this.partitions = partitions;
 		this.knowledgeProvider = knowledgeProvider;	
@@ -67,8 +67,8 @@ public class GrouperServerComponent {
 		
 		// process all replica knowledge received from other components
 		for (KnowledgeData kd : knowledgeProvider.getReplicaKnowledgeData()) {
-			Address sender = new IPAddress(kd.getMetaData().componentId);
-			
+			Address sender = AddressHelper.decodeAddress(kd.getMetaData().componentId);
+			try {
 			// component knowledge may participate in multiple partitions
 			for (KnowledgePartition part : partitions.getPartitions()) {
 				Object partVal = part.getPartitionByValue(kd);				
@@ -84,6 +84,9 @@ public class GrouperServerComponent {
 					// TODO: notify the other grouper(s)
 					// register.add(partVal, "???");
 				}
+			}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}
