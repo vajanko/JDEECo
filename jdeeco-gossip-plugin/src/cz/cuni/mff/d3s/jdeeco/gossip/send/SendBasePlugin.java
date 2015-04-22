@@ -10,12 +10,10 @@ import cz.cuni.mff.d3s.deeco.task.TimerTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
 import cz.cuni.mff.d3s.jdeeco.core.task.PeriodicTask;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProviderPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.RecipientSelector;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
+import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegister;
 import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegisterPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
-import cz.cuni.mff.d3s.jdeeco.network.address.Address;
-import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
 import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
 
 /**
@@ -26,36 +24,17 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
 public abstract class SendBasePlugin implements TimerTaskListener, DEECoPlugin {
 	
 	protected KnowledgeProviderPlugin knowledgeProvider;
+	protected AddressRegister addressRegister;
 	protected ReceptionBuffer receptionBuffer;
-	private Layer2 networkLayer;
-	private long period;
+	protected Layer2 networkLayer;
 	
-	private RecipientSelector recipientSelector;
+	private long period;
 	
 	/**
 	 * 
 	 */
 	public SendBasePlugin(long period) {
 		this.period = period;
-	}
-	/**
-	 * Overwrite default recipient selector.
-	 * @param recipientSelector
-	 */
-	public void setRecipinetSelector(RecipientSelector recipientSelector) {
-		this.recipientSelector = recipientSelector;
-	}
-	
-	/**
-	 * Send packet to known addresses.
-	 * 
-	 * @param packet Packet to be sent.
-	 */
-	protected void sendPacket(L2Packet packet) {
-		for (Address address : this.recipientSelector.getRecipients(packet)) {
-			// TODO: prevent from sending self message
-			this.networkLayer.sendL2Packet(packet, address);
-		}
 	}
 		
 	/* (non-Javadoc)
@@ -86,7 +65,7 @@ public abstract class SendBasePlugin implements TimerTaskListener, DEECoPlugin {
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
 		this.receptionBuffer = container.getPluginInstance(ReceptionBuffer.class);
 		this.knowledgeProvider = container.getPluginInstance(KnowledgeProviderPlugin.class);
-		this.recipientSelector = new StaticRecipientSelector(container.getPluginInstance(AddressRegisterPlugin.class).getRegister());
+		this.addressRegister = container.getPluginInstance(AddressRegisterPlugin.class).getRegister();
 		
 		// run PULL knowledge gossip task
 		Scheduler scheduler = container.getRuntimeFramework().getScheduler();

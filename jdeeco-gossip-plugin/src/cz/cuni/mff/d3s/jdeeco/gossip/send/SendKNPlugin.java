@@ -8,6 +8,8 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.jdeeco.gossip.BasicKnowledgeSource;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeSource;
+import cz.cuni.mff.d3s.jdeeco.gossip.RecipientSelector;
+import cz.cuni.mff.d3s.jdeeco.network.address.Address;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
 import cz.cuni.mff.d3s.jdeeco.network.l2.PacketHeader;
@@ -24,14 +26,29 @@ public class SendKNPlugin extends SendBasePlugin {
 	 */
 	public static final long TASK_PERIOD_DEFAULT = 2000;
 	
+	/**
+	 * Provides source to be published (sent).
+	 */
 	private KnowledgeSource knowledgeSource;
-	
 	public void setKnowledgeSource(KnowledgeSource knowledgeSource) {
 		this.knowledgeSource = knowledgeSource;
 	}
 	public KnowledgeSource getKnowledgeSource() {
 		return this.knowledgeSource;
 	}
+	
+	/**
+	 * Provides target addresses for knowledge to be sent retrieved
+	 * from {@link KnowledgeSource}.
+	 */
+	private RecipientSelector recipientSelector;
+	public RecipientSelector getRecipientSelector() {
+		return this.recipientSelector;
+	}
+	public void setRecipientSelector(RecipientSelector recipientSelector) {
+		this.recipientSelector = recipientSelector;
+	}
+	
 	
 	public SendKNPlugin() {
 		super(Long.getLong(TASK_PERIOD, TASK_PERIOD_DEFAULT));
@@ -41,15 +58,17 @@ public class SendKNPlugin extends SendBasePlugin {
 	 * @see cz.cuni.mff.d3s.deeco.task.TimerTaskListener#at(long, java.lang.Object)
 	 */
 	@Override
-	public void at(long time, Object triger) {
+	public void at(long time, Object triger) {		
 		for(KnowledgeData data: knowledgeSource.getKnowledge()) {
 			PacketHeader header = new PacketHeader(L2PacketType.KNOWLEDGE);
 			
 			L2Packet packet = new L2Packet(header, data);
 			
 			// send knowledge ...
-			// TODO: select recipients
-			sendPacket(packet);
+			for (Address address : this.recipientSelector.getRecipients(data)) {
+				// select recipients of particular knowledge
+				this.networkLayer.sendL2Packet(packet, address);
+			}
 			
 			// ... and stores information about last knowledge version
 			KnowledgeMetaData meta = data.getMetaData();
@@ -65,5 +84,6 @@ public class SendKNPlugin extends SendBasePlugin {
 		super.init(container);
 		
 		this.knowledgeSource = new BasicKnowledgeSource(this.knowledgeProvider);
+		this.recipientSelector = new StaticRecipientSelector(this.addressRegister);
 	}
 }

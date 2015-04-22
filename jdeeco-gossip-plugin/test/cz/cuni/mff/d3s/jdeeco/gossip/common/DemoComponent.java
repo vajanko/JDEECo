@@ -15,11 +15,15 @@ import cz.cuni.mff.d3s.deeco.annotations.Process;
 @Component
 public class DemoComponent {
 	public String id;
-	public String dest = "Berlin";
+	public String dest;
 	
 	
-	public DemoComponent(String id) {
+	public DemoComponent(String id, String dest) {
 		this.id = id;
+		this.dest = dest;
+	}
+	public DemoComponent(String id) {
+		this(id, "Berlin");
 	}
 	
 	@Process

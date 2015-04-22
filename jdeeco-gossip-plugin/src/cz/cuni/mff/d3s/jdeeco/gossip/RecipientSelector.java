@@ -5,8 +5,8 @@ package cz.cuni.mff.d3s.jdeeco.gossip;
 
 import java.util.Collection;
 
+import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.jdeeco.network.address.Address;
-import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
 
 /**
  * For given packet provides a list of addresses where this packet should be sent.
@@ -15,10 +15,10 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
  */
 public interface RecipientSelector {
 	/**
-	 * Gets collection of recipients of given packet.
+	 * Gets collection of recipients of given knowledge.
 	 * 
-	 * @param packet L2 packet to be sent.
+	 * @param data {@link KnowledgeData} to be sent over network.
 	 * @return Collection of recipient addresses.
 	 */
-	public Collection<Address> getRecipients(L2Packet packet); 
+	public Collection<Address> getRecipients(KnowledgeData data);
 }
