@@ -7,6 +7,7 @@ import cz.cuni.mff.d3s.deeco.annotations.Ensemble;
 import cz.cuni.mff.d3s.deeco.annotations.In;
 import cz.cuni.mff.d3s.deeco.annotations.KnowledgeExchange;
 import cz.cuni.mff.d3s.deeco.annotations.Membership;
+import cz.cuni.mff.d3s.deeco.annotations.PartitionedBy;
 import cz.cuni.mff.d3s.deeco.annotations.PeriodicScheduling;
 
 
@@ -16,6 +17,7 @@ import cz.cuni.mff.d3s.deeco.annotations.PeriodicScheduling;
  */
 @Ensemble
 @PeriodicScheduling(period=1000)
+@PartitionedBy(value = "dest")
 public class DemoEnsemble {
 	
 	@Membership

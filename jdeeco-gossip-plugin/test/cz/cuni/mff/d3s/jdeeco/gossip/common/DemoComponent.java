@@ -15,6 +15,7 @@ import cz.cuni.mff.d3s.deeco.annotations.Process;
 @Component
 public class DemoComponent {
 	public String id;
+	public String dest = "Berlin";
 	
 	
 	public DemoComponent(String id) {
