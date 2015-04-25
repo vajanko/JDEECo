@@ -22,11 +22,11 @@ import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
 import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
 import cz.cuni.mff.d3s.jdeeco.core.Position;
 import cz.cuni.mff.d3s.jdeeco.core.task.PeriodicTask;
-import cz.cuni.mff.d3s.jdeeco.matsim.AgentSensor;
 import cz.cuni.mff.d3s.jdeeco.matsim.MatsimHelper;
 import cz.cuni.mff.d3s.jdeeco.matsim.MatsimOutput;
 import cz.cuni.mff.d3s.jdeeco.matsim.MatsimPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTSimulation;
+import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
 
 /**
  * Simulation plugin providing functionality of MATSim as well as OMNeT.
@@ -45,7 +45,7 @@ public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 	// translates matsim coordinates to omnet coordinates
 	private MatsomnPositionTranslator translator;
 	// 
-	private Collection<AgentSensor> matsimSensors = new ArrayList<AgentSensor>();
+	private Collection<AgentSensor> matsimSensors;
 	// number of MATSim - OMNeT exchanges
 	private long stepCount;
 	
@@ -111,6 +111,8 @@ public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 			this.exchanger = new Exchanger<Object>();
 			this.matsim.setExchanger(exchanger);
 			
+			this.matsimSensors = this.matsim.getAgentSensors();
+			
 			Controler controler = matsim.getControler();
 			
 			// create translator for matsim coordinate system 
@@ -124,7 +126,7 @@ public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 			this.timer.setSimulationStep(MatsimHelper.sTOms(period));
 		}
 		
-		AgentSensor sensor = matsim.createAgentSensor(container.getId());
-		this.matsimSensors.add(sensor);
+//		AgentSensor sensor = matsim.createAgentSensor(container.getId());
+//		this.matsimSensors.add(sensor);
 	}
 }

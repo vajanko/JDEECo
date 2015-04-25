@@ -9,7 +9,9 @@ import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Network;
 import org.matsim.core.basic.v01.IdImpl;
 
+import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
 import cz.cuni.mff.d3s.jdeeco.core.Position;
+import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
 
 /**
  * Provides data about MATSim agent to deeco runtime.
@@ -22,22 +24,24 @@ public class MatsimAgentSensor implements AgentSensor {
 	private int nodeId;
 	private Network network;
 	private MatsimOutputProvider outputs;
+	private CurrentTimeProvider timer;
 	
 	/**
 	 * Creates a new instance of agent sensor where node ID is considered to be the same as
 	 * MATSim agent ID.
 	 */
-	public MatsimAgentSensor(int nodeId, Network network, MatsimOutputProvider outputs) {
-		this(nodeId, String.valueOf(nodeId), network, outputs);
+	public MatsimAgentSensor(int nodeId, Network network, MatsimOutputProvider outputs, CurrentTimeProvider timer) {
+		this(nodeId, String.valueOf(nodeId), network, outputs, timer);
 	}
 	/**
 	 * Creates a new instance of agent sensor with specific MATSim agent ID.
 	 */
-	public MatsimAgentSensor(int nodeId, String agentId, Network network, MatsimOutputProvider outputs) {
+	public MatsimAgentSensor(int nodeId, String agentId, Network network, MatsimOutputProvider outputs, CurrentTimeProvider timer) {
 		this.agentId = new IdImpl(agentId);
 		this.nodeId = nodeId;
 		this.outputs = outputs;
 		this.network = network;
+		this.timer = timer;
 	}
 	
 	/* (non-Javadoc)
@@ -57,5 +61,13 @@ public class MatsimAgentSensor implements AgentSensor {
 		Link link = network.getLinks().get(out.currentLinkId);
 		Coord co = link.getCoord();
 		return new Position(co.getX(), co.getY());
+	}
+	
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.jdeeco.sim.AgentSensor#getTime()
+	 */
+	@Override
+	public Long getTime() {
+		return timer.getCurrentMilliseconds();
 	}
 }

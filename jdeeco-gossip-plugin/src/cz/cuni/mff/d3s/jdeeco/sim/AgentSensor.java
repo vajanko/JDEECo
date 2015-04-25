@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cz.cuni.mff.d3s.jdeeco.matsim;
+package cz.cuni.mff.d3s.jdeeco.sim;
 
 import cz.cuni.mff.d3s.jdeeco.core.Position;
 
@@ -11,9 +11,11 @@ import cz.cuni.mff.d3s.jdeeco.core.Position;
  */
 public interface AgentSensor {
 	
-	Integer getNodeId();
+	public Integer getNodeId();
 	
-	Position getPosition();
+	public Position getPosition();
+	
+	public Long getTime();
 	
 	// TODO: add methods like
 	// getSpeed(), setSpeed(), ...
