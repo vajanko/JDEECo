@@ -22,6 +22,7 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
 import cz.cuni.mff.d3s.deeco.timer.TimerEventListener;
+import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
 
 /**
  * Plugin enabling MATSim simulation. Use only one instance of this plugin. 
@@ -42,6 +43,8 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener, MobsimInit
 	private MatsimOutputProvider outputs = new MatsimOutputProvider();
 	
 	private Collection<MobsimAgent> agents = new ArrayList<MobsimAgent>();
+	
+	private Collection<AgentSensor> matsimSensors = new ArrayList<AgentSensor>();
 	
 	public MatsimPlugin() {
 		// create controller
@@ -86,12 +89,17 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener, MobsimInit
 		return outputs;
 	}
 	public AgentSensor createAgentSensor(int nodeId) {
-		MatsimAgentSensor sensor = new MatsimAgentSensor(nodeId, controler.getNetwork(), outputs);
+		MatsimAgentSensor sensor = new MatsimAgentSensor(nodeId, controler.getNetwork(), outputs, timer);
+		this.matsimSensors.add(sensor);
 		return sensor;
 	}
 	public AgentSensor createAgentSensor(int nodeId, String agentId) {
-		MatsimAgentSensor sensor = new MatsimAgentSensor(nodeId, agentId, controler.getNetwork(), outputs);
+		MatsimAgentSensor sensor = new MatsimAgentSensor(nodeId, agentId, controler.getNetwork(), outputs, timer);
+		this.matsimSensors.add(sensor);
 		return sensor;
+	}
+	public Collection<AgentSensor> getAgentSensors() {
+		return this.matsimSensors;
 	}
 	
 	/**

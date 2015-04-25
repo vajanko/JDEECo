@@ -16,6 +16,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveHDStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveKNStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceivePLStrategy;
+import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegisterPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.send.SendHDPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.send.SendKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.send.SendPLPlugin;
@@ -67,6 +68,7 @@ public class GossipPlugin implements DEECoPlugin {
 		sim.addPlugin(Network.class);
 		sim.addPlugin(ReceptionBuffer.class);
 		sim.addPlugin(KnowledgeProviderPlugin.class);
+		sim.addPlugin(AddressRegisterPlugin.class);
 		
 		if (features.contains("push")) {
 			sim.addPlugin(SendKNPlugin.class);
