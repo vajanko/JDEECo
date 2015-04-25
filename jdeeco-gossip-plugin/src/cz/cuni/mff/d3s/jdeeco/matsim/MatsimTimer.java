@@ -27,8 +27,6 @@ public class MatsimTimer implements SimulationTimer, MobsimBeforeSimStepListener
 	
 	private long startTime;
 	private long currentTime;
-	private long simulationStep;
-	private long stepCount;
 	
 	private List<TimerEventListener> stepListeners = new ArrayList<TimerEventListener>();
 	
@@ -73,28 +71,20 @@ public class MatsimTimer implements SimulationTimer, MobsimBeforeSimStepListener
 		group.setEndTime(endTime);
 		
 		// configure current simulation step length
-		this.simulationStep = MatsimHelper.sTOms(group.getTimeStepSize());
 		this.startTime = MatsimHelper.sTOms(startTime);
-		this.stepCount = duration / simulationStep;
 		
 		// run matsim simulation
 		controler.run();
 		System.out.println("Matsim finished");
-	}
-	
+	}	
 	/* (non-Javadoc)
 	 * @see org.matsim.core.mobsim.framework.listeners.MobsimBeforeSimStepListener#notifyMobsimBeforeSimStep(org.matsim.core.mobsim.framework.events.MobsimBeforeSimStepEvent)
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void notifyMobsimBeforeSimStep(MobsimBeforeSimStepEvent e) {
+	public void notifyMobsimBeforeSimStep(MobsimBeforeSimStepEvent e) {	
 		// convert (double) seconds to (long) milliseconds
 		this.currentTime = MatsimHelper.sTOms(e.getSimulationTime());
-		
-		// this step counter prevents from blocking on the exchanger with other thread
-		if (this.stepCount <= 0)
-			return;
-		this.stepCount--;
 		
 		// fire callbacks which should be executed at "currentTime" as well as any
 		// registered listeners

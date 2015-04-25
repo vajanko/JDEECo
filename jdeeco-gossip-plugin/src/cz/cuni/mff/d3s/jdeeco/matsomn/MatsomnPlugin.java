@@ -3,7 +3,6 @@
  */
 package cz.cuni.mff.d3s.jdeeco.matsomn;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -36,6 +35,8 @@ import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
  */
 public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 	
+	// indicates whether simulation is finished
+	private boolean finished;
 	private MatsimPlugin matsim;
 	//private OMNeTSimulation omnet;
 	// synchronises data between matsim and omnet simulations
@@ -46,8 +47,6 @@ public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 	private MatsomnPositionTranslator translator;
 	// 
 	private Collection<AgentSensor> matsimSensors;
-	// number of MATSim - OMNeT exchanges
-	private long stepCount;
 	
 	/**
 	 * 
@@ -66,13 +65,19 @@ public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void at(long time, Object triger) {
+		// executes at each simulation step
+		if (this.finished)
+			return;	// prevents from blocking on the exchanger
+		
 		// exchange data between threads
 		if (exchanger != null) {
 			try {
-				Object data = exchanger.exchange(null);//, 5, TimeUnit.SECONDS);
-				Map<Id, MatsimOutput> outputs = (Map<Id, MatsimOutput>)data;
+				Object data = exchanger.exchange(new Object());
+				if (this.finished = data.equals(SimSignal.KILL))
+					return;
 				
 				// it is important that matsim outputs are updated from this thread
+				Map<Id, MatsimOutput> outputs = (Map<Id, MatsimOutput>)data;
 				matsim.getOutputProvider().updateOutputs(outputs);
 				
 				// update omnet nodes positions
@@ -105,6 +110,8 @@ public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 	 */
 	@Override
 	public void init(DEECoContainer container) {
+		this.finished = false;
+		
 		if (this.matsim == null) {
 			// only initialize once
 			this.matsim = container.getPluginInstance(MatsimPlugin.class);
@@ -122,11 +129,6 @@ public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 			double period = controler.getConfig().getQSimConfigGroup().getTimeStepSize();
 			Scheduler scheduler = container.getRuntimeFramework().getScheduler();
 			scheduler.addTask(new PeriodicTask(scheduler, this, MatsimHelper.sTOms(period)));
-			
-			this.timer.setSimulationStep(MatsimHelper.sTOms(period));
 		}
-		
-//		AgentSensor sensor = matsim.createAgentSensor(container.getId());
-//		this.matsimSensors.add(sensor);
 	}
 }

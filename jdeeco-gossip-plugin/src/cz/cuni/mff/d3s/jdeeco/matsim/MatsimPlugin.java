@@ -14,7 +14,9 @@ import java.util.concurrent.Exchanger;
 import org.matsim.api.core.v01.Id;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.mobsim.framework.MobsimAgent;
+import org.matsim.core.mobsim.framework.events.MobsimBeforeCleanupEvent;
 import org.matsim.core.mobsim.framework.events.MobsimInitializedEvent;
+import org.matsim.core.mobsim.framework.listeners.MobsimBeforeCleanupListener;
 import org.matsim.core.mobsim.framework.listeners.MobsimInitializedListener;
 import org.matsim.core.mobsim.qsim.QSim;
 
@@ -22,6 +24,7 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
 import cz.cuni.mff.d3s.deeco.timer.TimerEventListener;
+import cz.cuni.mff.d3s.jdeeco.matsomn.SimSignal;
 import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
 
 /**
@@ -29,13 +32,15 @@ import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class MatsimPlugin implements DEECoPlugin, TimerEventListener, MobsimInitializedListener {
+public class MatsimPlugin implements DEECoPlugin, TimerEventListener, MobsimInitializedListener, MobsimBeforeCleanupListener {
 	public static final String MATSIM_CONFIG = "deeco.matsim.config";
 	/**
 	 * Default path to MATSim configuration file
 	 */
 	public static final String MATSIM_CONFIG_DEFAULT = "config/matsim/config.xml";
 
+	// indicates whether simulation is finished
+	private boolean finished;
 	private Controler controler;
 	private MatsimTimer timer;
 	
@@ -117,13 +122,19 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener, MobsimInit
 	@Override
 	public void at(long time) {
 		// executes at each simulation step
+		if (this.finished)
+			return;	// prevents from blocking on the exchanger
 		
 		// there are two modes of matsim simulation:
 		// 1) single matsim simulation - only one thread, matsim updates its outputs itself
 		// 2) multiple threads (together with oment) - matsim exchanges its outputs with the other thread
 		if (exchanger != null) {
 			try {
-				/*Object inputs =*/ exchanger.exchange(getOutputs());//, 5, TimeUnit.SECONDS);
+				Object outputs = getOutputs();			
+				Object inputs = exchanger.exchange(outputs);
+				if (this.finished = inputs.equals(SimSignal.KILL))		// received KILL signal from the other thread
+					return;
+				
 				// TODO: process inputs
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -153,6 +164,21 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener, MobsimInit
 		// update with initial values
 		this.outputs.updateOutputs(getOutputs());
 	}
+	/* (non-Javadoc)
+	 * @see org.matsim.core.mobsim.framework.listeners.MobsimBeforeCleanupListener#notifyMobsimBeforeCleanup(org.matsim.core.mobsim.framework.events.MobsimBeforeCleanupEvent)
+	 */
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void notifyMobsimBeforeCleanup(MobsimBeforeCleanupEvent e) {
+		if (this.exchanger != null && !this.finished) {
+			try {
+				exchanger.exchange(SimSignal.KILL);
+			} catch (InterruptedException e1) {
+				
+			}
+		}
+		this.finished = true;
+	}
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#getDependencies()
@@ -166,6 +192,6 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener, MobsimInit
 	 */
 	@Override
 	public void init(DEECoContainer container) {
-		// nothing to initialise
+		this.finished = false;
 	}
 }

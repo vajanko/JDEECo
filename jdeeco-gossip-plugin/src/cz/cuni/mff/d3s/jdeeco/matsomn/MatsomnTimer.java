@@ -3,12 +3,9 @@
  */
 package cz.cuni.mff.d3s.jdeeco.matsomn;
 
-import org.matsim.core.config.groups.QSimConfigGroup;
-
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
 import cz.cuni.mff.d3s.deeco.timer.TimerEventListener;
-import cz.cuni.mff.d3s.jdeeco.matsim.MatsimHelper;
 
 /**
  * Implementation of {@link SimulationTimer} for simulation using OMNeT and MATSim.
@@ -19,16 +16,10 @@ public class MatsomnTimer implements SimulationTimer {
 
 	private SimulationTimer matsimTimer;
 	private SimulationTimer omnetTimer;
-	private long simulationStep;
-	private long stepCount;
 	
 	public MatsomnTimer(SimulationTimer matsimTimer, SimulationTimer omnetTimer) {
 		this.omnetTimer = omnetTimer;
 		this.matsimTimer = matsimTimer;
-	}
-	
-	public void setSimulationStep(long step) {
-		this.simulationStep = step;
 	}
 	
 	/* (non-Javadoc)
@@ -49,9 +40,7 @@ public class MatsomnTimer implements SimulationTimer {
 	 * @see cz.cuni.mff.d3s.deeco.timer.SimulationTimer#start(long)
 	 */
 	@Override
-	public void start(long duration) {
-		this.stepCount = duration / simulationStep;
-		
+	public void start(long duration) {	
 		try {
 			// run matsim in a different thread
 			Thread thread = new Thread(new Runnable() {
