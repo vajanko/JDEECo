@@ -7,6 +7,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager;
+import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManagerContainer;
+import cz.cuni.mff.d3s.deeco.model.runtime.api.EnsembleDefinition;
+import cz.cuni.mff.d3s.deeco.model.runtime.api.RuntimeMetadata;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
@@ -40,7 +44,9 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 	private Layer2 networkLayer;
 	private ReceptionBuffer receptionBuffer;
 	private KnowledgeProviderPlugin knowledgeProvider;
+	private RuntimeMetadata runtimeMetadata;
 	private String nodeId;
+	private KnowledgeManagerContainer kmContainer;
 	
 	protected KnowledgeData prepareForRebroadcast(KnowledgeData kd) {		
 		KnowledgeMetaData meta = kd.getMetaData().clone();
@@ -59,6 +65,9 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 			KnowledgeData kd = (KnowledgeData)packet.getObject();
 			KnowledgeMetaData meta = kd.getMetaData();
 			
+			if (!withinBoundary(kd))
+				return;
+			
 			if (receptionBuffer.getPulledTag(meta.componentId)) {
 				// if knowledge was pulled it will be rebroadcasted
 				L2Packet pck = new L2Packet(packet.header, prepareForRebroadcast(kd));
@@ -71,15 +80,31 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 					return;
 				
 				// do not rebroadcast older versions than currently available
+				// because the newer version of this knowledge already has had possibility
+				// to be rebroadcasted
 				if (!receptionBuffer.canReceive(meta.componentId, meta.versionId))
 					return;
 				
+				// rebroadcast by probability
 				if (generator.nextDouble() < probability) {
 					L2Packet pck = new L2Packet(packet.header, prepareForRebroadcast(kd));
 					networkLayer.sendL2Packet(pck, MANETBroadcastAddress.BROADCAST);
 				}
 			}
 		}
+	}
+	
+	protected boolean withinBoundary(KnowledgeData data) {
+		
+		// FIXME: create a KM which will contain union of the entire node knowledge
+		KnowledgeManager sender = this.kmContainer.getLocals().iterator().next();
+		
+		for (EnsembleDefinition ens: runtimeMetadata.getEnsembleDefinitions()) {
+			// null boundary condition counts as a satisfied one
+			if (ens.getCommunicationBoundary() == null || ens.getCommunicationBoundary().eval(data, sender))
+				return true;
+		}
+		return false;
 	}
 
 	/* (non-Javadoc)
@@ -95,6 +120,8 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 	@Override
 	public void init(DEECoContainer container) {
 		// initialise dependencies
+		this.runtimeMetadata = container.getRuntimeMetadata();
+		this.kmContainer = container.getRuntimeFramework().getContainer();
 		this.knowledgeProvider = container.getPluginInstance(KnowledgeProviderPlugin.class);
 		this.receptionBuffer = container.getPluginInstance(ReceptionBuffer.class);
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
