@@ -72,13 +72,13 @@ public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 		// exchange data between threads
 		if (exchanger != null) {
 			try {
-				Object data = exchanger.exchange(new Object());
-				if (this.finished = data.equals(SimSignal.KILL))
+				Object inputs = new Object();
+				Object outputs = exchanger.exchange(inputs);
+				if (this.finished = outputs.equals(SimSignal.KILL))
 					return;
 				
 				// it is important that matsim outputs are updated from this thread
-				Map<Id, MatsimOutput> outputs = (Map<Id, MatsimOutput>)data;
-				matsim.getOutputProvider().updateOutputs(outputs);
+				matsim.getOutputProvider().updateOutputs((Map<Id, MatsimOutput>)outputs);
 				
 				// update omnet nodes positions
 				for (AgentSensor sensor : this.matsimSensors) {

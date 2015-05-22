@@ -57,7 +57,8 @@ public class MatsomnTimer implements SimulationTimer {
 			}
 			
 			// run omnet in the current thread
-			this.omnetTimer.start(duration);
+			// omnet will run longer than matsim so matsim can deciden when to finish the simulation
+			this.omnetTimer.start(duration + 5000);
 			
 			System.out.println("Omnet finished");
 		
