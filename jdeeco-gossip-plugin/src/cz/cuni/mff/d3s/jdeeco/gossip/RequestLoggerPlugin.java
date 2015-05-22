@@ -57,7 +57,7 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	// knowledge specific
 	private Long knowledgeAge;
 	private String componentId;
-	private Boolean isSource;	// true if message is sending its own knowledge (not re-broadcasting or re-sending replica)
+	private int isSource;	// 1 if message is sending its own knowledge (not re-broadcasting or re-sending replica), 0 for rebroadcast, -1 otherwise
 	
 	// communication protocol arguments
 	private Long hdPeriod;
@@ -120,13 +120,13 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 			this.componentId = meta.componentId;
 			long lastUpdate = receptionBuffer.getLocalReceptionTime(meta.componentId);
 			lastUpdate = lastUpdate == ReceptionBuffer.MINUS_INFINITE ? 0 : lastUpdate;
-			this.knowledgeAge = time - lastUpdate;
-			this.isSource = meta.componentId.endsWith(meta.sender);
+			this.knowledgeAge = (time - lastUpdate);
+			this.isSource = meta.componentId.endsWith(meta.sender) ? 1 : 0;
 		}
 		else {
 			this.componentId = null;
 			this.knowledgeAge = -1l;
-			this.isSource = null;
+			this.isSource = -1;
 		}
 		
 		outputStream.println(String.format("%s;%d;%d;%s;%s;"+ "%s;%d;%s;" + "%s;%s;%s;" + "%s;%s;%s", 

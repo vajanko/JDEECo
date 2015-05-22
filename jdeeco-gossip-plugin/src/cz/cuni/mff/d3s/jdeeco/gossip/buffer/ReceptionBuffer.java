@@ -202,7 +202,7 @@ public class ReceptionBuffer implements L2Strategy, DEECoPlugin {
 		ItemInfo info = buffer.get(id);
 		if (info == null)
 			return MINUS_INFINITE;
-		return info.localReception;
+		return info.globalReception;
 	}
 	/**
 	 * Gets last message version received locally identified by {@code id}
