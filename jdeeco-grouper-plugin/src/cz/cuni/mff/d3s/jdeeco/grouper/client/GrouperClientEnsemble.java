@@ -27,7 +27,8 @@ public class GrouperClientEnsemble {
 			@In("coord.role") GrouperRole cRole,
 			@In("member.role") GrouperRole mRole) {
 		
-		return cRole == GrouperRole.client && mRole == GrouperRole.server;
+		return cRole != null && mRole != null &&
+				cRole == GrouperRole.client && mRole == GrouperRole.server;
 	}
 	
 	@KnowledgeExchange
