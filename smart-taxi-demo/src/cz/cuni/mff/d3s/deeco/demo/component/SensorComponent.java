@@ -13,7 +13,7 @@ import cz.cuni.mff.d3s.deeco.annotations.PeriodicScheduling;
 import cz.cuni.mff.d3s.deeco.annotations.Process;
 import cz.cuni.mff.d3s.deeco.task.ParamHolder;
 import cz.cuni.mff.d3s.jdeeco.core.Position;
-import cz.cuni.mff.d3s.jdeeco.matsim.AgentSensor;
+import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
 
 /**
  * 

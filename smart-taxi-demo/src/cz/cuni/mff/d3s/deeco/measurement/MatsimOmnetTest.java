@@ -13,14 +13,12 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoException;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoNode;
 import cz.cuni.mff.d3s.jdeeco.core.ConfigHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoEnsemble;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastStrategy;
-import cz.cuni.mff.d3s.jdeeco.matsim.AgentSensor;
 import cz.cuni.mff.d3s.jdeeco.matsim.MatsimPlugin;
 import cz.cuni.mff.d3s.jdeeco.matsomn.MatsomnPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTBroadcastDevice;
 import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTSimulation;
+import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
 
 /**
  * 
@@ -31,42 +29,37 @@ public class MatsimOmnetTest {
 		// this is wonderful !!!
 		Locale.setDefault(Locale.getDefault());
 		
-		ConfigHelper.loadProperties("config/generated.properties");
-		
-		double prob = 0.5;
+		String configFile = "config/grid.properties";
 		if (args.length > 0)
-			prob = Double.parseDouble(args[0]);
-		if (args.length > 1)
-			;//RequestLoggerPlugin.initOutputStream(args[1]);
+			configFile = args[0];
+		ConfigHelper.loadProperties(configFile);
+					
+		OMNeTSimulation omnet = new OMNeTSimulation();
+		MatsimPlugin matsim = new MatsimPlugin(); 
+		MatsomnPlugin matsomn = new MatsomnPlugin(matsim.getTimer(), omnet.getTimer());
+		DEECoSimulation sim = new DEECoSimulation(matsomn.getTimer());
+		
+		sim.addPlugin(matsim);
+		sim.addPlugin(omnet);
+		sim.addPlugin(matsomn);
+		
+		sim.addPlugin(OMNeTBroadcastDevice.class);
+		// TODO: configure plugins
+		GossipPlugin.registerPlugin(sim);
+		
+		// TODO: create population
+		final int nodes = 10;
+		for (int i = 1; i <= nodes; ++i) {
 			
-		for (int si = 0; si < 1; ++si) {
-			String probStr = String.format(Locale.getDefault(), "%.2f", prob);
-			System.getProperties().setProperty(GossipRebroadcastStrategy.REBROADCAST_PROBABILITY, probStr);
-			System.getProperties().setProperty(RequestLoggerPlugin.LOGGER_ARG1, probStr);
+			AgentSensor sensor = matsim.createAgentSensor(i);
 			
-			OMNeTSimulation omnet = new OMNeTSimulation();
-			MatsimPlugin matsim = new MatsimPlugin(); 
-			MatsomnPlugin matsomn = new MatsomnPlugin(matsim.getTimer(), omnet.getTimer());
-			DEECoSimulation sim = new DEECoSimulation(matsomn.getTimer());
-			
-			sim.addPlugin(matsim);
-			sim.addPlugin(omnet);
-			sim.addPlugin(matsomn);
-			sim.addPlugin(OMNeTBroadcastDevice.class);
-			
-			GossipPlugin.registerPlugin(sim);
-			
-			final int nodes = 10;
-			for (int i = 1; i <= nodes; ++i) {
-				
-				AgentSensor sensor = matsim.createAgentSensor(i);
-				
-				DEECoNode node = sim.createNode(i);
-				node.deployComponent(new SensorComponent("D" + String.valueOf(i), sensor));
-				node.deployEnsemble(DemoEnsemble.class);
-			}
-			
-			sim.start(20 * 60 * 1000);
+			DEECoNode node = sim.createNode(i);
+			node.deployComponent(new SensorComponent("D" + String.valueOf(i), sensor));
+			node.deployEnsemble(DemoEnsemble.class);
 		}
+		
+		// TODO: simulation duration
+		long duration = Long.getLong("deeco.simulation.duration", 60 * 1000);
+		sim.start(duration);
 	}
 }

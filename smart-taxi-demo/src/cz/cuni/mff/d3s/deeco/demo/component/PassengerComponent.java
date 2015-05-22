@@ -4,11 +4,8 @@
 package cz.cuni.mff.d3s.deeco.demo.component;
 
 import cz.cuni.mff.d3s.deeco.annotations.Component;
-import cz.cuni.mff.d3s.deeco.annotations.In;
-import cz.cuni.mff.d3s.deeco.annotations.PeriodicScheduling;
-import cz.cuni.mff.d3s.deeco.annotations.Process;
-import cz.cuni.mff.d3s.jdeeco.core.Position;
-import cz.cuni.mff.d3s.jdeeco.matsim.AgentSensor;
+import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
+import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
 
 /**
  * 
@@ -20,16 +17,16 @@ public class PassengerComponent extends ActorComponent {
 	/**
 	 * 
 	 */
-	public PassengerComponent(String id, AgentSensor sensor) {
-		super(id, sensor);
+	public PassengerComponent(int nodeId, AgentSensor aSensor) {
+		super(AddressHelper.encodeID("P", nodeId), ActorRole.passenger, aSensor);
 	}
 	
-	@Process
-	@PeriodicScheduling(period = 1000)
-	public static void process(
-			@In("id") String id,
-			@In("position") Position position) {
-		
-		//System.out.println(String.format("%s: %s", id, position));
-	}
+//	@Process
+//	@PeriodicScheduling(period = 1000)
+//	public static void process(
+//			@In("id") String id,
+//			@In("position") Position position) {
+//		
+//		//System.out.println(String.format("%s: %s", id, position));
+//	}
 }

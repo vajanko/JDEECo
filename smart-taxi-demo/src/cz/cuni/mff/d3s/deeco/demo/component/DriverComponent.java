@@ -7,8 +7,9 @@ import cz.cuni.mff.d3s.deeco.annotations.Component;
 import cz.cuni.mff.d3s.deeco.annotations.In;
 import cz.cuni.mff.d3s.deeco.annotations.PeriodicScheduling;
 import cz.cuni.mff.d3s.deeco.annotations.Process;
+import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
 import cz.cuni.mff.d3s.jdeeco.core.Position;
-import cz.cuni.mff.d3s.jdeeco.matsim.AgentSensor;
+import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
 
 /**
  * 
@@ -20,15 +21,15 @@ public class DriverComponent extends ActorComponent {
 	/**
 	 * 
 	 */
-	public DriverComponent(String id, AgentSensor sensor) {
-		super(id, sensor);
+	public DriverComponent(int nodeId, AgentSensor sensor) {
+		super(AddressHelper.encodeID("D", nodeId), ActorRole.driver, sensor);
 	}
 
-	@Process
-	@PeriodicScheduling(period = 1000)
-	public static void process(
-			@In("id") String id, 
-			@In("position") Position position) {
-		//System.out.println(String.format("%s: %s", id, position));
-	}
+//	@Process
+//	@PeriodicScheduling(period = 1000)
+//	public static void process(
+//			@In("id") String id, 
+//			@In("position") Position position) {
+//		//System.out.println(String.format("%s: %s", id, position));
+//	}
 }

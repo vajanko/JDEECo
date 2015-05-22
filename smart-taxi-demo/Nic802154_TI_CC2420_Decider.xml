@@ -5,7 +5,9 @@
 		<parameter name="sfdLength" type="long" value="8"/>
 		
 		<!--minimum possible bit error rate (BER floor)-->
-		<parameter name="berLowerBound" type="double" value="1e-8"/>
+		<!--<parameter name="berLowerBound" type="double" value="1e-8"/>-->
+    <parameter name="berLowerBound" type="double" value="0"/>
+    <parameter name="berUpperBound" type="double" value="0"/>
 		
 		<!--modulation type-->
 		<parameter name="modulation" type="string" value="oqpsk16"/>

@@ -12,8 +12,8 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoException;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoNode;
 import cz.cuni.mff.d3s.jdeeco.core.ConfigHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoEnsemble;
-import cz.cuni.mff.d3s.jdeeco.matsim.AgentSensor;
 import cz.cuni.mff.d3s.jdeeco.matsim.MatsimPlugin;
+import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
 
 /**
  * 
@@ -32,7 +32,7 @@ public class MatsimTest {
 		
 		// this is wonderful !!!
 		Locale.setDefault(Locale.getDefault());
-		ConfigHelper.loadProperties("config/generated.properties");
+		ConfigHelper.loadProperties("config/berlin.properties");
 		
 		MatsimPlugin matsim = new MatsimPlugin();
 		DEECoSimulation sim = new DEECoSimulation(matsim.getTimer());
@@ -49,7 +49,8 @@ public class MatsimTest {
 			node.deployEnsemble(DemoEnsemble.class);
 		}
 		
-		sim.start(20 * 60 * 1000);
+		long duration = Long.getLong("deeco.simulation.duration", 60 * 1000);
+		sim.start(duration);
 	}
 
 }
