@@ -91,13 +91,13 @@ public class GossipPlugin implements DEECoPlugin {
 			sim.addPlugin(RequestLoggerPlugin.class);
 		}
 		
-		String device = System.getProperty(GOSSIP_DEVICE, GOSSIP_DEVICE_DEFAULT);
-		if (device.equalsIgnoreCase("broadcast")) {
-			sim.addPlugin(new BroadcastDevice());
-		}
-		else if (device.equalsIgnoreCase("multicast")) {
-			sim.addPlugin(new MulticastDevice());
-		}
+//		String device = System.getProperty(GOSSIP_DEVICE, GOSSIP_DEVICE_DEFAULT);
+//		if (device.equalsIgnoreCase("broadcast")) {
+//			sim.addPlugin(new BroadcastDevice());
+//		}
+//		else if (device.equalsIgnoreCase("multicast")) {
+//			sim.addPlugin(new MulticastDevice());
+//		}
 
 		sim.addPlugin(GossipPlugin.class);
 		sim.addPlugin(ReceiveKNStrategy.class);

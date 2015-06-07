@@ -225,6 +225,9 @@ public class ReceptionBuffer implements L2Strategy, DEECoPlugin {
 	 * @param currentTime Current system or simulation time.
 	 */
 	public void removeGloballyObsoleteItems(long currentTime) {
+		if (globalTimeout == 0)
+			return;
+		
 		Iterator<Entry<String, ItemInfo>> it = buffer.entrySet().iterator();
 		while (it.hasNext()) {
 			Entry<String, ItemInfo> entry = it.next();
