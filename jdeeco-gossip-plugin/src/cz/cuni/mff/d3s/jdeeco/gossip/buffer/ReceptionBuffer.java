@@ -35,10 +35,10 @@ public class ReceptionBuffer implements L2Strategy, DEECoPlugin {
 	public static final long MINUS_INFINITE = Long.MIN_VALUE;
 	
 	public static final String GLOBAL_TIMEOUT = "deeco.receptionBuffer.globalTimeout";
-	public static final long GLOBAL_TIMEOUT_DEFAULT = 20000;
+	public static final long GLOBAL_TIMEOUT_DEFAULT = 0;
 	
 	public static final String LOCAL_TIMEOUT = "deeco.receptionBuffer.localTimeout";
-	public static final long LOCAL_TIMEOUT_DEFAULT = 3000;
+	public static final long LOCAL_TIMEOUT_DEFAULT = 0;
 	
 	/**
 	 * A collection of item IDs and associated information about item reception
