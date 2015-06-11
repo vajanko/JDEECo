@@ -37,7 +37,6 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	
 	public static final String LOGGER_OUT = "deeco.requestLogger.out";
 	public static final String LOGGER_OUT_DEFAULT = "console";
-	public static final String LOGGER_VARIANT = "deeco.requestLogger.variant";
 	public static final String LOGGER_ARG1 = "deeco.requestLogger.arg1";
 	public static final String LOGGER_ARG2 = "deeco.requestLogger.arg2";
 	public static final String LOGGER_ARG3 = "deeco.requestLogger.arg3";
@@ -48,7 +47,6 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	private Layer1 layer1;
 	
 	// log parameters
-	private String variant;		// name of the algorithm - could include enabled features etc.
 	private int nodeId;
 	private String messageType;	// KN, HD, PL
 	private String actionType;	// SEND, RECV
@@ -129,8 +127,8 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 			this.isSource = -1;
 		}
 		
-		outputStream.println(String.format("%s;%d;%d;%s;%s;"+ "%s;%d;%s;" + "%s;%s;%s;" + "%s;%s;%s", 
-				variant, nodeId, time, actionType, messageType,
+		outputStream.println(String.format("%d;%d;%s;%s;"+ "%s;%d;%s;" + "%s;%s;%s;" + "%s;%s;%s", 
+				nodeId, time, actionType, messageType,
 				componentId, knowledgeAge, isSource,
 				hdPeriod != null ? hdPeriod : "",plPeriod != null ? plPeriod : "",knPeriod != null ? knPeriod : "",
 				probability != null ? probability : "",localTimeout != null ? localTimeout : "",globalTimeout != null ? globalTimeout : ""));
@@ -200,7 +198,6 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 		// initialise stream for logger output
 		initOutputStream();
 		
-		this.variant = System.getProperty(LOGGER_VARIANT);
 		this.hdPeriod = Long.getLong(SendHDPlugin.TASK_PERIOD, SendHDPlugin.TASK_PERIOD_DEFAULT);
 		this.plPeriod = Long.getLong(SendPLPlugin.TASK_PERIOD, SendPLPlugin.TASK_PERIOD_DEFAULT);
 		this.knPeriod = Long.getLong(SendKNPlugin.TASK_PERIOD, SendKNPlugin.TASK_PERIOD_DEFAULT);
