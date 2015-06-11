@@ -15,6 +15,8 @@ public interface AgentSensor {
 	
 	public Position getPosition();
 	
+	public Position getDestination();
+	
 	public Long getTime();
 	
 	// TODO: add methods like

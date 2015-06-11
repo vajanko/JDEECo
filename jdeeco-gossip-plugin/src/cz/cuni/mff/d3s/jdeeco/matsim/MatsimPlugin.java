@@ -77,7 +77,7 @@ public class MatsimPlugin implements DEECoPlugin, TimerEventListener, MobsimInit
 		HashMap<Id, MatsimOutput> outputs = new HashMap<Id, MatsimOutput>();
 		
 		for (MobsimAgent agent : this.agents) {
-			MatsimOutput out = new MatsimOutput(agent.getCurrentLinkId(), agent.getState());
+			MatsimOutput out = new MatsimOutput(agent.getCurrentLinkId(), agent.getDestinationLinkId(), agent.getState());
 			outputs.put(agent.getId(), out);
 		}
 		

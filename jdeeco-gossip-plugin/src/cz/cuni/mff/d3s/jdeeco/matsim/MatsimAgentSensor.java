@@ -64,10 +64,22 @@ public class MatsimAgentSensor implements AgentSensor {
 	}
 	
 	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.jdeeco.sim.AgentSensor#getTarget()
+	 */
+	@Override
+	public Position getDestination() {
+		MatsimOutput out = outputs.getOutput(agentId);
+		Link link = network.getLinks().get(out.destinationLinkId);
+		Coord co = link.getCoord();
+		return new Position(co.getX(), co.getY());
+	}
+	
+	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.jdeeco.sim.AgentSensor#getTime()
 	 */
 	@Override
 	public Long getTime() {
 		return timer.getCurrentMilliseconds();
 	}
+	
 }

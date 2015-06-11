@@ -49,4 +49,12 @@ public class DummySensor implements AgentSensor {
 		return this.timer.getCurrentMilliseconds();
 	}
 
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.jdeeco.sim.AgentSensor#getDestination()
+	 */
+	@Override
+	public Position getDestination() {
+		return position;
+	}
+
 }
