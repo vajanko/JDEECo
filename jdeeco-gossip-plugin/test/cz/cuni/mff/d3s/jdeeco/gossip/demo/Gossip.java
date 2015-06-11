@@ -41,7 +41,6 @@ public class Gossip {
 		for (Double prob = 0.5; prob <= 0.5; prob += 0.1) {
 			
 			System.getProperties().setProperty(GossipRebroadcastStrategy.REBROADCAST_PROBABILITY, prob.toString());
-			System.getProperties().setProperty(RequestLoggerPlugin.LOGGER_ARG1, prob.toString());
 		
 			SimulationTimer simulationTimer = new DiscreteEventTimer();
 			DEECoSimulation realm = new DEECoSimulation(simulationTimer);

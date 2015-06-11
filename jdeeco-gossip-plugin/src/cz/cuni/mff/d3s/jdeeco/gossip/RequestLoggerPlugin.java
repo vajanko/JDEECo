@@ -37,9 +37,6 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	
 	public static final String LOGGER_OUT = "deeco.requestLogger.out";
 	public static final String LOGGER_OUT_DEFAULT = "console";
-	public static final String LOGGER_ARG1 = "deeco.requestLogger.arg1";
-	public static final String LOGGER_ARG2 = "deeco.requestLogger.arg2";
-	public static final String LOGGER_ARG3 = "deeco.requestLogger.arg3";
 	
 	private KnowledgeManagerContainer kmContainer;
 	private ReceptionBuffer receptionBuffer;
@@ -65,17 +62,12 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	private Long localTimeout;
 	private Long globalTimeout;
 	
-//	private String arg1;
-//	private String arg2;
-//	private String arg3;
-	
 	private static PrintStream outputStream = null;
 	public static void initOutputStream(PrintStream outputStream) {
 		RequestLoggerPlugin.outputStream = outputStream;
 		// print header
-		outputStream.println("Variant;Node;Time;Action;Type;Component;Age;IsSource;HDPeriod;PLPeriod;KNPeriod;Probability;"
+		outputStream.println("Node;Time;Action;Type;Component;Age;IsSource;HDPeriod;PLPeriod;KNPeriod;Probability;"
 				+ "LocalTimeout;GlobalTimeout");
-				//+ "Arg1;Arg2;Arg3");
 	}
 	public static void initOutputStream(String filename) throws FileNotFoundException {
 		initOutputStream(new PrintStream(filename));
@@ -132,7 +124,6 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 				componentId, knowledgeAge, isSource,
 				hdPeriod != null ? hdPeriod : "",plPeriod != null ? plPeriod : "",knPeriod != null ? knPeriod : "",
 				probability != null ? probability : "",localTimeout != null ? localTimeout : "",globalTimeout != null ? globalTimeout : ""));
-				//arg1 != null ? arg1 : "", arg2 != null ? arg2 : "", arg3 != null ? arg3 : ""));
 	}
 	
 	/* (non-Javadoc)
@@ -204,10 +195,6 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 		this.probability = Double.parseDouble(System.getProperty(GossipRebroadcastStrategy.REBROADCAST_PROBABILITY));
 		this.localTimeout = Long.getLong(ReceptionBuffer.LOCAL_TIMEOUT, ReceptionBuffer.LOCAL_TIMEOUT_DEFAULT);
 		this.globalTimeout = Long.getLong(ReceptionBuffer.GLOBAL_TIMEOUT, ReceptionBuffer.GLOBAL_TIMEOUT_DEFAULT);
-		
-//		this.arg1 = System.getProperty(LOGGER_ARG1);
-//		this.arg2 = System.getProperty(LOGGER_ARG2);
-//		this.arg3 = System.getProperty(LOGGER_ARG3);
 	}
 	
 }

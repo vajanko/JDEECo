@@ -61,7 +61,6 @@ public class Grid {
 			
 			String probStr = String.format(Locale.getDefault(), "%.2f", prob);
 			System.getProperties().setProperty(GossipRebroadcastStrategy.REBROADCAST_PROBABILITY, probStr);
-			System.getProperties().setProperty(RequestLoggerPlugin.LOGGER_ARG1, probStr);
 		
 			SimulationTimer simulationTimer = new DiscreteEventTimer();
 			DEECoSimulation realm = new DEECoSimulation(simulationTimer);

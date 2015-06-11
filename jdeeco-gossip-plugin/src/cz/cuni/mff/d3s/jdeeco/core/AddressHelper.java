@@ -36,6 +36,10 @@ public class AddressHelper {
 	}
 	public static Address decodeAddress(String id) {
 		int nodeId = decodeID(id);
+		
+		return createIP(nodeId);
+	}
+	public static Address createIP(int nodeId) {
 		return new IPAddress(String.valueOf(nodeId));
 	}
 	
@@ -57,6 +61,11 @@ public class AddressHelper {
 		}
 		
 		return res;
+	}
+	
+	public static String formatIP(int address) {
+		int[] ip = decodeIP(address);
+		return String.format("%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
 	}
 	private static long toLong(int value) {
 		return value & 0x00000000ffffffffL;

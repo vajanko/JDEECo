@@ -5,13 +5,12 @@ package cz.cuni.mff.d3s.jdeeco.gossip;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import cz.cuni.mff.d3s.deeco.runners.DEECoSimulation;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
-import cz.cuni.mff.d3s.jdeeco.gossip.device.BroadcastDevice;
-import cz.cuni.mff.d3s.jdeeco.gossip.device.MulticastDevice;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveHDStrategy;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveKNStrategy;
@@ -35,6 +34,8 @@ public class GossipPlugin implements DEECoPlugin {
 	public static final String GOSSIP_FEATURES_DEFAULT = "";
 	public static final String GOSSIP_DEVICE = "deeco.gossip.device";
 	public static final String GOSSIP_DEVICE_DEFAULT = "";
+	
+	public static final Random generator = new Random(123);
 	
 	
 	/* (non-Javadoc)
