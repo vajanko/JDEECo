@@ -39,8 +39,8 @@ public class AddressHelper {
 		
 		return createIP(nodeId);
 	}
-	public static Address createIP(int nodeId) {
-		return new IPAddress(String.valueOf(nodeId));
+	public static IPAddress createIP(int nodeId) {
+		return new IPAddress(formatIP(nodeId));
 	}
 	
 	public static int encodeIP(int[] bytes) {
