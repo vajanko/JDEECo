@@ -24,8 +24,8 @@ public class GrouperClientEnsemble {
 	
 	@Membership
 	public static boolean membership(
-			@In("coord.role") GrouperRole cRole,
-			@In("member.role") GrouperRole mRole) {
+			@In("coord.grouperRole") GrouperRole cRole,
+			@In("member.grouperRole") GrouperRole mRole) {
 		
 		return cRole != null && mRole != null &&
 				cRole == GrouperRole.client && mRole == GrouperRole.server;

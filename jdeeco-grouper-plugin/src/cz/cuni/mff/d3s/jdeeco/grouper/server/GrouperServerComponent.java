@@ -28,7 +28,7 @@ import cz.cuni.mff.d3s.jdeeco.network.address.Address;
 @Component
 public class GrouperServerComponent {
 	public String id;
-	public GrouperRole role = GrouperRole.server;
+	public GrouperRole grouperRole = GrouperRole.server;
 	public String group = "destination";
 	/**
 	 * This field is dynamically modified when published to particular hosts.

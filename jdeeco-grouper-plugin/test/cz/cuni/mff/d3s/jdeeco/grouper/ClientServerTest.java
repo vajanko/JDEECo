@@ -61,7 +61,7 @@ public class ClientServerTest {
 		node1.deployComponent(new DemoComponent(ip2, "Prague"));
 		
 		int ip3 = AddressHelper.encodeIP(0, 0, 0, 3);
-		DEECoNode node2 = sim.createNode(ip3, new GrouperServerPlugin(DemoEnsemble.class));
+		//DEECoNode node2 = sim.createNode(ip3, new GrouperServerPlugin(DemoEnsemble.class));
 		
 		sim.start(10000);
 		

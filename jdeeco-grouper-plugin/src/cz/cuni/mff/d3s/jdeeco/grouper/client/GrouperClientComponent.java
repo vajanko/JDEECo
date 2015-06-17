@@ -26,7 +26,7 @@ public class GrouperClientComponent {
 	/**
 	 * Component role
 	 */
-	public GrouperRole role = GrouperRole.client;
+	public GrouperRole grouperRole = GrouperRole.client;
 	/**
 	 * Collection of nodes in the communication group.
 	 */

@@ -43,7 +43,7 @@ public class GrouperKnowledgeProvider implements KnowledgeSource {
 		
 		for (KnowledgeData kd : this.innerSource.getKnowledge()) {
 			// check whether this is gouper
-			KnowledgePath rolePath = KnowledgeDataHelper.getPath(kd, "role");
+			KnowledgePath rolePath = KnowledgeDataHelper.getPath(kd, "grouperRole");
 			GrouperRole role = (GrouperRole)kd.getKnowledge().getValue(rolePath);
 			if (role == null || role != GrouperRole.server) {
 				res.add(kd);

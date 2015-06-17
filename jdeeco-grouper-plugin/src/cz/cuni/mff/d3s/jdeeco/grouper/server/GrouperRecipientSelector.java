@@ -34,7 +34,7 @@ public class GrouperRecipientSelector implements RecipientSelector {
 	@Override
 	public Collection<Address> getRecipients(KnowledgeData data) {
 		// check whether this is gouper
-		KnowledgePath rolePath = KnowledgeDataHelper.getPath(data, "role");
+		KnowledgePath rolePath = KnowledgeDataHelper.getPath(data, "grouperRole");
 		GrouperRole role = (GrouperRole)data.getKnowledge().getValue(rolePath);
 		if (role == null || role != GrouperRole.server) {
 			return this.innerSelector.getRecipients(data);
