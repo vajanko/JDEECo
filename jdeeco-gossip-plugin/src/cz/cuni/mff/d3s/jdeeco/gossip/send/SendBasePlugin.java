@@ -9,6 +9,7 @@ import cz.cuni.mff.d3s.deeco.scheduler.Scheduler;
 import cz.cuni.mff.d3s.deeco.task.TimerTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
 import cz.cuni.mff.d3s.jdeeco.core.task.PeriodicTask;
+import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProviderPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegister;
@@ -29,12 +30,14 @@ public abstract class SendBasePlugin implements TimerTaskListener, DEECoPlugin {
 	protected Layer2 networkLayer;
 	
 	private long period;
+	private long delay = 0;
 	
 	/**
 	 * 
 	 */
 	public SendBasePlugin(long period) {
 		this.period = period;
+		this.delay = GossipPlugin.generator.nextInt((int)period);
 	}
 		
 	/* (non-Javadoc)
@@ -69,6 +72,6 @@ public abstract class SendBasePlugin implements TimerTaskListener, DEECoPlugin {
 		
 		// run PULL knowledge gossip task
 		Scheduler scheduler = container.getRuntimeFramework().getScheduler();
-		scheduler.addTask(new PeriodicTask(scheduler, this, period));
+		scheduler.addTask(new PeriodicTask(scheduler, this, period, delay));
 	}
 }
