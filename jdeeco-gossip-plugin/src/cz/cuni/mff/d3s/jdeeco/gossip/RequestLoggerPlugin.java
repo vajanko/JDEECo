@@ -5,8 +5,10 @@ package cz.cuni.mff.d3s.jdeeco.gossip;
 
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManagerContainer;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
@@ -15,10 +17,6 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.send.SendHDPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.send.SendKNPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.send.SendPLPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.address.Address;
 import cz.cuni.mff.d3s.jdeeco.network.l1.L2PacketSender;
@@ -35,6 +33,16 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy;
  */
 public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlugin {
 	
+	static class ProtocolParam {
+		public String name;
+		public Function<L2Packet, String> getter;
+		
+		public ProtocolParam(String name, Function<L2Packet, String> getter) {
+			this.name = name;
+			this.getter = getter;
+		}
+	}
+	
 	public static final String LOGGER_OUT = "deeco.requestLogger.out";
 	public static final String LOGGER_OUT_DEFAULT = "console";
 	
@@ -45,29 +53,28 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	
 	// log parameters
 	private int nodeId;
-	private String messageType;	// KN, HD, PL
-	private String actionType;	// SEND, RECV
 	private long time;	// time of message being sent
+	private String actionType;	// SEND, RECV
+	private String messageType;	// KN, HD, PL
 	
-	// knowledge specific
-	private Long knowledgeAge;
-	private String componentId;
-	private int isSource;	// 1 if message is sending its own knowledge (not re-broadcasting or re-sending replica), 0 for rebroadcast, -1 otherwise
+	private List<ProtocolParam> parameters = new ArrayList<ProtocolParam>();
+	private static List<ProtocolParam> staticParameters = new ArrayList<ProtocolParam>();
 	
-	// communication protocol arguments
-	private Long hdPeriod;
-	private Long plPeriod;
-	private Long knPeriod;
-	private Double probability;
-	private Long localTimeout;
-	private Long globalTimeout;
+	private static boolean headerInitialized = false;
+	private void printHeader() {
+		if (headerInitialized)
+			return;
+		
+		outputStream.print("Node;Time;Action;Type");
+		for (ProtocolParam param : parameters)
+			outputStream.print(";" + param.name);
+		outputStream.println();
+		headerInitialized = true;
+	}
 	
 	private static PrintStream outputStream = null;
 	public static void initOutputStream(PrintStream outputStream) {
 		RequestLoggerPlugin.outputStream = outputStream;
-		// print header
-		outputStream.println("Node;Time;Action;Type;Component;Age;IsSource;HDPeriod;PLPeriod;KNPeriod;Probability;"
-				+ "LocalTimeout;GlobalTimeout");
 	}
 	public static void initOutputStream(String filename) throws FileNotFoundException {
 		initOutputStream(new PrintStream(filename));
@@ -87,6 +94,13 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 		}
 	}
 	
+	public static void registerStatParam(String name, Function<L2Packet, String> getter) {
+		staticParameters.add(new ProtocolParam(name, getter));
+	}
+	public void registerParam(String name, Function<L2Packet, String> getter) {
+		parameters.add(new ProtocolParam(name, getter));
+	}
+	
 	private static String getMessageType(L2PacketType type) {
 		if (type.equals(L2PacketType.KNOWLEDGE))
 			return "KN";
@@ -97,33 +111,19 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 
 		return "";
 	}
-	private void printRequest(String action, L2PacketType type, Object data) {
+	private void printRequest(String action, L2Packet packet) {
 		
+		printHeader();
+		
+		L2PacketType type = packet.header.type;
 		this.messageType = getMessageType(type);
 		this.actionType = action;
 		this.time = timeProvider.getCurrentMilliseconds();
 		
-		
-		if (type.equals(L2PacketType.KNOWLEDGE)) {
-			KnowledgeData kd = (KnowledgeData)data;
-			KnowledgeMetaData meta = kd.getMetaData();
-			this.componentId = meta.componentId;
-			long lastUpdate = receptionBuffer.getLocalReceptionTime(meta.componentId);
-			lastUpdate = lastUpdate == ReceptionBuffer.MINUS_INFINITE ? 0 : lastUpdate;
-			this.knowledgeAge = (time - lastUpdate);
-			this.isSource = meta.componentId.endsWith(meta.sender) ? 1 : 0;
-		}
-		else {
-			this.componentId = null;
-			this.knowledgeAge = -1l;
-			this.isSource = -1;
-		}
-		
-		outputStream.println(String.format("%d;%d;%s;%s;"+ "%s;%d;%s;" + "%s;%s;%s;" + "%s;%s;%s", 
-				nodeId, time, actionType, messageType,
-				componentId, knowledgeAge, isSource,
-				hdPeriod != null ? hdPeriod : "",plPeriod != null ? plPeriod : "",knPeriod != null ? knPeriod : "",
-				probability != null ? probability : "",localTimeout != null ? localTimeout : "",globalTimeout != null ? globalTimeout : ""));
+		outputStream.print(String.format("%d;%d;%s;%s", nodeId, time, actionType, messageType));
+		for (ProtocolParam param : parameters)
+			outputStream.print(";" + param.getter.apply(packet));
+		outputStream.println();
 	}
 	
 	/* (non-Javadoc)
@@ -142,7 +142,7 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 				return;
 		}
 		
-		printRequest("RECV", packet.header.type, packet.getObject());
+		printRequest("RECV", packet);
 	}
 	
 	/* (non-Javadoc)
@@ -151,7 +151,7 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	@Override
 	public boolean sendL2Packet(L2Packet packet, Address address) {
 		
-		printRequest("SEND", packet.header.type, packet.getObject());
+		printRequest("SEND", packet);
 		
 		// just pass the packet to the underlying layer as would be done
 		// previously by L2 layer
@@ -188,13 +188,8 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 		
 		// initialise stream for logger output
 		initOutputStream();
-		
-		this.hdPeriod = Long.getLong(SendHDPlugin.TASK_PERIOD, SendHDPlugin.TASK_PERIOD_DEFAULT);
-		this.plPeriod = Long.getLong(SendPLPlugin.TASK_PERIOD, SendPLPlugin.TASK_PERIOD_DEFAULT);
-		this.knPeriod = Long.getLong(SendKNPlugin.TASK_PERIOD, SendKNPlugin.TASK_PERIOD_DEFAULT);
-		this.probability = Double.parseDouble(System.getProperty(GossipRebroadcastStrategy.REBROADCAST_PROBABILITY));
-		this.localTimeout = Long.getLong(ReceptionBuffer.LOCAL_TIMEOUT, ReceptionBuffer.LOCAL_TIMEOUT_DEFAULT);
-		this.globalTimeout = Long.getLong(ReceptionBuffer.GLOBAL_TIMEOUT, ReceptionBuffer.GLOBAL_TIMEOUT_DEFAULT);
+
+		this.parameters.addAll(staticParameters);
 	}
 	
 }
