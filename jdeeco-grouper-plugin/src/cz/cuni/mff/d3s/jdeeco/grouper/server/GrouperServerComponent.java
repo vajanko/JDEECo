@@ -4,6 +4,7 @@
 package cz.cuni.mff.d3s.jdeeco.grouper.server;
 
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import cz.cuni.mff.d3s.deeco.annotations.Component;
@@ -41,7 +42,7 @@ public class GrouperServerComponent {
 	// Key space range - current connector stores values for this collection of keys
 	// for now suppose that key space partitioning is given.
 	// In the future it can be updated by the IPService
-	@Local public GrouperRange range;
+	//@Local public GrouperRange range;
 	@Local public GrouperPartitions partitions;
 	@Local public KnowledgeProvider knowledgeProvider;
 	@Local public GrouperRegister register;
@@ -49,9 +50,8 @@ public class GrouperServerComponent {
 	/**
 	 * 
 	 */
-	public GrouperServerComponent(int nodeId, GrouperRange range, GrouperPartitions partitions, GrouperRegister register, KnowledgeProvider knowledgeProvider) {
+	public GrouperServerComponent(int nodeId, GrouperPartitions partitions, GrouperRegister register, KnowledgeProvider knowledgeProvider) {
 		this.id = AddressHelper.encodeID("GS", nodeId);
-		this.range = range;
 		this.partitions = partitions;
 		this.knowledgeProvider = knowledgeProvider;	
 		this.register = register;
@@ -60,7 +60,6 @@ public class GrouperServerComponent {
 	@Process
 	@PeriodicScheduling(period = 1000)
 	public static void processKnowledge(
-			@In("range") GrouperRange range,
 			@In("partitions") GrouperPartitions partitions,
 			@In("knowledgeProvider") KnowledgeProvider knowledgeProvider,
 			@In("register") GrouperRegister register) {
@@ -69,22 +68,23 @@ public class GrouperServerComponent {
 		for (KnowledgeData kd : knowledgeProvider.getReplicaKnowledgeData()) {
 			Address sender = AddressHelper.decodeAddress(kd.getMetaData().componentId);
 			try {
-			// component knowledge may participate in multiple partitions
-			for (KnowledgePartition part : partitions.getPartitions()) {
-				Object partVal = part.getPartitionByValue(kd);				
-				if (range.inRange(partVal)) {
-					// this grouper is responsible for this component
-					register.add(partVal, sender);
-				} else {
-					// there is another grouper responsible for this component
-
-					// if this grouper was responsible for current knowledge it is not any more
-					register.remove(partVal, sender);
+				// component knowledge may participate in multiple partitions
+				for (Entry<KnowledgePartition, GrouperRange> item : partitions.getPartitions()) {
+					KnowledgePartition part = item.getKey();
+					GrouperRange range = item.getValue();
 					
-					// TODO: notify the other grouper(s)
-					// register.add(partVal, "???");
+					Object partVal = part.getPartitionByValue(kd);				
+					if (range.inRange(partVal)) {
+						// this grouper is responsible for this component
+						register.add(partVal, sender);
+					} else {
+						// there is another grouper responsible for this component
+	
+						// if this grouper was responsible for current knowledge it is not any more
+						//register.remove(partVal, sender);
+						register.remove(sender);
+					}
 				}
-			}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -3,8 +3,9 @@
  */
 package cz.cuni.mff.d3s.jdeeco.grouper;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -13,17 +14,18 @@ import java.util.Set;
  * @author Ondrej Kovac <info@vajanko.me>
  */
 public class GrouperPartitions {
-	private Set<KnowledgePartition> partitions;
+	//private Set<KnowledgePartition> partitions;
+	private Map<KnowledgePartition, GrouperRange> partitions;
 	
-	public Collection<KnowledgePartition> getPartitions() {
-		return partitions;
+	public Set<Entry<KnowledgePartition, GrouperRange>> getPartitions() {
+		return partitions.entrySet();
 	}
-	public void addPartition(KnowledgePartition partition) {
-		this.partitions.add(partition);
+	public void addPartition(KnowledgePartition partition, GrouperRange range) {
+		this.partitions.put(partition, range);
 	}
 	
 	public GrouperPartitions() {
-		this.partitions = new HashSet<KnowledgePartition>();
+		this.partitions = new HashMap<KnowledgePartition, GrouperRange>();
 	}
 	
 	/* (non-Javadoc)

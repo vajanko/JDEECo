@@ -19,7 +19,11 @@ public class GrouperRegister {
 	// address of node where the grouper is deployed
 	private Address address;
 	// range of keys for which current grouper is responsible for
-	private GrouperRange range;
+	//private GrouperRange range;
+	
+	public Address getAddress() {
+		return address;
+	}
 	
 	private HashMap<Object, AddressRegister> register = new HashMap<Object, AddressRegister>();
 	
@@ -30,11 +34,16 @@ public class GrouperRegister {
 			this.register.put(partitionValue, reg);
 			
 			// grouper address is automatically added to the partition key belongs to its range
-			if (this.range.inRange(partitionValue))
-				reg.add(this.address);
+//			if (this.range.inRange(partitionValue))
+//				reg.add(this.address);
 		}
 		
 		reg.add(address);
+	}
+	public void remove(Address address) {
+		for (AddressRegister reg : this.register.values()) {
+			reg.remove(address);
+		}
 	}
 	public void remove(Object partitionValue, Address address) {
 		AddressRegister reg = this.register.get(partitionValue);
@@ -54,10 +63,13 @@ public class GrouperRegister {
 	public Collection<AddressRegister> getRegisters() {
 		return this.register.values();
 	}
+	public AddressRegister getRegister(Object partitionValue) {
+		return this.register.get(partitionValue);
+	}
 	
-	public GrouperRegister(Address address, GrouperRange range) {
+	public GrouperRegister(Address address/*, GrouperRange range*/) {
 		this.address = address;
-		this.range = range;
+		//this.range = range;
 	}
 	
 	/* (non-Javadoc)
@@ -65,6 +77,6 @@ public class GrouperRegister {
 	 */
 	@Override
 	public String toString() {
-		return String.format("address: %s, %s, register: %s", address, range, register);
+		return String.format("address: %s, register: %s", address, register);
 	}
 }

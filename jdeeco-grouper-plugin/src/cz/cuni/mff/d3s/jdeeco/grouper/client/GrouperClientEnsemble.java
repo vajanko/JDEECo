@@ -38,7 +38,6 @@ public class GrouperClientEnsemble {
 			@InOut("coord.groupMembers") ParamHolder<Set<String>> cGroup,
 			@In("member.groupMembers") Set<String> mGroup) {
 		
-		//System.out.println("coord=" + cId + " member=" + mId);
 		cGroup.value.addAll(mGroup);
 	}
 }

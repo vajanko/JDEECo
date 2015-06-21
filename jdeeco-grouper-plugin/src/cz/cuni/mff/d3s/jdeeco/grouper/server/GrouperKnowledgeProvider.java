@@ -56,6 +56,10 @@ public class GrouperKnowledgeProvider implements KnowledgeSource {
 				KnowledgeData copy = cloneValues(kd);
 				// copy group data
 				HashSet<String> group = new HashSet<String>(reg.getStrings());
+				
+				// do not publish small groups with one member
+				if (group.size() <= 1)
+					continue;
 			
 				// set group data
 				KnowledgePath groupPath = KnowledgeDataHelper.getPath(kd, "groupMembers");

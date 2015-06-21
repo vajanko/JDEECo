@@ -10,9 +10,12 @@ import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessorException;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.runtime.DuplicateEnsembleDefinitionException;
+import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegister;
 import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegisterPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.send.SendKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
+import cz.cuni.mff.d3s.jdeeco.network.address.IPAddress;
 
 /**
  * Plugin allows to receive notifications from grouper about members of communication group.
@@ -25,7 +28,7 @@ public class GrouperClientPlugin implements DEECoPlugin {
 	 */
 	@Override
 	public List<Class<? extends DEECoPlugin>> getDependencies() {
-		return Arrays.asList(Network.class, AddressRegisterPlugin.class);
+		return Arrays.asList(Network.class, AddressRegisterPlugin.class, SendKNPlugin.class);
 	}
 	
 	/* (non-Javadoc)
@@ -33,16 +36,21 @@ public class GrouperClientPlugin implements DEECoPlugin {
 	 */
 	@Override
 	public void init(DEECoContainer container) {	
-		AddressRegister addressRegister = container.getPluginInstance(AddressRegisterPlugin.class).getRegister();
+		AddressRegister register = container.getPluginInstance(AddressRegisterPlugin.class).getRegister();
 		
 		try {
 			
-			container.deployComponent(new GrouperClientComponent(container.getId(), addressRegister));
+			container.deployComponent(new GrouperClientComponent(container.getId(), register));
 			container.deployEnsemble(GrouperClientEnsemble.class);
 			
 		} catch (AnnotationProcessorException | DuplicateEnsembleDefinitionException e) {
 			e.printStackTrace();
 		}
+		
+		SendKNPlugin sendKN = container.getPluginInstance(SendKNPlugin.class);
+		IPAddress address = AddressHelper.createIP(container.getId());
+		ClientRecipinetSelector selector = new ClientRecipinetSelector(address, sendKN.getRecipientSelector());
+		sendKN.setRecipientSelector(selector);
 	}
 	
 

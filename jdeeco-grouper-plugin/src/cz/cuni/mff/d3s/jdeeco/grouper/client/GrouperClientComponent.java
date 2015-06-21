@@ -37,7 +37,7 @@ public class GrouperClientComponent {
 	@Local public AddressRegister register;
 	
 	public GrouperClientComponent(int nodeId, AddressRegister register) {
-		this.id = AddressHelper.encodeID("GS", nodeId);
+		this.id = AddressHelper.encodeID("GC", nodeId);
 		this.groupMembers = new HashSet<String>();
 		this.register = register;
 	}
@@ -54,11 +54,12 @@ public class GrouperClientComponent {
 			@TriggerOnChange @In("groupMembers") Set<String> groupMembers,
 			@In("register") AddressRegister register) {
 		
+		register.clear();
 		for (String address : groupMembers)
 			register.add(new IPAddress(address));
-		
+				
 		groupMembers.clear();
 		
-		System.out.println(id + " - register: " + register);
+		//System.out.println(id + " - register: " + register);
 	}
 }
