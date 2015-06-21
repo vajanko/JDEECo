@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="windows-1250"?>
+
+<config>
+  <interface hosts='**.node[*]' names='etc' address='10.0.x.x' netmask='255.255.x.x'/>
+  <interface hosts='**.node[*]' names='nic802154' address='192.168.x.x' netmask='255.255.x.x'/>
+</config>
+
