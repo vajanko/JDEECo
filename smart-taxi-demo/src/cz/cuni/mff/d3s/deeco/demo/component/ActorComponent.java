@@ -13,7 +13,7 @@ import cz.cuni.mff.d3s.deeco.annotations.Local;
 import cz.cuni.mff.d3s.deeco.annotations.Out;
 import cz.cuni.mff.d3s.deeco.annotations.PeriodicScheduling;
 import cz.cuni.mff.d3s.deeco.annotations.Process;
-import cz.cuni.mff.d3s.deeco.simulation.omnet.OMNeTNative;
+import cz.cuni.mff.d3s.deeco.annotations.TriggerOnChange;
 import cz.cuni.mff.d3s.deeco.task.ParamHolder;
 import cz.cuni.mff.d3s.jdeeco.core.Position;
 import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
@@ -28,6 +28,9 @@ public abstract class ActorComponent {
 	public Position position;
 	public ActorRole role;
 	
+	// joined current position and the destination position
+	public Integer sector;
+	
 	// positions of other actors in the system
 	public ActorStorage actors;
 	
@@ -35,10 +38,6 @@ public abstract class ActorComponent {
 	
 	@Local public AgentSensor sensor;
 	
-	/**
-	 * @param tSensor 
-	 * 
-	 */
 	public ActorComponent(String id, ActorRole role, AgentSensor sensor) {
 		this.id = id;
 		this.role = role;
@@ -48,7 +47,21 @@ public abstract class ActorComponent {
 	}
 	
 	@Process
-	@PeriodicScheduling(period = 10000)
+	public static void updateGroup(
+			@In("sensor") AgentSensor sensor,
+			@TriggerOnChange @In("position") Position position,
+			@Out("sector") ParamHolder<Integer> sector) {
+		
+		//Position dest = sensor.getDestination();
+		//group.value = String.format("%s-%s", position, dest);
+		int y = (int)((53126 - position.y) / 1000) * 10;
+		int x = (int)((45275.7 - position.x) / 1000);
+		
+		sector.value = y + x;
+	}
+	
+	@Process
+	@PeriodicScheduling(period = 1000)
 	public static void updatePosition(
 			@In("id") String id,
 			@In("sensor") AgentSensor sensor,
@@ -61,7 +74,7 @@ public abstract class ActorComponent {
 	}
 	
 	@Process
-	@PeriodicScheduling(period = 10000)
+	@PeriodicScheduling(period = 1000)
 	public static void updateActors(
 			@In("id") String id,
 			@In("sensor") AgentSensor sensor,

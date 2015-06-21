@@ -35,6 +35,8 @@ import inet.linklayer.IExternalNic;
 import inet.base.NotificationBoard;
 import inet.nodes.inet.NetworkLayer;
 import inet.transport.udp.UDP;
+import inet.linklayer.loopback.LoopbackInterface;
+//import inet.nodes.inet.StandardHost;
 
 // This host is an example on how a host with INET network stack
 // can be equipped with mobility- and wireless-modules from MiXiM. 
@@ -69,8 +71,8 @@ module Node
     gates:
      	input radio80211In @directIn;
      	input radio802154In @directIn;
-        inout ethg @labels(EtherFrame-conn);
-        inout direct[];
+      inout ethg @labels(EtherFrame-conn);
+      inout direct[];
     submodules:
 
         //Application
@@ -109,17 +111,21 @@ module Node
         interfaceTable: InterfaceTable {
             parameters:
                 @display("p=53,287;is=s");
-        } 
+        }
+        
+        //lo0: LoopbackInterface {
+        //    @display("p=78,406");
+        //} 
             
         //NIC
-        nic80211: <nic80211Type> like IWirelessNic if nic80211Type != "" {
-            parameters:
-                @display("p=132,406,row,60;q=queue");
-        }
-        nic802154: <nic802154Type> like IWirelessNic if nic802154Type != "" {
-            parameters:
-                @display("p=132,406,row,60;q=queue");
-        }
+        //nic80211: <nic80211Type> like IWirelessNic if nic80211Type != "" {
+        //    parameters:
+        //        @display("p=132,406,row,60;q=queue");
+        //}
+        //nic802154: <nic802154Type> like IWirelessNic if nic802154Type != "" {
+        //    parameters:
+        //        @display("p=132,406,row,60;q=queue");
+        //}
         
         eth: <default("EthernetInterface")> like IWiredNic if useEthernet {
             parameters:
@@ -133,36 +139,45 @@ module Node
         battery: SimpleBattery {
             @display("p=60,176;i=block/control");
         }
-                notificationBoard: NotificationBoard {
+        notificationBoard: NotificationBoard {
             parameters:
                 @display("p=53,155;is=s");
         }
         
     connections allowunconnected:
- 
-        //# Connect IP branch
-        if (useEthernet) {
-            ethg <--> { @display("m=s"); } <--> eth.phys;
-            eth.upperLayerOut --> networkLayer.ifIn++;
-            eth.upperLayerIn <-- networkLayer.ifOut++;
-        }
-        if (!useEthernet && nic80211Type != "") {
-            nic80211.upperLayerOut --> networkLayer.ifIn++;
-            nic80211.upperLayerIn <-- networkLayer.ifOut++;
-        }
-        
-        if (nic80211Type != "" || useEthernet) {
-            //udp.ipOut --> networkLayer.udpIn;
-	    //udp.ipIn <-- networkLayer.udpOut;
-            udp.appOut++ --> appl.lowerLayerIn;
-            udp.appIn++ <-- appl.lowerLayerOut;
-        }
+    
+      //networkLayer.ifOut++ --> lo0.upperLayerIn;
+      //lo0.upperLayerOut --> networkLayer.ifIn++;
 
-        //# Connect MANET branch
+      //# Connect IP branch
+      if (useEthernet) {
+          ethg <--> { @display("m=s"); } <--> eth.phys;
+          eth.upperLayerOut --> networkLayer.ifIn++;
+          eth.upperLayerIn <-- networkLayer.ifOut++;
+                   
+          appl.lowerLayerOut --> udp.appIn++;
+          appl.lowerLayerIn <-- udp.appOut++;
+          
+          udp.ipOut --> networkLayer.transportIn++;
+          udp.ipIn <-- networkLayer.transportOut++;
+      }
+      //if (!useEthernet && nic80211Type != "") {
+      //    nic80211.upperLayerOut --> networkLayer.ifIn++;
+      //    nic80211.upperLayerIn <-- networkLayer.ifOut++;
+      //}
+      
+      //if (nic80211Type != "" || useEthernet) {
+      //    udp.ipOut --> networkLayer.ifIn;
+      //    udp.ipIn <-- networkLayer.ifOut;
+      //    udp.appOut++ --> appl.lowerLayerIn;
+      //    udp.appIn++ <-- appl.lowerLayerOut;
+      //}
 
-        if (nic802154Type != "") {
-            nic802154.upperLayerOut --> appl.lower802154LayerIn;
-            nic802154.upperLayerIn <-- appl.lower802154LayerOut;
-        }
+      //# Connect MANET branch
+
+      //if (nic802154Type != "") {
+      //    nic802154.upperLayerOut --> appl.lower802154LayerIn;
+      //    nic802154.upperLayerIn <-- appl.lower802154LayerOut;
+      //}
 }
 

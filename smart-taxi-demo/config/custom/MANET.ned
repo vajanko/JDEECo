@@ -66,12 +66,14 @@ network MANET
         node[numNodes]: Node {
         	useEthernet = ethernet;
         }
+        //node[numNodes]: StandardHost { }
         router[numRouters]: Router {}
         
         //switch: Switch {}
-	switch: EtherSwitch {}
+        switch: EtherSwitch {}
         
         configurator: IPv4NetworkConfigurator {
+        //configurator: FlatNetworkConfigurator {
             @display("p=140,50");
         }
     connections allowunconnected:

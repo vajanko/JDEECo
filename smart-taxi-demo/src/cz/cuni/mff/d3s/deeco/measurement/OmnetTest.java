@@ -8,7 +8,7 @@ import java.util.Locale;
 import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessorException;
 import cz.cuni.mff.d3s.deeco.demo.component.DriverComponent;
 import cz.cuni.mff.d3s.deeco.demo.component.PassengerComponent;
-import cz.cuni.mff.d3s.deeco.demo.ensemble.PositionAggregator;
+import cz.cuni.mff.d3s.deeco.demo.ensemble.BoundaryPositionAggregator;
 import cz.cuni.mff.d3s.deeco.runners.DEECoSimulation;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoException;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoNode;
@@ -66,7 +66,7 @@ public class OmnetTest {
 				
 				DriverComponent driver = new DriverComponent(nodeId, sensor);
 				node.deployComponent(driver);
-				node.deployEnsemble(PositionAggregator.class);
+				node.deployEnsemble(BoundaryPositionAggregator.class);
 			}
 			
 			final int pedestrians = 30;
@@ -78,7 +78,7 @@ public class OmnetTest {
 				
 				PassengerComponent passenger = new PassengerComponent(nodeId, sensor);
 				node.deployComponent(passenger);
-				node.deployEnsemble(PositionAggregator.class);
+				node.deployEnsemble(BoundaryPositionAggregator.class);
 			}
 			
 			long duration = Long.getLong("deeco.simulation.duration", 60 * 1000);

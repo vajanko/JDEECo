@@ -26,7 +26,7 @@ import inet.status.NodeStatus;
 import inet.linklayer.ethernet.EthernetInterface;
 //import inet.linklayer.ethernet.switch.MACRelayUnitNP;
 import inet.linklayer.ethernet.switch.MACRelayUnit;
-
+import inet.linklayer.ethernet.switch.MACAddressTable;
 
 //
 // Model of an Ethernet switch.
@@ -58,13 +58,12 @@ module Switch
             parameters:
                 @display("p=50,150;is=s");
         }
+        macTable: MACAddressTable {
+            @display("p=73,19;is=s");
+        }
         relayUnit: MACRelayUnit {
             parameters:
                 @display("p=270,50");
-		
-                //addressTableSize = 1000;
-                //numCPUs = sizeof(ethg);
-                //bufferSize = 2MiB;
         }
         eth[sizeof(ethg)]: CustomEthernetInterface {
             parameters:

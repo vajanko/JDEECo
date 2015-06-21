@@ -17,5 +17,10 @@
   		<artifactId>cz.cuni.mff.d3s.jdeeco.matsim</artifactId>
   		<version>3.0.0</version>
   	</dependency>
+  	<dependency>
+  		<groupId>jdeeco-grouper-plugin</groupId>
+  		<artifactId>jdeeco-grouper-plugin</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
   </dependencies>
 </project>
