@@ -67,6 +67,10 @@ public class OMNeTConfigGenerator {
 		// Add time limit
 		content.append(String.format(Locale.getDefault(), "sim-time-limit = %fs%n", (double)limit / 1000));
 		
+		int run = Integer.getInteger("deeco.sim.run", 0);
+		content.append(String.format("output-vector-file = ./results/omnetpp-%d.vec%n", run));
+		content.append(String.format("output-scalar-file = ./results/omnetpp-%d.vci%n", run));
+		
 		// Add nodes
 		int counter = 0;
 		for(Node node: nodes) {
@@ -84,7 +88,7 @@ public class OMNeTConfigGenerator {
 		content.append(String.format("<config>\\%n"));
 		for(Node node: nodes) {
 			if(node.ipAddress != null) {
-				content.append(String.format("\t<interface hosts='**.node[%d]' address='%s' netmask='255.x.x.x'/>\\%n", node.ordinal, node.ipAddress));
+				content.append(String.format("\t<interface hosts='**.node[%d]' name='eth' address='%s' netmask='255.255.x.x'/>\\%n", node.ordinal, node.ipAddress));
 			}
 		}
 		content.append("</config>\")");

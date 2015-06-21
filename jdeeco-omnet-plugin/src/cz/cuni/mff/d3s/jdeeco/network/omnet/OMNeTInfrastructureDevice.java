@@ -33,7 +33,7 @@ public class OMNeTInfrastructureDevice extends OMNeTDevice {
 		if(!(address instanceof IPAddress)) {
 			throw new UnsupportedOperationException();
 		}
-		System.out.println("Sending ip packet, from host " + host.getId() + " to host " + address);
+		//System.out.println("Sending ip packet, from host " + host.getId() + " to host " + address);
 		host.sendInfrastructurePacket(data, (IPAddress) address);
 	}
 
@@ -44,7 +44,7 @@ public class OMNeTInfrastructureDevice extends OMNeTDevice {
 	}
 	
 	public void receivePacket(byte[] data) {
-		System.out.println("Received infrastructure packet");
+		//System.out.println("Received infrastructure packet");
 		network.getL1().processL0Packet(data, this, new ReceivedInfo(new IPAddress("UNKNOWN")));
 	}
 }
