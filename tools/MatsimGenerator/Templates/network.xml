@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE network SYSTEM "http://matsim.org/files/dtd/network_v1.dtd">
+
+<network name="generated network">
+<nodes>
+  <!-- to be generated -->
+</nodes>
+<links capperiod="1:00:00">
+  <!-- to be generated -->
+</links>
+</network>

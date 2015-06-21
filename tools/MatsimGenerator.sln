@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matsim.Generator", "MatsimGenerator\Matsim.Generator.csproj", "{A29CB977-A8BA-4DDE-8B46-246E4D588C27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matsim.Extractor", "NetworkCleaner\Matsim.Extractor.csproj", "{4F476CBB-D2C4-4A81-9263-4F677445E08E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matsim.Transformer", "NetworkModifier\Matsim.Transformer.csproj", "{FFB119A5-00AB-4468-8C71-0DA86AC6BBC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matsim", "Matsim\Matsim.csproj", "{9F6A2CDA-C02C-43FF-9B31-5938E5E4C710}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeco.Log", "Deeco.Log\Deeco.Log.csproj", "{ABBC5FEE-74A0-488C-B9A2-DE2F123F8FB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matsim.Helper", "Matsim.Helper\Matsim.Helper.csproj", "{007212E7-F8E3-4A53-B493-7C8EAE690F69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeco.Report", "Deeco.Report\Deeco.Report.csproj", "{1555E90B-9E87-4D7F-A03E-FCCC8FD56B18}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A29CB977-A8BA-4DDE-8B46-246E4D588C27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A29CB977-A8BA-4DDE-8B46-246E4D588C27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A29CB977-A8BA-4DDE-8B46-246E4D588C27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A29CB977-A8BA-4DDE-8B46-246E4D588C27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F476CBB-D2C4-4A81-9263-4F677445E08E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F476CBB-D2C4-4A81-9263-4F677445E08E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F476CBB-D2C4-4A81-9263-4F677445E08E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F476CBB-D2C4-4A81-9263-4F677445E08E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFB119A5-00AB-4468-8C71-0DA86AC6BBC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFB119A5-00AB-4468-8C71-0DA86AC6BBC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFB119A5-00AB-4468-8C71-0DA86AC6BBC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFB119A5-00AB-4468-8C71-0DA86AC6BBC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F6A2CDA-C02C-43FF-9B31-5938E5E4C710}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F6A2CDA-C02C-43FF-9B31-5938E5E4C710}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F6A2CDA-C02C-43FF-9B31-5938E5E4C710}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F6A2CDA-C02C-43FF-9B31-5938E5E4C710}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABBC5FEE-74A0-488C-B9A2-DE2F123F8FB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABBC5FEE-74A0-488C-B9A2-DE2F123F8FB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABBC5FEE-74A0-488C-B9A2-DE2F123F8FB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABBC5FEE-74A0-488C-B9A2-DE2F123F8FB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{007212E7-F8E3-4A53-B493-7C8EAE690F69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{007212E7-F8E3-4A53-B493-7C8EAE690F69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{007212E7-F8E3-4A53-B493-7C8EAE690F69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{007212E7-F8E3-4A53-B493-7C8EAE690F69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1555E90B-9E87-4D7F-A03E-FCCC8FD56B18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1555E90B-9E87-4D7F-A03E-FCCC8FD56B18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1555E90B-9E87-4D7F-A03E-FCCC8FD56B18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1555E90B-9E87-4D7F-A03E-FCCC8FD56B18}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
