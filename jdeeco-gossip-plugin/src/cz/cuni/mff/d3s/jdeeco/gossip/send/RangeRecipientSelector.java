@@ -13,20 +13,26 @@ import cz.cuni.mff.d3s.jdeeco.gossip.RecipientSelector;
 import cz.cuni.mff.d3s.jdeeco.network.address.Address;
 
 /**
+ * The core of gossip protocol for infrastructure network. Selects random recipients
+ * from range of IP addresses.
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
 public class RangeRecipientSelector implements RecipientSelector {
 
+	private int local;
 	private int from;
 	private int to;
+	private int count;
 	
 	/**
 	 * 
 	 */
-	public RangeRecipientSelector(int from, int to) {
+	public RangeRecipientSelector(int local, int from, int to, int count) {
+		this.local = local;
 		this.from = from;
 		this.to = to;
+		this.count = count;
 	}
 	
 	/* (non-Javadoc)
@@ -34,9 +40,11 @@ public class RangeRecipientSelector implements RecipientSelector {
 	 */
 	@Override
 	public Collection<Address> getRecipients(KnowledgeData data) {
-		Collection<Address> res = new HashSet<Address>();
-		for (int i = 0; i < 3; i++) {
+		Collection<Address> res = new HashSet<Address>();		
+		for (int i = 0; i < count; i++) {
 			int ip = GossipPlugin.generator.nextInt(to - from) + from;
+			if (ip == local)
+				continue;
 			res.add(AddressHelper.createIP(ip));
 		}
 

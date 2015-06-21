@@ -151,11 +151,14 @@ public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlu
 	@Override
 	public boolean sendL2Packet(L2Packet packet, Address address) {
 		
-		printRequest("SEND", packet);
-		
 		// just pass the packet to the underlying layer as would be done
 		// previously by L2 layer
-		return layer1.sendL2Packet(packet, address);
+		boolean res = layer1.sendL2Packet(packet, address);
+		
+		if (res)
+			printRequest("SEND", packet);
+		
+		return res;
 	}
 	
 	/* (non-Javadoc)

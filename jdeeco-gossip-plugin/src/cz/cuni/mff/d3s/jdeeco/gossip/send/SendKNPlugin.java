@@ -6,10 +6,13 @@ package cz.cuni.mff.d3s.jdeeco.gossip.send;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
+import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.BasicKnowledgeSource;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeSource;
 import cz.cuni.mff.d3s.jdeeco.gossip.RecipientSelector;
 import cz.cuni.mff.d3s.jdeeco.network.address.Address;
+import cz.cuni.mff.d3s.jdeeco.network.address.IPAddress;
+import cz.cuni.mff.d3s.jdeeco.network.address.MANETBroadcastAddress;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
 import cz.cuni.mff.d3s.jdeeco.network.l2.PacketHeader;
@@ -25,6 +28,8 @@ public class SendKNPlugin extends SendBasePlugin {
 	 * Default value of knowledge broadcasting period in milliseconds.
 	 */
 	public static final long TASK_PERIOD_DEFAULT = 2000;
+	
+	private IPAddress address;
 	
 	/**
 	 * Provides source to be published (sent).
@@ -42,6 +47,7 @@ public class SendKNPlugin extends SendBasePlugin {
 	 * from {@link KnowledgeSource}.
 	 */
 	private RecipientSelector recipientSelector;
+	
 	public RecipientSelector getRecipientSelector() {
 		return this.recipientSelector;
 	}
@@ -64,8 +70,13 @@ public class SendKNPlugin extends SendBasePlugin {
 			
 			L2Packet packet = new L2Packet(header, data);
 			
-			// send knowledge ...
+			// publish knowledge on MANET
+			this.networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
+			
+			// publish knowledge on IP
 			for (Address address : this.recipientSelector.getRecipients(data)) {
+				if (this.address.equals(address))
+					continue;
 				// select recipients of particular knowledge
 				this.networkLayer.sendL2Packet(packet, address);
 			}
@@ -85,5 +96,7 @@ public class SendKNPlugin extends SendBasePlugin {
 		
 		this.knowledgeSource = new BasicKnowledgeSource(this.knowledgeProvider);
 		this.recipientSelector = new StaticRecipientSelector(this.addressRegister);
+		
+		this.address = AddressHelper.createIP(container.getId());
 	}
 }

@@ -14,11 +14,15 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
+import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
 import cz.cuni.mff.d3s.jdeeco.core.ConfigHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProviderPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
+import cz.cuni.mff.d3s.jdeeco.gossip.send.SendKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
+import cz.cuni.mff.d3s.jdeeco.network.address.Address;
+import cz.cuni.mff.d3s.jdeeco.network.address.IPAddress;
 import cz.cuni.mff.d3s.jdeeco.network.address.MANETBroadcastAddress;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
@@ -39,6 +43,9 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 	 */
 	public static final double REBROADCAST_PROBABILITY_DEFAULT = 0.5;
 	
+	public static final String REBROADCAST_COUNT = "deeco.gossipRebroadcast.count";
+	public static final int REBROADCAST_COUNT_DEFAULT = 1;
+	
 	private double probability;
 	private Layer2 networkLayer;
 	private ReceptionBuffer receptionBuffer;
@@ -46,6 +53,9 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 	private RuntimeMetadata runtimeMetadata;
 	private String nodeId;
 	private KnowledgeManagerContainer kmContainer;
+	
+	private SendKNPlugin knowledgeSender;
+	private IPAddress address;
 	
 	protected KnowledgeData prepareForRebroadcast(KnowledgeData kd) {		
 		KnowledgeMetaData meta = kd.getMetaData().clone();
@@ -84,14 +94,27 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 				if (!receptionBuffer.canReceive(meta.componentId, meta.versionId))
 					return;
 				
-				// rebroadcast by probability on MANET
+				L2Packet pck = new L2Packet(packet.header, prepareForRebroadcast(kd));
+				
+				// rebroadcast with certain probability on MANET
 				if (GossipPlugin.generator.nextDouble() < probability) {
-					L2Packet pck = new L2Packet(packet.header, prepareForRebroadcast(kd));
 					networkLayer.sendL2Packet(pck, MANETBroadcastAddress.BROADCAST);
 				}
 				
-				// rebroadcast to random subset of known nodes
+//				if (meta.hopCount > 4)
+//					return;
 				
+				// rebroadcast to random subset of known nodes
+				for (Address adr : this.knowledgeSender.getRecipientSelector().getRecipients(kd)) {
+					if (adr.equals(this.address))
+						continue;
+					
+					// rebroadcast with certain probability on IP
+					if (GossipPlugin.generator.nextDouble() < probability) {
+						networkLayer.sendL2Packet(pck, adr);
+					}
+					//networkLayer.sendL2Packet(pck, adr);
+				}
 			}
 		}
 	}
@@ -114,7 +137,7 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 	 */
 	@Override
 	public List<Class<? extends DEECoPlugin>> getDependencies() {
-		return Arrays.asList(Network.class, ReceptionBuffer.class, KnowledgeProviderPlugin.class);
+		return Arrays.asList(Network.class, ReceptionBuffer.class, KnowledgeProviderPlugin.class, SendKNPlugin.class);
 	}
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#init(cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)
@@ -130,9 +153,11 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 		// register L2 strategy
 		this.networkLayer.registerL2Strategy(this);
 		this.nodeId = String.valueOf(container.getId());
+		this.address = AddressHelper.createIP(container.getId());
 		
 		// config parameters
 		this.probability = ConfigHelper.getDouble(REBROADCAST_PROBABILITY, REBROADCAST_PROBABILITY_DEFAULT);
+		this.knowledgeSender = container.getPluginInstance(SendKNPlugin.class);
 	}
 
 }

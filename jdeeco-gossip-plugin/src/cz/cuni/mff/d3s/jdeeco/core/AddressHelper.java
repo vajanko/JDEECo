@@ -30,6 +30,12 @@ public class AddressHelper {
 //		
 //		return encodeIP(bytes);
 		
+//		try {
+//			return Integer.parseInt(id);
+//		} catch (NumberFormatException e) {
+//			
+//		}
+		
 		String[] parts = id.split("\\.");
 		long nodeId = Long.parseLong(parts[1]);
 		return (int)nodeId;
@@ -40,7 +46,8 @@ public class AddressHelper {
 		return createIP(nodeId);
 	}
 	public static IPAddress createIP(int nodeId) {
-		return new IPAddress(formatIP(nodeId));
+		return new IPAddress(formatIP(encodeIP(10, 0, 0, 0) + nodeId));
+		//return new IPAddress(String.valueOf(nodeId));
 	}
 	
 	public static int encodeIP(int[] bytes) {
