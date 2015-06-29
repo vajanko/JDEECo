@@ -63,7 +63,7 @@ namespace Matsim.Generator
             VehicleGenerator veh = new VehicleGenerator(conf, (int)vehCountEdit.Value);
             veh.Generate();
 
-            ScheduleGenerator sch = new ScheduleGenerator(conf, graph, veh, (int)transitsEdit.Value);
+            ScheduleGenerator sch = new ScheduleGenerator(conf, graph, veh, (int)transitsEdit.Value, (int)groupSizeEdit.Value);
             sch.Generate();
 
             PopulationGenerator pop = new PopulationGenerator(conf, graph, (int)popCountEdit.Value, (int)activitiesEdit.Value);

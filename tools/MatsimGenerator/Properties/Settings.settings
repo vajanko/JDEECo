@@ -53,5 +53,8 @@
     <Setting Name="DepartureCount" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
+    <Setting Name="VehicleGroup" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

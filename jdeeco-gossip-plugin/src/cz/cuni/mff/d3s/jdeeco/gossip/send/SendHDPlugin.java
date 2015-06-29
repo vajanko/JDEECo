@@ -3,9 +3,9 @@ package cz.cuni.mff.d3s.jdeeco.gossip.send;
 import java.util.Collection;
 import java.util.Iterator;
 
-import cz.cuni.mff.d3s.jdeeco.gossip.buffer.HeaderPayload;
+import cz.cuni.mff.d3s.jdeeco.gossip.buffer.MessageHeader;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ItemHeader;
-import cz.cuni.mff.d3s.jdeeco.network.address.Address;
+import cz.cuni.mff.d3s.jdeeco.network.address.MANETBroadcastAddress;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
 import cz.cuni.mff.d3s.jdeeco.network.l2.PacketHeader;
@@ -33,6 +33,11 @@ public class SendHDPlugin extends SendBasePlugin {
 	@Override
 	public void at(long time, Object triger) {
 		
+		publish(time);
+
+		// PULL request on IP network is not implemented
+	}
+	private void publish(long time) {
 		PacketHeader header = new PacketHeader(L2PacketType.MESSAGE_HEADERS);
 		
 		// get messages received by current node or messages received by other nodes
@@ -48,12 +53,12 @@ public class SendHDPlugin extends SendBasePlugin {
 				it.remove();
 		}
 		
-		if (!headers.isEmpty()) {
-			HeaderPayload data = new HeaderPayload(headers);
-			L2Packet packet = new L2Packet(header, data);
-
-			for (Address address : this.addressRegister.getAddresses())
-				this.networkLayer.sendL2Packet(packet, address);
-		}
+		if (headers.isEmpty())
+			return;
+		
+		MessageHeader data = new MessageHeader(headers);
+		L2Packet packet = new L2Packet(header, data);
+		
+		this.networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
 	}
 }

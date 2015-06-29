@@ -12,7 +12,6 @@ import cz.cuni.mff.d3s.jdeeco.core.task.PeriodicTask;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProviderPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
-import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegister;
 import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegisterPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
@@ -25,7 +24,6 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
 public abstract class SendBasePlugin implements TimerTaskListener, DEECoPlugin {
 	
 	protected KnowledgeProviderPlugin knowledgeProvider;
-	protected AddressRegister addressRegister;
 	protected ReceptionBuffer receptionBuffer;
 	protected Layer2 networkLayer;
 	
@@ -68,7 +66,6 @@ public abstract class SendBasePlugin implements TimerTaskListener, DEECoPlugin {
 		this.networkLayer = container.getPluginInstance(Network.class).getL2();
 		this.receptionBuffer = container.getPluginInstance(ReceptionBuffer.class);
 		this.knowledgeProvider = container.getPluginInstance(KnowledgeProviderPlugin.class);
-		this.addressRegister = container.getPluginInstance(AddressRegisterPlugin.class).getRegister();
 		
 		// run PULL knowledge gossip task
 		Scheduler scheduler = container.getRuntimeFramework().getScheduler();

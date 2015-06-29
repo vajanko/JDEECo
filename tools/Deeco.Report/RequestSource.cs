@@ -17,21 +17,35 @@ namespace Deeco.Report
 
         private IEnumerable<string> getLines()
         {
-            if (File.Exists(path))
+            List<string> files = new List<string>();
+            foreach (string part in path.Split(';'))
             {
-                string[] lines = File.ReadAllLines(path);
-                Request.InitHeader(lines[0]);
-                return lines.Skip(1);
+                if (File.Exists(part))
+                    files.Add(part);
+                else
+                    files.AddRange(Directory.EnumerateFiles(path, "*.csv"));
             }
-            else
-            {
-                var files = Directory.EnumerateFiles(path, "*.csv");
-                string first = files.First();
-                string firstLine = File.ReadLines(first).First();
-                Request.InitHeader(firstLine);
 
-                return files.SelectMany(f => { try { return File.ReadAllLines(f).Skip(1); } catch { return Enumerable.Empty<string>(); } });
-            }
+            string firstLine = File.ReadLines(files.First()).First();
+            Request.InitHeader(firstLine);
+
+            return files.SelectMany(f => File.ReadAllLines(f).Skip(1) );
+
+            //if (File.Exists(path))
+            //{
+            //    string[] lines = File.ReadAllLines(path);
+            //    Request.InitHeader(lines[0]);
+            //    return lines.Skip(1);
+            //}
+            //else
+            //{
+            //    var files = Directory.EnumerateFiles(path, "*.csv");
+            //    string first = files.First();
+            //    string firstLine = File.ReadLines(first).First();
+            //    Request.InitHeader(firstLine);
+
+            //    return files.SelectMany(f => { try { return File.ReadAllLines(f).Skip(1); } catch { return Enumerable.Empty<string>(); } });
+            //}
         }
 
         public IEnumerable<Request> GetRequests()

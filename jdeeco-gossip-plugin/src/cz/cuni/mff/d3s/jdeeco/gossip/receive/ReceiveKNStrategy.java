@@ -49,27 +49,29 @@ public class ReceiveKNStrategy extends ReceiveBaseStrategy {
 			// Collect all IDs of component which are coming from the network.
 			// Remember also the time so that we can recognise when some component
 			// is lost and does not participate in the communication any more.
-			KnowledgeData kd = (KnowledgeData)packet.getObject();
-			KnowledgeMetaData meta = kd.getMetaData();
-			
-			// check whether not received more than once
-			if (!receptionBuffer.canReceive(meta.componentId, meta.versionId))
-				return;
-			
-			if (!kmContainer.hasLocal(meta.componentId)) {
-				// not local knowledge add to replica manager
-				for (KnowledgeManager replica : kmContainer.createReplica(meta.componentId)) {
-					try {
-						replica.update(toChangeSet(kd.getKnowledge()));
-					} catch (KnowledgeUpdateException e) {
-						e.printStackTrace();
-					}
+			receive((KnowledgeData)packet.getObject());
+		}
+	}
+	private void receive(KnowledgeData kd) {
+		KnowledgeMetaData meta = kd.getMetaData();
+		
+		// check whether not received more than once
+		if (!receptionBuffer.canReceive(meta.componentId, meta.versionId))
+			return;
+		
+		if (!kmContainer.hasLocal(meta.componentId)) {
+			// not local knowledge add to replica manager
+			for (KnowledgeManager replica : kmContainer.createReplica(meta.componentId)) {
+				try {
+					replica.update(toChangeSet(kd.getKnowledge()));
+				} catch (KnowledgeUpdateException e) {
+					e.printStackTrace();
 				}
 			}
-			
-			// update current version (as well as time) of message received locally
-			receptionBuffer.receiveLocal(meta.componentId, meta.createdAt, meta.versionId);
 		}
+		
+		// update current version (as well as time) of message received locally
+		receptionBuffer.receiveLocal(meta.componentId, meta.createdAt, meta.versionId);
 	}
 	
 	/* (non-Javadoc)

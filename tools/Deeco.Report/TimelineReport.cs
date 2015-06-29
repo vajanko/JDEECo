@@ -10,23 +10,21 @@ namespace Deeco.Report
     /// <summary>
     /// Calculates the number of SENT messages per time
     /// </summary>
-    class TimelineReport
+    class TimelineReport : IReport
     {
         private RequestSource source;
-        private string outputFile;
         private Func<Request, string> versionSelector;
 
         public int Timestep { get; set; }
 
-        public TimelineReport(string inputPath, string outputFile, Func<Request, string> versionSelector)
+        public TimelineReport(string inputPath, Func<Request, string> versionSelector)
         {
             this.source = new RequestSource(inputPath);
-            this.outputFile = outputFile;
             this.versionSelector = versionSelector;
             this.Timestep = 1000;
         }
 
-        public void GenerateReport()
+        public void GenerateReport(string outputFile)
         {
             File.Delete(outputFile);
             using (var writer = new StreamWriter(File.OpenWrite(outputFile)))
@@ -37,7 +35,6 @@ namespace Deeco.Report
                     .Select(r => new
                     {
                         Version = versionSelector(r),
-                        //string.Format("P:{0:F1} C:{1}", r.GetDouble("Probability"), r.GetString("PublishCount")),
                         Time = r.GetInt("Time"),
                     })
                     .GroupBy(i => i.Version)

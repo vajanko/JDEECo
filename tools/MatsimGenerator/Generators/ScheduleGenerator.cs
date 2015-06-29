@@ -26,8 +26,9 @@ namespace Matsim.Generator
 
         public TimeSpan StopTime { get; set; }
         public int Transits { get; private set; }
+        public int GroupSize { get; private set; }
 
-        public ScheduleGenerator(ConfigGenerator conf, Graph network, VehicleGenerator vehicle, int transits)
+        public ScheduleGenerator(ConfigGenerator conf, Graph network, VehicleGenerator vehicle, int transits, int groupSize)
             : base(conf, "Templates/schedule.xml", "schedule.xml", "Templates/transitSchedule_v1.dtd")
         {
             this.vehicle = vehicle;
@@ -35,6 +36,7 @@ namespace Matsim.Generator
 
             StopTime = TimeSpan.FromSeconds(3);
             Transits = transits;
+            GroupSize = groupSize;
         }
         protected override void generateInternal(XDocument doc)
         {
@@ -48,36 +50,16 @@ namespace Matsim.Generator
             // total simulation time in seconds
             double totalTime = (config.End - config.Start).TotalSeconds;
 
-            // generate schedule for each vehicle
-            foreach (XElement veh in vehicle.GetVehicles())
+            // generate schedule for each vehicle group - some of the vehicles has common
+            // schedule so that the size of transit network will be smaller
+            List<string> vehicleIds = new List<string>();
+            foreach (var veh in vehicle.GetVehicles())
             {
-                List<Edge> vehiclePath = new List<Edge>();
+                vehicleIds.Add(veh.GetId());
+                if (vehicleIds.Count < GroupSize)
+                    continue;
 
-                // random start edge
-                Edge start = edges[random(edges.Count)];
-                Edge from = start;
-
-                for (int i = 0; i < Transits; i++)
-                {
-                    // next random edge - find shortest path to it and add it to the vehicle path
-                    int toId = random(edges.Count);
-                    Edge to = edges[toId];
-                    while (from.To == to.To)
-                    {
-                        toId = (toId + 1) % edges.Count;
-                        to = edges[toId];
-                    }
-
-                    IEnumerable<Edge> path = network.FindShortestPath(from.To, to.To);
-                    vehiclePath.AddRange(path);
-
-                    from = to;
-                }
-
-                // return to the source link - the route is a cycle
-                IEnumerable<Edge> backPath = network.FindShortestPath(from.To, start.From);
-                vehiclePath.AddRange(backPath);
-                vehiclePath.Add(start);
+                var vehiclePath = createRandomPath(edges);
 
                 // calculate how long the route will take
                 double length = vehiclePath.Select(e => e.Length).Sum();
@@ -85,15 +67,81 @@ namespace Matsim.Generator
                 TimeSpan routeTime = TimeSpan.FromSeconds(routeSeconds);
 
                 // generate a transit line for particular vehicle
-                schedule.Add(createTransitLine(vehiclePath, routeTime, veh.GetId()));
+                schedule.Add(createTransitLine(ref vehiclePath, routeTime, vehicleIds));
+                // notice that in the previous method call vehiclePath could be changed to only allow
+                // such path which can be travelled during the simulation time
+                // the path is shortened if it is too long, so the transit network will be smaller
 
                 // remember all links through which some vehicle passes
                 foreach (Edge e in vehiclePath)
                     stopEdges.Add(e);
+
+                vehicleIds.Clear();
             }
+            //var enumerator = vehicle.GetVehicles().GetEnumerator();
+            //while (enumerator.MoveNext())
+            //{
+            //    var vehiclePath = createRandomPath(edges);
+
+            //    // calculate how long the route will take
+            //    double length = vehiclePath.Select(e => e.Length).Sum();
+            //    double routeSeconds = vehiclePath.Select(e => e.Length / e.Freespeed + StopTime.TotalSeconds).Sum();
+            //    TimeSpan routeTime = TimeSpan.FromSeconds(routeSeconds);
+
+            //    List<string> vehicleIds = new List<string>();
+            //    for (int c = 0; c < GroupSize; c++)
+            //    {
+            //        vehicleIds.Add(enumerator.Current.GetId());
+            //        if (!enumerator.MoveNext())
+            //            break;
+                    
+            //    }
+
+            //    // generate a transit line for particular vehicle
+            //    schedule.Add(createTransitLine(ref vehiclePath, routeTime, vehicleIds));
+            //    // notice that in the previous method call vehiclePath could be changed to only allow
+            //    // such path which can be travelled during the simulation time
+            //    // the path is shortened if it is too long, so the transit network will be smaller
+
+            //    // remember all links through which some vehicle passes
+            //    foreach (Edge e in vehiclePath)
+            //        stopEdges.Add(e);
+            //}
 
             // generate stop facility at each link throught which same vehicle has passed
             schedule.AddFirst(createTransitStops(edges));
+        }
+        private List<Edge> createRandomPath(List<Edge> edges)
+        {
+            List<Edge> vehiclePath = new List<Edge>();
+
+            // random start edge
+            Edge start = edges[random(edges.Count)];
+            Edge from = start;
+
+            for (int i = 0; i < Transits; i++)
+            {
+                // next random edge - find shortest path to it and add it to the vehicle path
+                int toId = random(edges.Count);
+                Edge to = edges[toId];
+                while (from.To == to.To)
+                {
+                    toId = (toId + 1) % edges.Count;
+                    to = edges[toId];
+                }
+
+                IEnumerable<Edge> path = network.FindShortestPath(from.To, to.To);
+                vehiclePath.AddRange(path);
+
+                from = to;
+            }
+
+            // return to the source link - the route is a cycle
+            IEnumerable<Edge> backPath = network.FindShortestPath(from.To, start.From);
+            vehiclePath.AddRange(backPath);
+            vehiclePath.Add(start);
+
+            return vehiclePath;
         }
 
         protected XElement createTransitStops(IEnumerable<Edge> links)
@@ -120,15 +168,15 @@ namespace Matsim.Generator
             return stop;
         }
 
-        protected XElement createTransitLine(IEnumerable<Edge> path, TimeSpan routeTime, string vehicleId)
+        protected XElement createTransitLine(ref List<Edge> path, TimeSpan routeTime, IEnumerable<string> vehicleId)
         {
             XElement line = new XElement("transitLine",
                 transitLineIds.CreateIdAttr(),
-                createTransitRoute(path, routeTime, vehicleId));
+                createTransitRoute(ref path, routeTime, vehicleId));
 
             return line;
         }
-        protected XElement createTransitRoute(IEnumerable<Edge> path, TimeSpan routeTime, string vehicleId)
+        protected XElement createTransitRoute(ref List<Edge> path, TimeSpan routeTime, IEnumerable<string> vehicleId)
         {
             // we will modify the path if it cannot be passed during the simulation time
             List<Edge> myPath = new List<Edge>();
@@ -140,8 +188,52 @@ namespace Matsim.Generator
                 createRoute(myPath),
                 createDepartures(routeTime, vehicleId));
 
+            path = myPath;
+
             return route;
         }
+        protected XElement createDepartures(TimeSpan routeTime, IEnumerable<string> vehicleIds)
+        {
+            XElement departures = new XElement("departures");
+
+            foreach (string vehicleId in vehicleIds)
+            {
+
+                TimeSpan dept = config.Start + TimeSpan.FromSeconds(random(GroupSize * 2));
+                TimeSpan step = routeTime + StopTime;
+
+                while (dept < config.End)
+                {
+                    departures.Add(createDeparture(dept, vehicleId));
+                    dept += step;
+                }
+            }
+
+            return departures;
+        }
+
+        //protected XElement createTransitLine(IEnumerable<Edge> path, TimeSpan routeTime, string vehicleId)
+        //{
+        //    XElement line = new XElement("transitLine",
+        //        transitLineIds.CreateIdAttr(),
+        //        createTransitRoute(path, routeTime, vehicleId));
+
+        //    return line;
+        //}
+        //protected XElement createTransitRoute(IEnumerable<Edge> path, TimeSpan routeTime, string vehicleId)
+        //{
+        //    // we will modify the path if it cannot be passed during the simulation time
+        //    List<Edge> myPath = new List<Edge>();
+
+        //    XElement route = new XElement("transitRoute",
+        //        transitRouteIds.CreateIdAttr(),
+        //        new XElement("transportMode", "pt"),
+        //        createRouteProfile(path, myPath),
+        //        createRoute(myPath),
+        //        createDepartures(routeTime, vehicleId));
+
+        //    return route;
+        //}
         protected XElement createRouteProfile(IEnumerable<Edge> potentialPath, List<Edge> realPath)
         {
             XElement profile = new XElement("routeProfile");
@@ -190,21 +282,21 @@ namespace Matsim.Generator
 
             return route;
         }
-        protected XElement createDepartures(TimeSpan routeTime, string vehicleId)
-        {
-            XElement departures = new XElement("departures");
+        //protected XElement createDepartures(TimeSpan routeTime, string vehicleId)
+        //{
+        //    XElement departures = new XElement("departures");
 
-            TimeSpan dept = config.Start;
-            TimeSpan step = routeTime + StopTime;
+        //    TimeSpan dept = config.Start;
+        //    TimeSpan step = routeTime + StopTime;
 
-            while (dept < config.End)
-            {
-                departures.Add(createDeparture(dept, vehicleId));
-                dept += step;
-            }
+        //    while (dept < config.End)
+        //    {
+        //        departures.Add(createDeparture(dept, vehicleId));
+        //        dept += step;
+        //    }
 
-            return departures;
-        }
+        //    return departures;
+        //}
         protected XElement createDeparture(TimeSpan time, string vehicleId)
         {
             XElement departure = new XElement("departure",

@@ -10,6 +10,8 @@ import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.BasicKnowledgeSource;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeSource;
 import cz.cuni.mff.d3s.jdeeco.gossip.RecipientSelector;
+import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegister;
+import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegisterPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.address.Address;
 import cz.cuni.mff.d3s.jdeeco.network.address.IPAddress;
 import cz.cuni.mff.d3s.jdeeco.network.address.MANETBroadcastAddress;
@@ -30,6 +32,7 @@ public class SendKNPlugin extends SendBasePlugin {
 	public static final long TASK_PERIOD_DEFAULT = 2000;
 	
 	private IPAddress address;
+	private AddressRegister addressRegister;
 	
 	/**
 	 * Provides source to be published (sent).
@@ -65,6 +68,9 @@ public class SendKNPlugin extends SendBasePlugin {
 	 */
 	@Override
 	public void at(long time, Object triger) {		
+		publish();
+	}
+	private void publish() {
 		for(KnowledgeData data: knowledgeSource.getKnowledge()) {
 			PacketHeader header = new PacketHeader(L2PacketType.KNOWLEDGE);
 			
@@ -93,6 +99,8 @@ public class SendKNPlugin extends SendBasePlugin {
 	@Override
 	public void init(DEECoContainer container) {
 		super.init(container);
+		
+		this.addressRegister = container.getPluginInstance(AddressRegisterPlugin.class).getRegister();
 		
 		this.knowledgeSource = new BasicKnowledgeSource(this.knowledgeProvider);
 		this.recipientSelector = new StaticRecipientSelector(this.addressRegister);

@@ -35,54 +35,57 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.vehCountEdit = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.browseRootButton = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
-            this.outputEdit = new System.Windows.Forms.TextBox();
-            this.configEdit = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.rootEdit = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.endEdit = new System.Windows.Forms.DateTimePicker();
             this.label7 = new System.Windows.Forms.Label();
-            this.startEdit = new System.Windows.Forms.DateTimePicker();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label14 = new System.Windows.Forms.Label();
-            this.transitsEdit = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.activitiesEdit = new System.Windows.Forms.NumericUpDown();
             this.label13 = new System.Windows.Forms.Label();
-            this.popCountEdit = new System.Windows.Forms.NumericUpDown();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.bottomEdit = new System.Windows.Forms.NumericUpDown();
             this.generateEdit = new System.Windows.Forms.RadioButton();
-            this.stepEdit = new System.Windows.Forms.NumericUpDown();
-            this.leftEdit = new System.Windows.Forms.NumericUpDown();
             this.loadEdit = new System.Windows.Forms.RadioButton();
             this.browseNetworkButton = new System.Windows.Forms.Button();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.openFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.label15 = new System.Windows.Forms.Label();
+            this.bottomEdit = new System.Windows.Forms.NumericUpDown();
+            this.stepEdit = new System.Windows.Forms.NumericUpDown();
+            this.leftEdit = new System.Windows.Forms.NumericUpDown();
             this.networkFileEdit = new System.Windows.Forms.TextBox();
             this.widthEdit = new System.Windows.Forms.NumericUpDown();
             this.heightEdit = new System.Windows.Forms.NumericUpDown();
-            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.openFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.activitiesEdit = new System.Windows.Forms.NumericUpDown();
+            this.popCountEdit = new System.Windows.Forms.NumericUpDown();
+            this.transitsEdit = new System.Windows.Forms.NumericUpDown();
+            this.outputEdit = new System.Windows.Forms.TextBox();
+            this.configEdit = new System.Windows.Forms.TextBox();
+            this.rootEdit = new System.Windows.Forms.TextBox();
+            this.endEdit = new System.Windows.Forms.DateTimePicker();
+            this.startEdit = new System.Windows.Forms.DateTimePicker();
+            this.groupSizeEdit = new System.Windows.Forms.NumericUpDown();
+            this.vehCountEdit = new System.Windows.Forms.NumericUpDown();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.vehCountEdit)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.transitsEdit)).BeginInit();
             this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.activitiesEdit)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.popCountEdit)).BeginInit();
             this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bottomEdit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.stepEdit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.leftEdit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.widthEdit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.heightEdit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.activitiesEdit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popCountEdit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.transitsEdit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.groupSizeEdit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.vehCountEdit)).BeginInit();
             this.SuspendLayout();
             // 
             // generateButton
@@ -152,20 +155,6 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Vehicles";
             // 
-            // vehCountEdit
-            // 
-            this.vehCountEdit.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Matsim.Generator.Properties.Settings.Default, "VehicleCount", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.vehCountEdit.Location = new System.Drawing.Point(58, 19);
-            this.vehCountEdit.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.vehCountEdit.Name = "vehCountEdit";
-            this.vehCountEdit.Size = new System.Drawing.Size(74, 20);
-            this.vehCountEdit.TabIndex = 4;
-            this.vehCountEdit.Value = global::Matsim.Generator.Properties.Settings.Default.VehicleCount;
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -214,24 +203,6 @@
             this.label12.TabIndex = 9;
             this.label12.Text = "Output:";
             // 
-            // outputEdit
-            // 
-            this.outputEdit.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Matsim.Generator.Properties.Settings.Default, "Output", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.outputEdit.Location = new System.Drawing.Point(182, 70);
-            this.outputEdit.Name = "outputEdit";
-            this.outputEdit.Size = new System.Drawing.Size(277, 20);
-            this.outputEdit.TabIndex = 8;
-            this.outputEdit.Text = global::Matsim.Generator.Properties.Settings.Default.Output;
-            // 
-            // configEdit
-            // 
-            this.configEdit.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Matsim.Generator.Properties.Settings.Default, "Config", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.configEdit.Location = new System.Drawing.Point(182, 44);
-            this.configEdit.Name = "configEdit";
-            this.configEdit.Size = new System.Drawing.Size(277, 20);
-            this.configEdit.TabIndex = 7;
-            this.configEdit.Text = global::Matsim.Generator.Properties.Settings.Default.Config;
-            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -250,15 +221,6 @@
             this.label10.TabIndex = 5;
             this.label10.Text = "Root:";
             // 
-            // rootEdit
-            // 
-            this.rootEdit.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Matsim.Generator.Properties.Settings.Default, "Root", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.rootEdit.Location = new System.Drawing.Point(182, 18);
-            this.rootEdit.Name = "rootEdit";
-            this.rootEdit.Size = new System.Drawing.Size(277, 20);
-            this.rootEdit.TabIndex = 4;
-            this.rootEdit.Text = global::Matsim.Generator.Properties.Settings.Default.Root;
-            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -267,17 +229,6 @@
             this.label8.Size = new System.Drawing.Size(29, 13);
             this.label8.TabIndex = 3;
             this.label8.Text = "End:";
-            // 
-            // endEdit
-            // 
-            this.endEdit.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Matsim.Generator.Properties.Settings.Default, "End", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.endEdit.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.endEdit.Location = new System.Drawing.Point(44, 44);
-            this.endEdit.Name = "endEdit";
-            this.endEdit.ShowUpDown = true;
-            this.endEdit.Size = new System.Drawing.Size(85, 20);
-            this.endEdit.TabIndex = 2;
-            this.endEdit.Value = global::Matsim.Generator.Properties.Settings.Default.End;
             // 
             // label7
             // 
@@ -288,19 +239,10 @@
             this.label7.TabIndex = 1;
             this.label7.Text = "Start:";
             // 
-            // startEdit
-            // 
-            this.startEdit.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Matsim.Generator.Properties.Settings.Default, "Start", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.startEdit.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.startEdit.Location = new System.Drawing.Point(44, 18);
-            this.startEdit.Name = "startEdit";
-            this.startEdit.ShowUpDown = true;
-            this.startEdit.Size = new System.Drawing.Size(85, 20);
-            this.startEdit.TabIndex = 0;
-            this.startEdit.Value = global::Matsim.Generator.Properties.Settings.Default.Start;
-            // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.groupSizeEdit);
+            this.groupBox4.Controls.Add(this.label15);
             this.groupBox4.Controls.Add(this.label14);
             this.groupBox4.Controls.Add(this.transitsEdit);
             this.groupBox4.Location = new System.Drawing.Point(167, 232);
@@ -318,15 +260,6 @@
             this.label14.Size = new System.Drawing.Size(47, 13);
             this.label14.TabIndex = 6;
             this.label14.Text = "Transits:";
-            // 
-            // transitsEdit
-            // 
-            this.transitsEdit.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Matsim.Generator.Properties.Settings.Default, "TransitCount", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.transitsEdit.Location = new System.Drawing.Point(69, 19);
-            this.transitsEdit.Name = "transitsEdit";
-            this.transitsEdit.Size = new System.Drawing.Size(74, 20);
-            this.transitsEdit.TabIndex = 0;
-            this.transitsEdit.Value = global::Matsim.Generator.Properties.Settings.Default.TransitCount;
             // 
             // label9
             // 
@@ -350,20 +283,6 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Population";
             // 
-            // activitiesEdit
-            // 
-            this.activitiesEdit.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Matsim.Generator.Properties.Settings.Default, "ActivitiesCount", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.activitiesEdit.Location = new System.Drawing.Point(67, 45);
-            this.activitiesEdit.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.activitiesEdit.Name = "activitiesEdit";
-            this.activitiesEdit.Size = new System.Drawing.Size(74, 20);
-            this.activitiesEdit.TabIndex = 8;
-            this.activitiesEdit.Value = global::Matsim.Generator.Properties.Settings.Default.ActivitiesCount;
-            // 
             // label13
             // 
             this.label13.AutoSize = true;
@@ -372,20 +291,6 @@
             this.label13.Size = new System.Drawing.Size(52, 13);
             this.label13.TabIndex = 7;
             this.label13.Text = "Activities:";
-            // 
-            // popCountEdit
-            // 
-            this.popCountEdit.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Matsim.Generator.Properties.Settings.Default, "PopulationCount", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.popCountEdit.Location = new System.Drawing.Point(67, 19);
-            this.popCountEdit.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.popCountEdit.Name = "popCountEdit";
-            this.popCountEdit.Size = new System.Drawing.Size(74, 20);
-            this.popCountEdit.TabIndex = 6;
-            this.popCountEdit.Value = global::Matsim.Generator.Properties.Settings.Default.PopulationCount;
             // 
             // groupBox6
             // 
@@ -410,6 +315,51 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Network";
             // 
+            // generateEdit
+            // 
+            this.generateEdit.AutoSize = true;
+            this.generateEdit.Location = new System.Drawing.Point(22, 55);
+            this.generateEdit.Name = "generateEdit";
+            this.generateEdit.Size = new System.Drawing.Size(69, 17);
+            this.generateEdit.TabIndex = 16;
+            this.generateEdit.Text = "Generate";
+            this.generateEdit.UseVisualStyleBackColor = true;
+            // 
+            // loadEdit
+            // 
+            this.loadEdit.AutoSize = true;
+            this.loadEdit.Checked = true;
+            this.loadEdit.Location = new System.Drawing.Point(22, 23);
+            this.loadEdit.Name = "loadEdit";
+            this.loadEdit.Size = new System.Drawing.Size(49, 17);
+            this.loadEdit.TabIndex = 15;
+            this.loadEdit.TabStop = true;
+            this.loadEdit.Text = "Load";
+            this.loadEdit.UseVisualStyleBackColor = true;
+            // 
+            // browseNetworkButton
+            // 
+            this.browseNetworkButton.Location = new System.Drawing.Point(465, 17);
+            this.browseNetworkButton.Name = "browseNetworkButton";
+            this.browseNetworkButton.Size = new System.Drawing.Size(75, 23);
+            this.browseNetworkButton.TabIndex = 13;
+            this.browseNetworkButton.Text = "Browse ...";
+            this.browseNetworkButton.UseVisualStyleBackColor = true;
+            this.browseNetworkButton.Click += new System.EventHandler(this.browseNetworkButton_Click);
+            // 
+            // openFileDialog
+            // 
+            this.openFileDialog.FileName = "network.xml";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(6, 47);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(53, 13);
+            this.label15.TabIndex = 5;
+            this.label15.Text = "Group by:";
+            // 
             // bottomEdit
             // 
             this.bottomEdit.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Matsim.Generator.Properties.Settings.Default, "Bottom", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
@@ -425,16 +375,6 @@
             this.bottomEdit.TabIndex = 7;
             this.bottomEdit.ThousandsSeparator = true;
             this.bottomEdit.Value = global::Matsim.Generator.Properties.Settings.Default.Bottom;
-            // 
-            // generateEdit
-            // 
-            this.generateEdit.AutoSize = true;
-            this.generateEdit.Location = new System.Drawing.Point(22, 55);
-            this.generateEdit.Name = "generateEdit";
-            this.generateEdit.Size = new System.Drawing.Size(69, 17);
-            this.generateEdit.TabIndex = 16;
-            this.generateEdit.Text = "Generate";
-            this.generateEdit.UseVisualStyleBackColor = true;
             // 
             // stepEdit
             // 
@@ -468,28 +408,6 @@
             this.leftEdit.ThousandsSeparator = true;
             this.leftEdit.Value = global::Matsim.Generator.Properties.Settings.Default.Left;
             // 
-            // loadEdit
-            // 
-            this.loadEdit.AutoSize = true;
-            this.loadEdit.Checked = true;
-            this.loadEdit.Location = new System.Drawing.Point(22, 23);
-            this.loadEdit.Name = "loadEdit";
-            this.loadEdit.Size = new System.Drawing.Size(49, 17);
-            this.loadEdit.TabIndex = 15;
-            this.loadEdit.TabStop = true;
-            this.loadEdit.Text = "Load";
-            this.loadEdit.UseVisualStyleBackColor = true;
-            // 
-            // browseNetworkButton
-            // 
-            this.browseNetworkButton.Location = new System.Drawing.Point(465, 17);
-            this.browseNetworkButton.Name = "browseNetworkButton";
-            this.browseNetworkButton.Size = new System.Drawing.Size(75, 23);
-            this.browseNetworkButton.TabIndex = 13;
-            this.browseNetworkButton.Text = "Browse ...";
-            this.browseNetworkButton.UseVisualStyleBackColor = true;
-            this.browseNetworkButton.Click += new System.EventHandler(this.browseNetworkButton_Click);
-            // 
             // networkFileEdit
             // 
             this.networkFileEdit.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Matsim.Generator.Properties.Settings.Default, "NetworkFile", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
@@ -517,9 +435,119 @@
             this.heightEdit.TabIndex = 3;
             this.heightEdit.Value = global::Matsim.Generator.Properties.Settings.Default.Height;
             // 
-            // openFileDialog
+            // activitiesEdit
             // 
-            this.openFileDialog.FileName = "network.xml";
+            this.activitiesEdit.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Matsim.Generator.Properties.Settings.Default, "ActivitiesCount", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.activitiesEdit.Location = new System.Drawing.Point(67, 45);
+            this.activitiesEdit.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.activitiesEdit.Name = "activitiesEdit";
+            this.activitiesEdit.Size = new System.Drawing.Size(74, 20);
+            this.activitiesEdit.TabIndex = 8;
+            this.activitiesEdit.Value = global::Matsim.Generator.Properties.Settings.Default.ActivitiesCount;
+            // 
+            // popCountEdit
+            // 
+            this.popCountEdit.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Matsim.Generator.Properties.Settings.Default, "PopulationCount", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.popCountEdit.Location = new System.Drawing.Point(67, 19);
+            this.popCountEdit.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.popCountEdit.Name = "popCountEdit";
+            this.popCountEdit.Size = new System.Drawing.Size(74, 20);
+            this.popCountEdit.TabIndex = 6;
+            this.popCountEdit.Value = global::Matsim.Generator.Properties.Settings.Default.PopulationCount;
+            // 
+            // transitsEdit
+            // 
+            this.transitsEdit.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Matsim.Generator.Properties.Settings.Default, "TransitCount", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.transitsEdit.Location = new System.Drawing.Point(69, 19);
+            this.transitsEdit.Name = "transitsEdit";
+            this.transitsEdit.Size = new System.Drawing.Size(74, 20);
+            this.transitsEdit.TabIndex = 0;
+            this.transitsEdit.Value = global::Matsim.Generator.Properties.Settings.Default.TransitCount;
+            // 
+            // outputEdit
+            // 
+            this.outputEdit.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Matsim.Generator.Properties.Settings.Default, "Output", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.outputEdit.Location = new System.Drawing.Point(182, 70);
+            this.outputEdit.Name = "outputEdit";
+            this.outputEdit.Size = new System.Drawing.Size(277, 20);
+            this.outputEdit.TabIndex = 8;
+            this.outputEdit.Text = global::Matsim.Generator.Properties.Settings.Default.Output;
+            // 
+            // configEdit
+            // 
+            this.configEdit.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Matsim.Generator.Properties.Settings.Default, "Config", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.configEdit.Location = new System.Drawing.Point(182, 44);
+            this.configEdit.Name = "configEdit";
+            this.configEdit.Size = new System.Drawing.Size(277, 20);
+            this.configEdit.TabIndex = 7;
+            this.configEdit.Text = global::Matsim.Generator.Properties.Settings.Default.Config;
+            // 
+            // rootEdit
+            // 
+            this.rootEdit.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Matsim.Generator.Properties.Settings.Default, "Root", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.rootEdit.Location = new System.Drawing.Point(182, 18);
+            this.rootEdit.Name = "rootEdit";
+            this.rootEdit.Size = new System.Drawing.Size(277, 20);
+            this.rootEdit.TabIndex = 4;
+            this.rootEdit.Text = global::Matsim.Generator.Properties.Settings.Default.Root;
+            // 
+            // endEdit
+            // 
+            this.endEdit.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Matsim.Generator.Properties.Settings.Default, "End", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.endEdit.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.endEdit.Location = new System.Drawing.Point(44, 44);
+            this.endEdit.Name = "endEdit";
+            this.endEdit.ShowUpDown = true;
+            this.endEdit.Size = new System.Drawing.Size(85, 20);
+            this.endEdit.TabIndex = 2;
+            this.endEdit.Value = global::Matsim.Generator.Properties.Settings.Default.End;
+            // 
+            // startEdit
+            // 
+            this.startEdit.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Matsim.Generator.Properties.Settings.Default, "Start", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.startEdit.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.startEdit.Location = new System.Drawing.Point(44, 18);
+            this.startEdit.Name = "startEdit";
+            this.startEdit.ShowUpDown = true;
+            this.startEdit.Size = new System.Drawing.Size(85, 20);
+            this.startEdit.TabIndex = 0;
+            this.startEdit.Value = global::Matsim.Generator.Properties.Settings.Default.Start;
+            // 
+            // groupSizeEdit
+            // 
+            this.groupSizeEdit.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Matsim.Generator.Properties.Settings.Default, "VehicleGroup", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.groupSizeEdit.Location = new System.Drawing.Point(69, 45);
+            this.groupSizeEdit.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.groupSizeEdit.Name = "groupSizeEdit";
+            this.groupSizeEdit.Size = new System.Drawing.Size(74, 20);
+            this.groupSizeEdit.TabIndex = 6;
+            this.groupSizeEdit.Value = global::Matsim.Generator.Properties.Settings.Default.VehicleGroup;
+            // 
+            // vehCountEdit
+            // 
+            this.vehCountEdit.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Matsim.Generator.Properties.Settings.Default, "VehicleCount", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.vehCountEdit.Location = new System.Drawing.Point(58, 19);
+            this.vehCountEdit.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.vehCountEdit.Name = "vehCountEdit";
+            this.vehCountEdit.Size = new System.Drawing.Size(74, 20);
+            this.vehCountEdit.TabIndex = 4;
+            this.vehCountEdit.Value = global::Matsim.Generator.Properties.Settings.Default.VehicleCount;
             // 
             // MainForm
             // 
@@ -537,16 +565,12 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.vehCountEdit)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.transitsEdit)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.activitiesEdit)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.popCountEdit)).EndInit();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bottomEdit)).EndInit();
@@ -554,6 +578,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.leftEdit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.widthEdit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.heightEdit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.activitiesEdit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popCountEdit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.transitsEdit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.groupSizeEdit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.vehCountEdit)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -601,6 +630,8 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.NumericUpDown transitsEdit;
         private System.Windows.Forms.FolderBrowserDialog openFolderDialog;
+        private System.Windows.Forms.NumericUpDown groupSizeEdit;
+        private System.Windows.Forms.Label label15;
     }
 }
 

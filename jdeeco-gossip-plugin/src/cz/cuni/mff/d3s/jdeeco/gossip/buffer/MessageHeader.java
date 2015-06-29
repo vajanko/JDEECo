@@ -15,7 +15,7 @@ import java.util.Collection;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class HeaderPayload implements Serializable {
+public class MessageHeader implements Serializable {
 	/**
 	 * Generated serial version ID
 	 */
@@ -27,7 +27,7 @@ public class HeaderPayload implements Serializable {
 		return headers;
 	}
 	
-	public HeaderPayload(Collection<ItemHeader> messageHeaders) {
+	public MessageHeader(Collection<ItemHeader> messageHeaders) {
 		this.headers = new ArrayList<ItemHeader>(messageHeaders);
 	}
 	

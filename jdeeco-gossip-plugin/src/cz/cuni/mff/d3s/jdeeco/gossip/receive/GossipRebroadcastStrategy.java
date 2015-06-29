@@ -43,8 +43,8 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 	 */
 	public static final double REBROADCAST_PROBABILITY_DEFAULT = 0.5;
 	
-	public static final String REBROADCAST_COUNT = "deeco.gossipRebroadcast.count";
-	public static final int REBROADCAST_COUNT_DEFAULT = 1;
+	//public static final String REBROADCAST_COUNT = "deeco.gossipRebroadcast.count";
+	//public static final int REBROADCAST_COUNT_DEFAULT = 1;
 	
 	private double probability;
 	private Layer2 networkLayer;
@@ -100,9 +100,6 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 				if (GossipPlugin.generator.nextDouble() < probability) {
 					networkLayer.sendL2Packet(pck, MANETBroadcastAddress.BROADCAST);
 				}
-				
-//				if (meta.hopCount > 4)
-//					return;
 				
 				// rebroadcast to random subset of known nodes
 				for (Address adr : this.knowledgeSender.getRecipientSelector().getRecipients(kd)) {
