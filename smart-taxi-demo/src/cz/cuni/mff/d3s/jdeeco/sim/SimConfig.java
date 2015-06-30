@@ -196,7 +196,7 @@ public class SimConfig {
 	public static final String GOSSIP_DEVICES = "deeco.sim.devices";
 	public static final String GOSSIP_DEVICES_DEFAULT = "";
 	
-	public static final String SIMULATION_DURATION = "deeco.sim.durartion";
+	public static final String SIMULATION_DURATION = "deeco.sim.duration";
 	public static final Long SIMULATION_DURATION_DEFAULT = (long) 60000;
 	
 	public static final String SIMULATION_SIMULATORS = "deeco.sim.simulators";
