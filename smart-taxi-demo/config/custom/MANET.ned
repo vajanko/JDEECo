@@ -63,7 +63,7 @@ network MANET
             	@display("p=391,24");
         }
         
-        node[numNodes]: Node {
+        node[numNodes]: IPNode {
         	useEthernet = ethernet;
         }
         //node[numNodes]: StandardHost { }

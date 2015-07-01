@@ -122,10 +122,10 @@ module Node
         //    parameters:
         //        @display("p=132,406,row,60;q=queue");
         //}
-        //nic802154: <nic802154Type> like IWirelessNic if nic802154Type != "" {
-        //    parameters:
-        //        @display("p=132,406,row,60;q=queue");
-        //}
+        nic802154: <nic802154Type> like IWirelessNic if nic802154Type != "" {
+            parameters:
+                @display("p=132,406,row,60;q=queue");
+        }
         
         eth: <default("EthernetInterface")> like IWiredNic if useEthernet {
             parameters:
@@ -175,9 +175,9 @@ module Node
 
       //# Connect MANET branch
 
-      //if (nic802154Type != "") {
-      //    nic802154.upperLayerOut --> appl.lower802154LayerIn;
-      //    nic802154.upperLayerIn <-- appl.lower802154LayerOut;
-      //}
+      if (nic802154Type != "") {
+          nic802154.upperLayerOut --> appl.lower802154LayerIn;
+          nic802154.upperLayerIn <-- appl.lower802154LayerOut;
+      }
 }
 

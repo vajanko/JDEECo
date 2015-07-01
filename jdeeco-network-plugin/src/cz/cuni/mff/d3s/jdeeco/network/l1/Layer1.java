@@ -188,6 +188,11 @@ public class Layer1 implements L2PacketSender, L1StrategyManager {
 		L1Packet l1Packet;
 		Collector collector = null;
 		CollectorKey key = null;
+		
+		// FIXME: time must be considered
+//		if (collectors.size() > 9)
+//			collectors.clear();
+		
 		int position = 0;
 		while (position < l0Packet.length) {
 			l1Packet = L1Packet.fromBytes(l0Packet, position);
