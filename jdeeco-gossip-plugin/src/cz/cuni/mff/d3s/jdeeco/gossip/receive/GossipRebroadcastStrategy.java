@@ -110,7 +110,6 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 					if (GossipPlugin.generator.nextDouble() < probability) {
 						networkLayer.sendL2Packet(pck, adr);
 					}
-					//networkLayer.sendL2Packet(pck, adr);
 				}
 			}
 		}
