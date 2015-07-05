@@ -68,13 +68,10 @@ public abstract class ActorComponent {
 			@Out("position") ParamHolder<Position> position) {
 		
 		position.value = sensor.getPosition();
-		
-		//OMNeTNative.nativeSetPosition(sensor.getNodeId(), position.value.x, position.value.y, 0);
-		//System.out.println(id + ": " + position.value.toString());
 	}
 	
 	@Process
-	@PeriodicScheduling(period = 1000)
+	@PeriodicScheduling(period = 5000)
 	public static void updateActors(
 			@In("id") String id,
 			@In("sensor") AgentSensor sensor,
@@ -99,8 +96,5 @@ public abstract class ActorComponent {
 			// update time we have seen this agent lastly
 			updates.value.put(aid, time);
 		}
-		
-//		if (!actors.value.getActors().isEmpty())
-//			System.out.println("Current " + id + " actors: " + actors.value);
 	}
 }

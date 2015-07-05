@@ -24,8 +24,8 @@ public class MatsomnPositionTranslator implements PositionTranslator {
 	 */
 	public MatsomnPositionTranslator(Network network) {
 		// calculate position of the edge nodes
-		double minX = 0.0;
-		double minY = 0.0;
+		double minX = Double.MAX_VALUE;
+		double minY = Double.MAX_VALUE;
 		
 		for (Node node : network.getNodes().values()) {
 			Coord c = node.getCoord();

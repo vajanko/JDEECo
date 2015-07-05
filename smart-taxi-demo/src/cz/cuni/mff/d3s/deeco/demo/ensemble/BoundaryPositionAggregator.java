@@ -56,7 +56,7 @@ public class BoundaryPositionAggregator {
 		Position compPos = (Position) data.getKnowledge().getValue(posPath);
 		
 		// less than 2 km
-		boolean rebroadcast = distance(senderPos, compPos) < 1000;
+		boolean rebroadcast = distance(senderPos, compPos) < 500;
 		return rebroadcast;
 	}
 	

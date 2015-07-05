@@ -4,8 +4,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import cz.cuni.mff.d3s.deeco.logging.Log;
@@ -189,9 +191,18 @@ public class Layer1 implements L2PacketSender, L1StrategyManager {
 		Collector collector = null;
 		CollectorKey key = null;
 		
-		// FIXME: time must be considered
-//		if (collectors.size() > 9)
-//			collectors.clear();
+		long time = this.scheduler.getTimer().getCurrentMilliseconds();
+		
+		Iterator<Entry<CollectorKey, Collector>> it = this.collectors.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<CollectorKey, Collector> item = it.next();
+			// FIXME: here should be the knowledge publish period instead
+			// of 25000 constant
+			if (time - item.getValue().getCreatedAt() > 5000) {
+				it.remove();
+				System.out.println("Dropped message");
+			}
+		}
 		
 		int position = 0;
 		while (position < l0Packet.length) {
@@ -201,7 +212,7 @@ public class Layer1 implements L2PacketSender, L1StrategyManager {
 				key = new CollectorKey(l1Packet.dataId, l1Packet.srcNode);
 				collector = collectors.get(key);
 				if (collector == null) {
-					collector = new Collector(l1Packet.totalSize);
+					collector = new Collector(l1Packet.totalSize, time);
 					collectors.put(key, collector);
 				}
 			}
@@ -256,10 +267,21 @@ public class Layer1 implements L2PacketSender, L1StrategyManager {
 		private boolean isComplete = false;
 		/** Indicates whether the value in the isContinue field is valid */
 		private boolean isCompleteValid = true;
+		
+		/**
+		 * Simulation or system time of collector being created. This is necessary
+		 * in order to be able to remove collectors of uncomplete messages.
+		 */
+		private long createdAt;
 
-		public Collector(int totalSize) {
+		public Collector(int totalSize, long createdAt) {
 			this.l1Packets = new LinkedList<L1Packet>();
 			this.map = new boolean[totalSize];
+			this.createdAt = createdAt;
+		}
+		
+		public long getCreatedAt() {
+			return createdAt;
 		}
 
 		/**

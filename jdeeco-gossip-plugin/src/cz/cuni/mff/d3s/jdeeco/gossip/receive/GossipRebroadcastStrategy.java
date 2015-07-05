@@ -74,43 +74,41 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 			KnowledgeData kd = (KnowledgeData)packet.getObject();
 			KnowledgeMetaData meta = kd.getMetaData();
 			
-			if (!withinBoundary(kd))
+			if (!withinBoundary(kd)) {
+				//System.out.println("out of boundary");
+				return;
+			}
+			
+			// do not rebroadcast when receive own local knowledge
+			if (knowledgeProvider.hasLocal(meta.componentId))
 				return;
 			
+			// do not rebroadcast older versions than currently available
+			// because the newer version of this knowledge already has had possibility
+			// to be rebroadcasted
+			if (!receptionBuffer.canReceive(meta.componentId, meta.versionId))
+				return;
+			
+			L2Packet pck = new L2Packet(packet.header, prepareForRebroadcast(kd));
+			
 			if (receptionBuffer.getPulledTag(meta.componentId)) {
-				// if knowledge was pulled it will be rebroadcasted
-				L2Packet pck = new L2Packet(packet.header, prepareForRebroadcast(kd));
+				// pulled knowledge is rebroadcasted
 				networkLayer.sendL2Packet(pck, MANETBroadcastAddress.BROADCAST);
 				receptionBuffer.clearPulledTag(meta.componentId);
 			}
-			else {
-				// do not rebroadcast when receive own local knowledge
-				if (knowledgeProvider.hasLocal(meta.componentId))
-					return;
-				
-				// do not rebroadcast older versions than currently available
-				// because the newer version of this knowledge already has had possibility
-				// to be rebroadcasted
-				if (!receptionBuffer.canReceive(meta.componentId, meta.versionId))
-					return;
-				
-				L2Packet pck = new L2Packet(packet.header, prepareForRebroadcast(kd));
-				
+			else if (GossipPlugin.generator.nextDouble() < probability) {
 				// rebroadcast with certain probability on MANET
-				if (GossipPlugin.generator.nextDouble() < probability) {
-					networkLayer.sendL2Packet(pck, MANETBroadcastAddress.BROADCAST);
-				}
+				networkLayer.sendL2Packet(pck, MANETBroadcastAddress.BROADCAST);
+			}
+			
+			// rebroadcast to random subset of known nodes
+			for (Address adr : this.knowledgeSender.getRecipientSelector().getRecipients(kd)) {
+				if (adr.equals(this.address))
+					continue;
 				
-				// rebroadcast to random subset of known nodes
-				for (Address adr : this.knowledgeSender.getRecipientSelector().getRecipients(kd)) {
-					if (adr.equals(this.address))
-						continue;
-					
-					// rebroadcast with certain probability on IP
-					if (GossipPlugin.generator.nextDouble() < probability) {
-						networkLayer.sendL2Packet(pck, adr);
-					}
-					//networkLayer.sendL2Packet(pck, adr);
+				// rebroadcast with certain probability on IP
+				if (GossipPlugin.generator.nextDouble() < probability) {
+					networkLayer.sendL2Packet(pck, adr);
 				}
 			}
 		}
@@ -123,7 +121,9 @@ public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
 		
 		for (EnsembleDefinition ens: runtimeMetadata.getEnsembleDefinitions()) {
 			// null boundary condition counts as a satisfied one
-			if (ens.getCommunicationBoundary() == null || ens.getCommunicationBoundary().eval(data, sender))
+			if (ens.getCommunicationBoundary() == null)
+				return true;
+			if (ens.getCommunicationBoundary().eval(data, sender))
 				return true;
 		}
 		return false;

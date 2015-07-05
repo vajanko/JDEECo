@@ -16,26 +16,10 @@ public class AddressHelper {
 		return encodeIP(new int[] { a1, a2, a3, a4 });
 	}
 	
-	public static String encodeID(String component, int nodeId) {
-		//int[] ip = decodeIP(nodeId);
-		//return String.format("%s.%d.%d.%d.%d", component, ip[0], ip[1], ip[2], ip[3]);
-		
+	public static String encodeID(String component, int nodeId) {		
 		return String.format("%s.%d", component, nodeId);
 	}
 	public static int decodeID(String id) {
-//		String[] parts = id.split("\\.");
-//		int[] bytes = new int[4];
-//		for (int i = 0; i < 4; ++i)
-//			bytes[i] = Integer.parseInt(parts[i + 1]);
-//		
-//		return encodeIP(bytes);
-		
-//		try {
-//			return Integer.parseInt(id);
-//		} catch (NumberFormatException e) {
-//			
-//		}
-		
 		String[] parts = id.split("\\.");
 		long nodeId = Long.parseLong(parts[1]);
 		return (int)nodeId;
@@ -46,6 +30,11 @@ public class AddressHelper {
 		return createIP(nodeId);
 	}
 	public static IPAddress createIP(int nodeId) {
+//		int ipValue = encodeIP(10, 0, 0, 0) + nodeId;
+//		String ipFormat = formatIP(ipValue);
+//		if (ipFormat.endsWith(".0"))
+//			ipValue += encodeIP(0,1,0,0);
+//		return new IPAddress(formatIP(ipValue));
 		return new IPAddress(formatIP(encodeIP(10, 0, 0, 0) + nodeId));
 		//return new IPAddress(String.valueOf(nodeId));
 	}

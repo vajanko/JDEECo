@@ -121,7 +121,7 @@ namespace Matsim.Generator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public decimal VehicleCount {
             get {
                 return ((decimal)(this["VehicleCount"]));
@@ -236,6 +236,18 @@ namespace Matsim.Generator.Properties {
             }
             set {
                 this["VehicleGroup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public decimal SimStepSize {
+            get {
+                return ((decimal)(this["SimStepSize"]));
+            }
+            set {
+                this["SimStepSize"] = value;
             }
         }
     }

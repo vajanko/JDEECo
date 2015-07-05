@@ -343,6 +343,10 @@ public class SimConfig {
 
 	private static void configureGossip(DEECoNode node) {
 		
+		RequestLoggerPlugin logger = node.getPluginInstance(RequestLoggerPlugin.class);
+		int count = Integer.getInteger(PUBLISH_COUNT, 0);
+		logger.registerParam("PublishCount", new StaticGetter(PUBLISH_COUNT));
+		
 		String features = System.getProperty(GOSSIP_FEATURES, GOSSIP_FEATURES_DEFAULT);
 		if (features.contains("grouper")) {
 			// initialise with grouper address, in the case of grouper with other grouper address
@@ -355,12 +359,8 @@ public class SimConfig {
 			
 			int from = Integer.getInteger(SELECTOR_RANGE_FROM, 0);
 			int to = Integer.getInteger(SELECTOR_RANGE_TO, 0);
-			int count = Integer.getInteger(PUBLISH_COUNT, 0);
-			selector = new RangeRecipientSelector(node.getId(), from, to, count);
 			
-			RequestLoggerPlugin logger = node.getPluginInstance(RequestLoggerPlugin.class);
-			logger.registerParam("PublishCount", new StaticGetter(PUBLISH_COUNT));
-
+			selector = new RangeRecipientSelector(node.getId(), from, to, count);
 			sendKN.setRecipientSelector(selector);
 		}
 	}

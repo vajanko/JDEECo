@@ -83,8 +83,9 @@ public class SendKNPlugin extends SendBasePlugin {
 			for (Address address : this.recipientSelector.getRecipients(data)) {
 				if (this.address.equals(address))
 					continue;
+
 				// select recipients of particular knowledge
-				this.networkLayer.sendL2Packet(packet, address);
+				this.networkLayer.sendL2Packet(packet, address);				
 			}
 			
 			// ... and stores information about last knowledge version

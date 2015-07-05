@@ -125,7 +125,7 @@ void JDEECoApplication::setPosition(double valX, double valY, double valZ) {
         newPosition.y = valY;
         newPosition.z = valZ;
         mobility->setCurrentPosition(newPosition);
-    }
+	}
 }
 
 IMobility *JDEECoApplication::getMobilityModule() {

@@ -13,6 +13,7 @@ public class OMNeTBroadcastDevice extends OMNeTDevice {
 	public int getMTU() {
 		// TODO: Read from OMNeT
 		return 1024;
+				//1024;
 				//128;
 	}
 
