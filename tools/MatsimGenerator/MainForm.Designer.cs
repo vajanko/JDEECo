@@ -44,6 +44,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
@@ -54,7 +55,7 @@
             this.browseNetworkButton = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.openFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
             this.bottomEdit = new System.Windows.Forms.NumericUpDown();
             this.stepEdit = new System.Windows.Forms.NumericUpDown();
             this.leftEdit = new System.Windows.Forms.NumericUpDown();
@@ -63,13 +64,14 @@
             this.heightEdit = new System.Windows.Forms.NumericUpDown();
             this.activitiesEdit = new System.Windows.Forms.NumericUpDown();
             this.popCountEdit = new System.Windows.Forms.NumericUpDown();
+            this.groupSizeEdit = new System.Windows.Forms.NumericUpDown();
             this.transitsEdit = new System.Windows.Forms.NumericUpDown();
+            this.simStepEdit = new System.Windows.Forms.NumericUpDown();
             this.outputEdit = new System.Windows.Forms.TextBox();
             this.configEdit = new System.Windows.Forms.TextBox();
             this.rootEdit = new System.Windows.Forms.TextBox();
             this.endEdit = new System.Windows.Forms.DateTimePicker();
             this.startEdit = new System.Windows.Forms.DateTimePicker();
-            this.groupSizeEdit = new System.Windows.Forms.NumericUpDown();
             this.vehCountEdit = new System.Windows.Forms.NumericUpDown();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -83,8 +85,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.heightEdit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.activitiesEdit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popCountEdit)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.transitsEdit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupSizeEdit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.transitsEdit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.simStepEdit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.vehCountEdit)).BeginInit();
             this.SuspendLayout();
             // 
@@ -166,6 +169,8 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.simStepEdit);
+            this.groupBox3.Controls.Add(this.label16);
             this.groupBox3.Controls.Add(this.browseRootButton);
             this.groupBox3.Controls.Add(this.label12);
             this.groupBox3.Controls.Add(this.outputEdit);
@@ -251,6 +256,15 @@
             this.groupBox4.TabIndex = 4;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Schedule";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(6, 47);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(53, 13);
+            this.label15.TabIndex = 5;
+            this.label15.Text = "Group by:";
             // 
             // label14
             // 
@@ -351,14 +365,14 @@
             // 
             this.openFileDialog.FileName = "network.xml";
             // 
-            // label15
+            // label16
             // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(6, 47);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(53, 13);
-            this.label15.TabIndex = 5;
-            this.label15.Text = "Group by:";
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(5, 73);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(32, 13);
+            this.label16.TabIndex = 12;
+            this.label16.Text = "Step:";
             // 
             // bottomEdit
             // 
@@ -463,6 +477,20 @@
             this.popCountEdit.TabIndex = 6;
             this.popCountEdit.Value = global::Matsim.Generator.Properties.Settings.Default.PopulationCount;
             // 
+            // groupSizeEdit
+            // 
+            this.groupSizeEdit.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Matsim.Generator.Properties.Settings.Default, "VehicleGroup", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.groupSizeEdit.Location = new System.Drawing.Point(69, 45);
+            this.groupSizeEdit.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.groupSizeEdit.Name = "groupSizeEdit";
+            this.groupSizeEdit.Size = new System.Drawing.Size(74, 20);
+            this.groupSizeEdit.TabIndex = 6;
+            this.groupSizeEdit.Value = global::Matsim.Generator.Properties.Settings.Default.VehicleGroup;
+            // 
             // transitsEdit
             // 
             this.transitsEdit.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Matsim.Generator.Properties.Settings.Default, "TransitCount", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
@@ -471,6 +499,20 @@
             this.transitsEdit.Size = new System.Drawing.Size(74, 20);
             this.transitsEdit.TabIndex = 0;
             this.transitsEdit.Value = global::Matsim.Generator.Properties.Settings.Default.TransitCount;
+            // 
+            // simStepEdit
+            // 
+            this.simStepEdit.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Matsim.Generator.Properties.Settings.Default, "SimStepSize", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.simStepEdit.Location = new System.Drawing.Point(44, 70);
+            this.simStepEdit.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.simStepEdit.Name = "simStepEdit";
+            this.simStepEdit.Size = new System.Drawing.Size(84, 20);
+            this.simStepEdit.TabIndex = 13;
+            this.simStepEdit.Value = global::Matsim.Generator.Properties.Settings.Default.SimStepSize;
             // 
             // outputEdit
             // 
@@ -521,20 +563,6 @@
             this.startEdit.TabIndex = 0;
             this.startEdit.Value = global::Matsim.Generator.Properties.Settings.Default.Start;
             // 
-            // groupSizeEdit
-            // 
-            this.groupSizeEdit.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Matsim.Generator.Properties.Settings.Default, "VehicleGroup", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.groupSizeEdit.Location = new System.Drawing.Point(69, 45);
-            this.groupSizeEdit.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.groupSizeEdit.Name = "groupSizeEdit";
-            this.groupSizeEdit.Size = new System.Drawing.Size(74, 20);
-            this.groupSizeEdit.TabIndex = 6;
-            this.groupSizeEdit.Value = global::Matsim.Generator.Properties.Settings.Default.VehicleGroup;
-            // 
             // vehCountEdit
             // 
             this.vehCountEdit.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::Matsim.Generator.Properties.Settings.Default, "VehicleCount", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
@@ -580,8 +608,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.heightEdit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.activitiesEdit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popCountEdit)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.transitsEdit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupSizeEdit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.transitsEdit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.simStepEdit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.vehCountEdit)).EndInit();
             this.ResumeLayout(false);
 
@@ -632,6 +661,8 @@
         private System.Windows.Forms.FolderBrowserDialog openFolderDialog;
         private System.Windows.Forms.NumericUpDown groupSizeEdit;
         private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.NumericUpDown simStepEdit;
     }
 }
 

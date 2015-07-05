@@ -96,7 +96,7 @@ public class OMNeTConfigGenerator {
 		content.append(String.format("%n%n%n# IP Static configuration%n"));
 		for(Node node: nodes) {
 			if(node.ipAddress != null) {
-				content.append(String.format("**.node[%d].configurator.config = xml(<config><interface hosts='**.node[%d]' name='eth' address='%s' netmask='255.255.x.x'/></config>%n", node.ordinal, node.ordinal, node.ipAddress));
+				content.append(String.format("**.node[%d].configurator.config = xml(<config><interface hosts='**.node[%d]' name='eth' address='%s' netmask='255.255.x.x'/></config>%n", node.id, node.id, node.ipAddress));
 			}
 		}
 		

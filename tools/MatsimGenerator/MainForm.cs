@@ -31,7 +31,7 @@ namespace Matsim.Generator
                 throw new NotImplementedException();
 
             ConfigGenerator conf = new ConfigGenerator(rootEdit.Text, configEdit.Text, outputEdit.Text,
-                startEdit.Value.TimeOfDay, endEdit.Value.TimeOfDay, networkFilename);
+                startEdit.Value.TimeOfDay, endEdit.Value.TimeOfDay, (int)simStepEdit.Value, networkFilename);
             conf.Generate();
 
             Graph graph;

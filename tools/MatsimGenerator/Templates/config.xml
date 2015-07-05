@@ -22,6 +22,7 @@
 	<module name="qsim">
     <param name="startTime" value="${start}" />
     <param name="endTime" value="${end}" />
+    <param name="timeStepSize" value="${stepSize}"/>
     <param name="mainMode" value="car" />
 	</module>
   

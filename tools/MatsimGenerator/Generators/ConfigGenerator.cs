@@ -17,10 +17,12 @@ namespace Matsim.Generator
         public string OutputDir { get; private set; }
         public TimeSpan Start { get; private set; }
         public TimeSpan End { get; private set; }
+        public int StepSize { get; private set; }
         public string NetworkFilename { get; private set; }
         
 
-        public ConfigGenerator(string rootDir, string configDir, string outputDir, TimeSpan start, TimeSpan end, string networkFilename)
+        public ConfigGenerator(string rootDir, string configDir, string outputDir, TimeSpan start, TimeSpan end, 
+            int stepSize, string networkFilename)
         {
             this.Generator = new Random(123);
 
@@ -29,6 +31,7 @@ namespace Matsim.Generator
             this.OutputDir = outputDir;
             this.Start = start;
             this.End = end;
+            this.StepSize = stepSize;
             this.NetworkFilename = networkFilename;
         }
         public void Generate()
@@ -41,6 +44,7 @@ namespace Matsim.Generator
             builder.Replace("${start}", Start.ToString());
             builder.Replace("${end}", End.ToString());
             builder.Replace("${network}", NetworkFilename);
+            builder.Replace("${stepSize}", StepSize.ToString());
 
             string targetDir = Path.Combine(RootDir, ConfigDir);
             Directory.CreateDirectory(targetDir);

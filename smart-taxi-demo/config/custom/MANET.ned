@@ -31,9 +31,9 @@ import inet.nodes.ethernet.EtherSwitch;
 network MANET
 {
     parameters:
-        double playgroundSizeX @unit(m) = default(1000m); // x size of the area the nodes are in (in meters)
-        double playgroundSizeY @unit(m) = default(1000m); // y size of the area the nodes are in (in meters)
-        double playgroundSizeZ @unit(m) = default(1000m); // z size of the area the nodes are in (in meters)
+        double playgroundSizeX @unit(m) = default(8000m); // x size of the area the nodes are in (in meters)
+        double playgroundSizeY @unit(m) = default(8000m); // y size of the area the nodes are in (in meters)
+        double playgroundSizeZ @unit(m) = default(10m); // z size of the area the nodes are in (in meters)
         
         int numNodes;
         int numRouters = default(0);
@@ -66,14 +66,12 @@ network MANET
         node[numNodes]: IPNode {
         	useEthernet = ethernet;
         }
-        //node[numNodes]: StandardHost { }
         router[numRouters]: Router {}
         
         //switch: Switch {}
         switch: EtherSwitch {}
         
         configurator: IPv4NetworkConfigurator {
-        //configurator: FlatNetworkConfigurator {
             @display("p=140,50");
         }
     connections allowunconnected:

@@ -27,7 +27,7 @@
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="VehicleCount" Type="System.Decimal" Scope="User">
-      <Value Profile="(Default)">10</Value>
+      <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="PopulationCount" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">10</Value>
@@ -54,6 +54,9 @@
       <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="VehicleGroup" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="SimStepSize" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
   </Settings>

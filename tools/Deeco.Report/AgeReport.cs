@@ -9,9 +9,12 @@ namespace Deeco.Report
 {
     class AgeReport : ReportBase
     {
+        public int Timestep { get; set; }
+
         public AgeReport(string inputPath, Func<Request, string> versionSelector)
             : base(inputPath, versionSelector)
         {
+            this.Timestep = 1000;
         }
 
         protected override void writeReport(StreamWriter writer)
@@ -20,7 +23,7 @@ namespace Deeco.Report
 
             foreach (var item in this.GetRequests()
                 // select retransmited messages
-                .Where(r => r.GetString("Action") == "SEND" && r.GetInt("IsSource") == 0)
+                .Where(r => r.GetString("Action") == "SEND")// && r.GetInt("IsSource") == 0)
                 .Select(r => new
                 {
                     Version = GetVersion(r),
