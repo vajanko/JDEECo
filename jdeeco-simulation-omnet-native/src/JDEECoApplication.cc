@@ -129,7 +129,8 @@ void JDEECoApplication::setPosition(double valX, double valY, double valZ) {
 }
 
 IMobility *JDEECoApplication::getMobilityModule() {
-    IMobility *mobility = check_and_cast<IMobility *>(
-            getParentModule()->getSubmodule("mobility"));
-    return mobility;
+	cModule *mob = getParentModule()->getSubmodule("mobility");
+	if (mob == NULL)
+		return NULL;
+	return check_and_cast<IMobility *>(mob);
 }
