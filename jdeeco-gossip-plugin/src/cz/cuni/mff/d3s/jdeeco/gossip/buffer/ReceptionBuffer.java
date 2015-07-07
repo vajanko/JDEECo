@@ -292,7 +292,7 @@ public class ReceptionBuffer implements L2Strategy, DEECoPlugin {
 	 */
 	public boolean canReceive(String id, long version) {
 		ItemInfo info = buffer.get(id);
-		return info == null || info.version < version;
+		return info == null || info.version <= version;
 	}
 	
 	/**
