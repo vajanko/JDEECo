@@ -28,7 +28,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.device.BroadcastDevice;
 import cz.cuni.mff.d3s.jdeeco.gossip.device.MulticastDevice;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastStrategy;
+import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveHDPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceivePLPlugin;
@@ -284,9 +284,9 @@ public class SimConfig {
 		}
 		
 		if (features.contains("push") || features.contains("pull")) {
-			sim.addPlugin(GossipRebroadcastStrategy.class);
+			sim.addPlugin(GossipRebroadcastPlugin.class);
 			
-			RequestLoggerPlugin.registerStatParam("Probability", new StaticGetter(GossipRebroadcastStrategy.REBROADCAST_PROBABILITY));
+			RequestLoggerPlugin.registerStatParam("Probability", new StaticGetter(GossipRebroadcastPlugin.REBROADCAST_PROBABILITY));
 		}
 		
 		if (features.contains("logger")) {
