@@ -71,7 +71,7 @@ public abstract class ActorComponent {
 	}
 	
 	@Process
-	@PeriodicScheduling(period = 5000)
+	@PeriodicScheduling(period = 1000)
 	public static void updateActors(
 			@In("id") String id,
 			@In("sensor") AgentSensor sensor,

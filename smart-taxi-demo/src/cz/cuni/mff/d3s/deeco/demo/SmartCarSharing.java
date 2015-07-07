@@ -34,6 +34,7 @@ public class SmartCarSharing {
 	 */
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, DEECoException, AnnotationProcessorException, IOException {	
 		String configFile = "./config/test.properties";
+		configFile = "E:/tmp/logs/config10.properties";
 		if (args.length > 0)
 			configFile = args[0];
 		
@@ -42,8 +43,8 @@ public class SmartCarSharing {
 		// this is encoded IP address
 		int nodeId = AddressHelper.encodeIP(0, 0, 0, 0);
 		
-		final int drivers = 200;
-		final int pedestrians = 200;
+		final int drivers = 100;
+		final int pedestrians = 100;
 		
 		for (int i = 1; i <= drivers; ++i) {
 			nodeId++;
