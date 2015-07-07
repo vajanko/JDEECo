@@ -17,11 +17,14 @@ namespace Deeco.Report
 
         public int Timestep { get; set; }
 
-        public TimelineReport(string inputPath, Func<Request, string> versionSelector)
+        public ActionType Action { get; set; }
+
+        public TimelineReport(string inputPath, Func<Request, string> versionSelector, ActionType action = ActionType.SEND)
         {
             this.source = new RequestSource(inputPath);
             this.versionSelector = versionSelector;
             this.Timestep = 1000;
+            Action = ActionType.SEND;
         }
 
         public void GenerateReport(string outputFile)
@@ -29,9 +32,10 @@ namespace Deeco.Report
             File.Delete(outputFile);
             using (var writer = new StreamWriter(File.OpenWrite(outputFile)))
             {
+                string act = this.Action.ToString();
                 writer.WriteLine("Version;Time;Count");
                 foreach (var item in this.source.GetRequests()
-                    .Where(r => r.GetString("Action") == "SEND")
+                    .Where(r => r.GetString("Action") == act && r.GetInt("IsSource") == 0)
                     .Select(r => new
                     {
                         Version = versionSelector(r),

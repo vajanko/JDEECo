@@ -41,6 +41,10 @@ namespace Deeco.Report
             AgeReport boundaryAge = new AgeReport(boundaryInput, version);
             CompareReports("Simple", simpleAge, "Boundary", boundaryAge, "manet_age.csv");
 
+            TimelineReport simpleRcp = new TimelineReport(simpleInput, version, ActionType.RECV);
+            TimelineReport boundaryRcp = new TimelineReport(boundaryInput, version, ActionType.RECV);
+            CompareReports("Simple", simpleRcp, "Boundary", boundaryRcp, "manet_rcp.csv");
+
             //RebroadcastReport simpleRebr = new RebroadcastReport(simpleInput, version);
             //RebroadcastReport boundaryRebr = new RebroadcastReport(boundaryInput, version);
             //CompareReports("Simple", simpleRebr, "Boundary", boundaryRebr, "manet_rebr.csv");
@@ -62,8 +66,8 @@ namespace Deeco.Report
 
         static void Main(string[] args)
         {
-            //manet();
-            infrastructure();
+            manet();
+            //infrastructure();
 
             Console.WriteLine("Done!");
             //Console.ReadKey();
