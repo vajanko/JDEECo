@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!--<!DOCTYPE config SYSTEM "http://www.matsim.org/files/dtd/config_v1.dtd">-->
-<!DOCTYPE config SYSTEM ".\config\matsim\berlin\\config_v1.dtd">
+<!DOCTYPE config SYSTEM ".\config\matsim\berlin\config_v1.dtd">
 <config>
 
 	<module name="network">
@@ -12,7 +12,7 @@
 	</module>
 
 	<module name="controler">
-		<param name="outputDirectory" value=".\output\berlin\" />
+		<param name="outputDirectory" value=".\output\berlin" />
 		<param name="firstIteration" value="0" />
 		<param name="lastIteration" value="0" />
 		<param name="eventsFileFormat" value="xml" />
@@ -21,7 +21,8 @@
 
 	<module name="qsim">
     <param name="startTime" value="06:00:00" />
-    <param name="endTime" value="06:02:00" />
+    <param name="endTime" value="06:15:00" />
+    <param name="timeStepSize" value="1"/>
     <param name="mainMode" value="car" />
 	</module>
   
@@ -31,8 +32,8 @@
   </module>
   
   <module name="transit">
-		<param name="transitScheduleFile" value=".\config\matsim\berlin\\schedule.xml" />
-		<param name="vehiclesFile" value=".\config\matsim\berlin\\vehicles.xml" />
+		<param name="transitScheduleFile" value=".\config\matsim\berlin\schedule.xml" />
+		<param name="vehiclesFile" value=".\config\matsim\berlin\vehicles.xml" />
 		<param name="transitModes" value="pt" />
 	</module>
   
