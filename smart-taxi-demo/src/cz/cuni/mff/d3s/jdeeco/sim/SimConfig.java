@@ -29,9 +29,9 @@ import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.device.BroadcastDevice;
 import cz.cuni.mff.d3s.jdeeco.gossip.device.MulticastDevice;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveHDStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveKNStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceivePLStrategy;
+import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveHDPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveKNPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceivePLPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegister;
 import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegisterPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.send.RangeRecipientSelector;
@@ -271,8 +271,8 @@ public class SimConfig {
 			RequestLoggerPlugin.registerStatParam("LocalTimeout", new StaticGetter(ReceptionBuffer.LOCAL_TIMEOUT));
 			RequestLoggerPlugin.registerStatParam("GlobalTimeout", new StaticGetter(ReceptionBuffer.GLOBAL_TIMEOUT));
 			
-			sim.addPlugin(ReceiveHDStrategy.class);
-			sim.addPlugin(ReceivePLStrategy.class);
+			sim.addPlugin(ReceiveHDPlugin.class);
+			sim.addPlugin(ReceivePLPlugin.class);
 		}
 		
 		if (features.contains("grouper")) {
@@ -306,7 +306,7 @@ public class SimConfig {
 		}
 
 		sim.addPlugin(GossipPlugin.class);
-		sim.addPlugin(ReceiveKNStrategy.class);
+		sim.addPlugin(ReceiveKNPlugin.class);
 	}
 	public static DEECoNode createNode(DEECoSimulation sim, int nodeId) throws InstantiationException, IllegalAccessException, DEECoException {
 		

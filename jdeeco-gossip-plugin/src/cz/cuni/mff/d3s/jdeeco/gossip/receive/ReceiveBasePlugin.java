@@ -20,7 +20,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
  * @see ReceptionBuffer
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public abstract class ReceiveBaseStrategy implements L2Strategy, DEECoPlugin {
+public abstract class ReceiveBasePlugin implements L2Strategy, DEECoPlugin {
 
 	protected ReceptionBuffer receptionBuffer;
 		
