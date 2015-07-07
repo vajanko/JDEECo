@@ -50,7 +50,6 @@ import inet.linklayer.loopback.LoopbackInterface;
 
 module IPNode
 {
-
      parameters:
         @display("i=device/pc2");
         @node;
@@ -62,38 +61,23 @@ module IPNode
         bool forwardMulticast = default(false);
         bool useEthernet = default(false);
         
-        //NIC
-        string nic802154Type = default("");
-        string nic80211Type = default("");
-        
-        string mobilityType = default(numRadios > 0 ? "CustomMobility" : "");
-        
     gates:
-     	input radio80211In @directIn;
-     	input radio802154In @directIn;
       inout ethg @labels(EtherFrame-conn);
       inout direct[];
     submodules:
-
         //Application
         appl: JDEECoApplication {
             parameters:
                 @display("p=70,30;i=app");
         }
         
-        udp: UDP if nic80211Type != "" || useEthernet {
+        udp: UDP if useEthernet {
             parameters:
                 @display("p=329,141");
         }
         
-        // optional mobility module. Required only if wireless cards are present
-        mobility: <mobilityType> like IMobility if mobilityType != "" {
-            parameters:
-                @display("p=53,111");
-        }
-        
         //Network layer
-        networkLayer: NetworkLayer if nic80211Type != "" || useEthernet {
+        networkLayer: NetworkLayer if useEthernet {
             parameters:
                 proxyARP = true;
                 @display("p=329,287;q=queue");
@@ -122,13 +106,6 @@ module IPNode
                 @display("p=368,406,row,60;q=txQueue");
         }
         
-        //Battery
-        //batteryStats: BatteryStats {
-        //    @display("p=60,106;i=block/circle");
-        //}
-        //battery: SimpleBattery {
-        //    @display("p=60,176;i=block/control");
-        //}
         notificationBoard: NotificationBoard {
             parameters:
                 @display("p=53,155;is=s");
