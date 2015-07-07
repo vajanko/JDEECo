@@ -11,7 +11,7 @@ import cz.cuni.mff.d3s.deeco.runners.DEECoSimulation;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastStrategy;
+import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveHDPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceivePLPlugin;
@@ -85,7 +85,7 @@ public class GossipPlugin implements DEECoPlugin {
 		}
 		
 		if (features.contains("push") || features.contains("pull")) {
-			sim.addPlugin(GossipRebroadcastStrategy.class);
+			sim.addPlugin(GossipRebroadcastPlugin.class);
 		}
 		
 		if (features.contains("logger")) {

@@ -17,7 +17,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoComponent;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoEnsemble;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastStrategy;
+import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastPlugin;
 
 /**
  * 
@@ -34,7 +34,7 @@ public class Pulling {
 			
 			double prob = 0.1 * i;
 			String probStr = String.format(Locale.getDefault(), "%.2f", prob);
-			System.getProperties().setProperty(GossipRebroadcastStrategy.REBROADCAST_PROBABILITY, probStr);
+			System.getProperties().setProperty(GossipRebroadcastPlugin.REBROADCAST_PROBABILITY, probStr);
 		
 			SimulationTimer simulationTimer = new DiscreteEventTimer();
 			DEECoSimulation realm = new DEECoSimulation(simulationTimer);

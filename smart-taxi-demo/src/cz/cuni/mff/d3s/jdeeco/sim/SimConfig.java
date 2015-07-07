@@ -20,7 +20,7 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
 import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
 import cz.cuni.mff.d3s.jdeeco.core.ConfigHelper;
-import cz.cuni.mff.d3s.jdeeco.core.EnsembleDeployer;
+import cz.cuni.mff.d3s.jdeeco.core.EnsembleDeployerPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProviderPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.RecipientSelector;
@@ -252,7 +252,7 @@ public class SimConfig {
 		sim.addPlugin(ReceptionBuffer.class);
 		sim.addPlugin(KnowledgeProviderPlugin.class);
 		sim.addPlugin(AddressRegisterPlugin.class);
-		sim.addPlugin(EnsembleDeployer.class);
+		sim.addPlugin(EnsembleDeployerPlugin.class);
 		
 		if (features.contains("push")) {
 			sim.addPlugin(SendKNPlugin.class);
@@ -280,7 +280,7 @@ public class SimConfig {
 			rangeConfig = new DefaultRangeConfigurator(groupers);
 			RequestLoggerPlugin.registerStatParam("Groupers", new StaticGetter(GROUPER_COUNT));
 			
-			EnsembleDeployer.registerPreprocessor(new PartitionedByProcessor());
+			EnsembleDeployerPlugin.registerPreprocessor(new PartitionedByProcessor());
 		}
 		
 		if (features.contains("push") || features.contains("pull")) {

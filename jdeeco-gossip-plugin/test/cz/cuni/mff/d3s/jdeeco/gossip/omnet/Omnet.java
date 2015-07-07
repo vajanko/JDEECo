@@ -15,7 +15,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoComponent;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoEnsemble;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastStrategy;
+import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastPlugin;
 import cz.cuni.mff.d3s.jdeeco.matsim.MatsimPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTSimulation;
 
@@ -46,7 +46,7 @@ public class Omnet {
 		final double prob = 0.5;
 				
 		String probStr = String.format(Locale.getDefault(), "%.2f", prob);
-		System.getProperties().setProperty(GossipRebroadcastStrategy.REBROADCAST_PROBABILITY, probStr);
+		System.getProperties().setProperty(GossipRebroadcastPlugin.REBROADCAST_PROBABILITY, probStr);
 	
 		MatsimPlugin matsim = new MatsimPlugin();
 		OMNeTSimulation omnet = new OMNeTSimulation();

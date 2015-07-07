@@ -10,7 +10,7 @@ import cz.cuni.mff.d3s.deeco.model.runtime.api.EnsembleDefinition;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
-import cz.cuni.mff.d3s.jdeeco.core.EnsembleDeployer;
+import cz.cuni.mff.d3s.jdeeco.core.EnsembleDeployerPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.address.IPAddress;
 
 /**
@@ -40,7 +40,7 @@ public class GrouperAddressRegisterPlugin implements DEECoPlugin {
 	 */
 	@Override
 	public List<Class<? extends DEECoPlugin>> getDependencies() {
-		return Arrays.asList(EnsembleDeployer.class);
+		return Arrays.asList(EnsembleDeployerPlugin.class);
 	}
 
 	/* (non-Javadoc)

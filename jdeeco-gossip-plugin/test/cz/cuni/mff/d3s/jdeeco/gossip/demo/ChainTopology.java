@@ -20,7 +20,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoComponent;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoEnsemble;
 import cz.cuni.mff.d3s.jdeeco.gossip.device.MulticastDevice;
 import cz.cuni.mff.d3s.jdeeco.gossip.device.NetworkLink;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastStrategy;
+import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveHDPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceivePLPlugin;
@@ -60,7 +60,7 @@ public class ChainTopology {
 		realm.addPlugin(ReceiveHDPlugin.class);
 		realm.addPlugin(ReceivePLPlugin.class);
 		
-		realm.addPlugin(GossipRebroadcastStrategy.class);
+		realm.addPlugin(GossipRebroadcastPlugin.class);
 		
 		// create a following topology
 		// 1 --- 3 --- 4 --- 2

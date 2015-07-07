@@ -18,7 +18,7 @@ import cz.cuni.mff.d3s.deeco.runtime.DuplicateEnsembleDefinitionException;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class EnsembleDeployer implements DEECoPlugin {
+public class EnsembleDeployerPlugin implements DEECoPlugin {
 	/**
 	 * Name of property in the configuration file which specifies which
 	 * ensembles should be deployed. This is a list of semicolon separated
