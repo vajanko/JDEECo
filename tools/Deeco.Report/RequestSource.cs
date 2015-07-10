@@ -23,7 +23,7 @@ namespace Deeco.Report
                 if (File.Exists(part))
                     files.Add(part);
                 else
-                    files.AddRange(Directory.EnumerateFiles(path, "*.csv"));
+                    files.AddRange(Directory.EnumerateFiles(part, "*.csv"));
             }
 
             string firstLine = File.ReadLines(files.First()).First();
