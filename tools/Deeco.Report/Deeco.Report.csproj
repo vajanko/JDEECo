@@ -64,6 +64,7 @@
     <Compile Include="ActionType.cs" />
     <Compile Include="Reports\AgeReport.cs" />
     <Compile Include="Reports\CompareReport.cs" />
+    <Compile Include="Reports\CountReport.cs" />
     <Compile Include="Reports\DeliveryReport.cs" />
     <Compile Include="IReport.cs" />
     <Compile Include="Program.cs" />

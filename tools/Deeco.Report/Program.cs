@@ -63,13 +63,13 @@ namespace Deeco.Report
             string simpleInput = GetInPath("ip-simple2");
             string grouperInput = GetInPath("ip-grouper2");
 
-            //TimelineReport simpleTimeline = new TimelineReport(simpleInput, version);
-            //TimelineReport grouperTimeline = new TimelineReport(grouperInput, version);
-            //CompareReports("Simple", simpleTimeline, "Grouper", grouperTimeline, "ip_count.csv");
+            TimelineReport simpleTimeline = new TimelineReport(simpleInput, version);
+            TimelineReport grouperTimeline = new TimelineReport(grouperInput, version);
+            CompareReports("Simple", simpleTimeline, "Grouper", grouperTimeline, "ip_count.csv");
 
             AgeReport simpleAge = new AgeReport(simpleInput, version);
             AgeReport grouperAge = new AgeReport(grouperInput, version);
-            CompareReports("Simple", simpleAge, "Grouper", grouperAge, "ip_age.csv");
+            //CompareReports("Simple", simpleAge, "Grouper", grouperAge, "ip_age.csv");
         }
         void pull()
         {
@@ -84,7 +84,10 @@ namespace Deeco.Report
             string pullInput = GetInPath("manet-pull");
 
             PullReport pullAge = new PullReport(pullInput);
-            pullAge.GenerateReport(GetOutPath("pull_age.csv"));
+            //pullAge.GenerateReport(GetOutPath("pull_age.csv"));
+
+            CountReport pullCount = new CountReport(pullInput);
+            pullCount.GenerateReport(GetOutPath("pull_count.csv"));
 
             //AgeReport simpleAge = new AgeReport(pullInput, version);
             //simpleAge.GenerateReport(GetOutPath("pull_age.csv"));
@@ -93,8 +96,8 @@ namespace Deeco.Report
         void generate()
         {
             //manet();
-            //infrastructure();
-            pull();
+            infrastructure();
+            //pull();
         }
 
         public Program()
