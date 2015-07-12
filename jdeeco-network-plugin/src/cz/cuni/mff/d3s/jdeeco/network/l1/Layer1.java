@@ -197,8 +197,8 @@ public class Layer1 implements L2PacketSender, L1StrategyManager {
 		while (it.hasNext()) {
 			Entry<CollectorKey, Collector> item = it.next();
 			// FIXME: here should be the knowledge publish period instead
-			// of 25000 constant
-			if (time - item.getValue().getCreatedAt() > 5000) {
+			int timeout = Integer.getInteger("deeco.receptionBuffer.globalTimeout");
+			if (time - item.getValue().getCreatedAt() >= timeout) {
 				it.remove();
 				System.out.println("Dropped message");
 			}
