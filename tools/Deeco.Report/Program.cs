@@ -83,21 +83,29 @@ namespace Deeco.Report
             //    );
             string pullInput = GetInPath("manet-pull");
 
+            //List<string> files = new List<string>();
+            //files.AddRange(Directory.EnumerateFiles(pullInput, "*.csv"));
+            //foreach (string file in files)
+            //{
+            //    FileStream stream = File.OpenWrite(file);
+            //    stream.Seek("Node;Time;Action;Type;ComponentId;".Length, SeekOrigin.Begin);
+            //    var bytes = Encoding.ASCII.GetBytes("KN");
+            //    stream.Write(bytes, 0, bytes.Length);
+            //    stream.Close();
+            //}
+
             PullReport pullAge = new PullReport(pullInput);
-            //pullAge.GenerateReport(GetOutPath("pull_age.csv"));
+            pullAge.GenerateReport(GetOutPath("pull_age.csv"));
 
             CountReport pullCount = new CountReport(pullInput);
             pullCount.GenerateReport(GetOutPath("pull_count.csv"));
-
-            //AgeReport simpleAge = new AgeReport(pullInput, version);
-            //simpleAge.GenerateReport(GetOutPath("pull_age.csv"));
         }
 
         void generate()
         {
             //manet();
-            infrastructure();
-            //pull();
+            //infrastructure();
+            pull();
         }
 
         public Program()
