@@ -16,7 +16,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoComponent;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoEnsemble;
 import cz.cuni.mff.d3s.jdeeco.gossip.device.BroadcastDevice;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveKNStrategy;
+import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegisterPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.send.SendKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.grouper.client.GrouperClientEnsemble;
@@ -50,7 +50,7 @@ public class ClientServerTest {
 		sim.addPlugin(SendKNPlugin.class);
 		sim.addPlugin(new BroadcastDevice());
 		sim.addPlugin(new InfrastructureLoopback());
-		sim.addPlugin(ReceiveKNStrategy.class);
+		sim.addPlugin(ReceiveKNPlugin.class);
 		
 		int ip1 = AddressHelper.encodeIP(0, 0, 0, 1);
 		DEECoNode node0 = sim.createNode(ip1, new GrouperClientPlugin());

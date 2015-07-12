@@ -35,7 +35,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class GossipRebroadcastStrategy implements L2Strategy, DEECoPlugin {
+public class GossipRebroadcastPlugin implements L2Strategy, DEECoPlugin {
 
 	public static final String REBROADCAST_PROBABILITY = "deeco.gossipRebroadcast.probability";
 	/**

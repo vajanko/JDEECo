@@ -246,8 +246,6 @@ namespace Matsim.Generator
 
             foreach (Edge link in potentialPath)
             {
-                realPath.Add(link);
-
                 // stop ID is the same as link ID
                 string stopId = link.Id;
                 XElement stop = new XElement("stop", new XAttribute("refId", stopId));
@@ -265,6 +263,7 @@ namespace Matsim.Generator
                 if (time > simTime)
                     break;
 
+                realPath.Add(link);
                 profile.Add(stop);
                 index++;
             }

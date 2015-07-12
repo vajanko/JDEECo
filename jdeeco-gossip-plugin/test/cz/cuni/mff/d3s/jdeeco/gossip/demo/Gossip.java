@@ -16,7 +16,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoComponent;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoEnsemble;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastStrategy;
+import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastPlugin;
 
 /**
  * 
@@ -40,7 +40,7 @@ public class Gossip {
 		
 		for (Double prob = 0.5; prob <= 0.5; prob += 0.1) {
 			
-			System.getProperties().setProperty(GossipRebroadcastStrategy.REBROADCAST_PROBABILITY, prob.toString());
+			System.getProperties().setProperty(GossipRebroadcastPlugin.REBROADCAST_PROBABILITY, prob.toString());
 		
 			SimulationTimer simulationTimer = new DiscreteEventTimer();
 			DEECoSimulation realm = new DEECoSimulation(simulationTimer);

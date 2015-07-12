@@ -66,20 +66,14 @@ network MANET
         node[numNodes]: IPNode {
         	useEthernet = ethernet;
         }
-        router[numRouters]: Router {}
-        
-        //switch: Switch {}
-        switch: EtherSwitch {}
+
+        switch: EtherSwitch {
+        }
         
         configurator: IPv4NetworkConfigurator {
             @display("p=140,50");
         }
     connections allowunconnected:
-        //Connect routers
-        
-        for i=0..numRouters-1 {
-        	router[i].ethg++ <--> {  datarate = 100Mbps; delay = 0.1us; } <--> switch.ethg++ if !ethernet;
-        }
         // 4G:  6Mbps down, 1.5Mbps up, 150ms latency 
         // simulate 4G
         for i=0..numNodes-1 {

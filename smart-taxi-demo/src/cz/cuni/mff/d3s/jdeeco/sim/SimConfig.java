@@ -18,20 +18,24 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoException;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoNode;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
+import cz.cuni.mff.d3s.deeco.timer.DiscreteEventTimer;
+import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
 import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
 import cz.cuni.mff.d3s.jdeeco.core.ConfigHelper;
-import cz.cuni.mff.d3s.jdeeco.core.EnsembleDeployer;
+import cz.cuni.mff.d3s.jdeeco.core.EnsembleDeployerPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProviderPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.RecipientSelector;
 import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ItemHeader;
+import cz.cuni.mff.d3s.jdeeco.gossip.buffer.MessageHeader;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.device.BroadcastDevice;
 import cz.cuni.mff.d3s.jdeeco.gossip.device.MulticastDevice;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveHDStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveKNStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceivePLStrategy;
+import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveHDPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveKNPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceivePLPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegister;
 import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegisterPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.send.RangeRecipientSelector;
@@ -83,11 +87,20 @@ public class SimConfig {
 		 */
 		@Override
 		public String apply(L2Packet t) {
-			if (!t.header.type.equals(L2PacketType.KNOWLEDGE))
-				return "";
+			if (t.header.type.equals(L2PacketType.KNOWLEDGE)) {
+				KnowledgeData kd = (KnowledgeData)t.getObject();
+				return kd.getMetaData().componentId;
+			}
+			else if (t.header.type.equals(L2PacketType.PULL_REQUEST)) {
+				MessageHeader hd = (MessageHeader)t.getObject();
+				StringBuilder str = new StringBuilder();
+				for (ItemHeader it : hd.getHeaders()) {
+					str.append(it.id + ", ");
+				}
+				return str.substring(0, str.length() - 2);
+			}
 			
-			KnowledgeData kd = (KnowledgeData)t.getObject();
-			return kd.getMetaData().componentId;
+			return "";
 		}
 	}
 	static class SourceGetter implements Function<L2Packet, String> {
@@ -238,6 +251,10 @@ public class SimConfig {
 			
 			sim.addPlugin(omnet);
 		}
+		else {
+			SimulationTimer deeco = new DiscreteEventTimer();
+			sim = new DEECoSimulation(deeco);
+		}
 		
 		configureSimulation(sim);
 		
@@ -252,13 +269,14 @@ public class SimConfig {
 		sim.addPlugin(ReceptionBuffer.class);
 		sim.addPlugin(KnowledgeProviderPlugin.class);
 		sim.addPlugin(AddressRegisterPlugin.class);
-		sim.addPlugin(EnsembleDeployer.class);
+		sim.addPlugin(EnsembleDeployerPlugin.class);
 		
 		if (features.contains("push")) {
 			sim.addPlugin(SendKNPlugin.class);
 			RequestLoggerPlugin.registerStatParam("ComponentId", new ComponentIdGetter());
-			RequestLoggerPlugin.registerStatParam("HDPeriod", new StaticGetter(SendKNPlugin.TASK_PERIOD));
+			RequestLoggerPlugin.registerStatParam("KNPeriod", new StaticGetter(SendKNPlugin.TASK_PERIOD));
 			RequestLoggerPlugin.registerStatParam("IsSource", new SourceGetter());
+			sim.addPlugin(ReceiveKNPlugin.class);
 		}
 		
 		if (features.contains("pull")) {
@@ -271,8 +289,8 @@ public class SimConfig {
 			RequestLoggerPlugin.registerStatParam("LocalTimeout", new StaticGetter(ReceptionBuffer.LOCAL_TIMEOUT));
 			RequestLoggerPlugin.registerStatParam("GlobalTimeout", new StaticGetter(ReceptionBuffer.GLOBAL_TIMEOUT));
 			
-			sim.addPlugin(ReceiveHDStrategy.class);
-			sim.addPlugin(ReceivePLStrategy.class);
+			sim.addPlugin(ReceiveHDPlugin.class);
+			sim.addPlugin(ReceivePLPlugin.class);
 		}
 		
 		if (features.contains("grouper")) {
@@ -280,13 +298,13 @@ public class SimConfig {
 			rangeConfig = new DefaultRangeConfigurator(groupers);
 			RequestLoggerPlugin.registerStatParam("Groupers", new StaticGetter(GROUPER_COUNT));
 			
-			EnsembleDeployer.registerPreprocessor(new PartitionedByProcessor());
+			EnsembleDeployerPlugin.registerPreprocessor(new PartitionedByProcessor());
 		}
 		
 		if (features.contains("push") || features.contains("pull")) {
-			sim.addPlugin(GossipRebroadcastStrategy.class);
+			sim.addPlugin(GossipRebroadcastPlugin.class);
 			
-			RequestLoggerPlugin.registerStatParam("Probability", new StaticGetter(GossipRebroadcastStrategy.REBROADCAST_PROBABILITY));
+			RequestLoggerPlugin.registerStatParam("Probability", new StaticGetter(GossipRebroadcastPlugin.REBROADCAST_PROBABILITY));
 		}
 		
 		if (features.contains("logger")) {
@@ -306,7 +324,6 @@ public class SimConfig {
 		}
 
 		sim.addPlugin(GossipPlugin.class);
-		sim.addPlugin(ReceiveKNStrategy.class);
 	}
 	public static DEECoNode createNode(DEECoSimulation sim, int nodeId) throws InstantiationException, IllegalAccessException, DEECoException {
 		

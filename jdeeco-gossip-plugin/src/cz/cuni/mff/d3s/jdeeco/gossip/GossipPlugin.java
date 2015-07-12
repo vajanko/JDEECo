@@ -11,10 +11,10 @@ import cz.cuni.mff.d3s.deeco.runners.DEECoSimulation;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveHDStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveKNStrategy;
-import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceivePLStrategy;
+import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveHDPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveKNPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceivePLPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegisterPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.send.SendHDPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.send.SendKNPlugin;
@@ -80,12 +80,12 @@ public class GossipPlugin implements DEECoPlugin {
 			sim.addPlugin(SendHDPlugin.class);
 			sim.addPlugin(SendPLPlugin.class);
 			
-			sim.addPlugin(ReceiveHDStrategy.class);
-			sim.addPlugin(ReceivePLStrategy.class);
+			sim.addPlugin(ReceiveHDPlugin.class);
+			sim.addPlugin(ReceivePLPlugin.class);
 		}
 		
 		if (features.contains("push") || features.contains("pull")) {
-			sim.addPlugin(GossipRebroadcastStrategy.class);
+			sim.addPlugin(GossipRebroadcastPlugin.class);
 		}
 		
 		if (features.contains("logger")) {
@@ -101,7 +101,7 @@ public class GossipPlugin implements DEECoPlugin {
 //		}
 
 		sim.addPlugin(GossipPlugin.class);
-		sim.addPlugin(ReceiveKNStrategy.class);
+		sim.addPlugin(ReceiveKNPlugin.class);
 	}
 
 }

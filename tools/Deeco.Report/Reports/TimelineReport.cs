@@ -35,7 +35,7 @@ namespace Deeco.Report
                 string act = this.Action.ToString();
                 writer.WriteLine("Version;Time;Count");
                 foreach (var item in this.source.GetRequests()
-                    .Where(r => r.GetString("Action") == act && r.GetInt("IsSource") == 0)
+                    .Where(r => r.GetString("Action") == act)
                     .Select(r => new
                     {
                         Version = versionSelector(r),

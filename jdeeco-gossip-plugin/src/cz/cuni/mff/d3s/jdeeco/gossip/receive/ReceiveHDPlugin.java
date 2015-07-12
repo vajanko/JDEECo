@@ -11,7 +11,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class ReceiveHDStrategy extends ReceiveBaseStrategy {
+public class ReceiveHDPlugin extends ReceiveBasePlugin {
 	
 	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy#processL2Packet(cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet)

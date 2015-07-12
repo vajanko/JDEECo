@@ -19,7 +19,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class ReceiveKNStrategy extends ReceiveBaseStrategy {
+public class ReceiveKNPlugin extends ReceiveBasePlugin {
 	
 	protected KnowledgeManagerContainer kmContainer;
 	

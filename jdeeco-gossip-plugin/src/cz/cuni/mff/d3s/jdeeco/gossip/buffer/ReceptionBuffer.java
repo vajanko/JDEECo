@@ -292,7 +292,7 @@ public class ReceptionBuffer implements L2Strategy, DEECoPlugin {
 	 */
 	public boolean canReceive(String id, long version) {
 		ItemInfo info = buffer.get(id);
-		return info == null || info.version <= version;
+		return info == null || info.version < version;
 	}
 	
 	/**
@@ -355,7 +355,7 @@ public class ReceptionBuffer implements L2Strategy, DEECoPlugin {
 	@Override
 	public void init(DEECoContainer container) {
 		// register L2 strategy
-		Layer2 networkLayer = container.getPluginInstance(Network.class).getL2();
-		networkLayer.registerL2Strategy(this);
+//		Layer2 networkLayer = container.getPluginInstance(Network.class).getL2();
+//		networkLayer.registerL2Strategy(this);
 	}
 }

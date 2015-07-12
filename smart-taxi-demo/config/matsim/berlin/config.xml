@@ -21,7 +21,7 @@
 
 	<module name="qsim">
     <param name="startTime" value="06:00:00" />
-    <param name="endTime" value="06:15:00" />
+    <param name="endTime" value="06:05:00" />
     <param name="timeStepSize" value="1"/>
     <param name="mainMode" value="car" />
 	</module>

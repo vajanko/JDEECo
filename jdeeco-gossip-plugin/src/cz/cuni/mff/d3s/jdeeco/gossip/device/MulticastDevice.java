@@ -74,6 +74,14 @@ public class MulticastDevice implements DEECoPlugin {
 		public void send(byte[] data, Address notUsed) {
 			// Schedule packet delivery
 			PacketWrapper packet = new PacketWrapper(data, this);
+			
+			// for demonstration purpose only
+//			long time = MulticastDevice.this.scheduler.getTimer().getCurrentMilliseconds();
+//			if (time > 20000) {
+//				if (packet.sender.id.equals("1"))
+//					return;
+//			}
+			
 			Scheduler scheduler = MulticastDevice.this.scheduler;
 			scheduler.addTask(new CustomStepTask(scheduler, new DeliveryListener(packet)));
 		}

@@ -6,7 +6,7 @@ $classPath = "C:\Projects\JDEECo\smart-taxi-demo\target\classes;C:\Projects\JDEE
 $logDir = "E:/tmp/logs/"
 #"$($currentDir)logs/tmp/"
 $matsimConfig = "$($currentDir)config/matsim/berlin/config.xml"
-$maxThreads = 3
+$maxThreads = 4
 
 $template = "$($currentDir)config/template.properties"
 $duration = 900000   # 15 minutes
@@ -74,7 +74,7 @@ function RunJob($id)
         $logDir = [System.IO.Path]::GetDirectoryName($configFile)
 
         cd $currentDir
-        c:\ProgramFiles\java\jdk8_x86\bin\java.exe '-classpath' $classPath $mainClass $configFile 2>&1 > "$logDir/out$($id).out"
+        c:\ProgramFiles\java\jdk8_x86\bin\java.exe -Xms1500M '-classpath' $classPath $mainClass $configFile 2>&1 > "$logDir/out$($id).out"
 
     } -ArgumentList $id, $configFile, $mainClass, $classPath, $currentDir
     Register-ObjectEvent -InputObject $job -EventName StateChanged -Action { 
@@ -186,7 +186,7 @@ function IPSimple($id)
             $pubCount = $i # number of known nodes
             $prob = 0.1 * $j
             $features = ('logger;push')
-            $ensembles = "cz.cuni.mff.d3s.deeco.demo.ensemble.SimplePositionAggregator"
+            $ensembles = "cz.cuni.mff.d3s.deeco.demo.ensemble.BoundaryPositionAggregator"
             $devices = "omnet-infrastructure"
             $globTime = $knPer * 3
             $grpCount = 0
@@ -280,11 +280,13 @@ function RunConfigs
 # prepare the script for running
 #InitEnv
 
+$duration = 300000   # 5 minutes
+
 #MANETSimple(1)
-#MANETBoundary(12)
+#MANETBoundary(12)#
 #IPSimple(23)
-#IPGrouper(40)
-#MANETPull(58)
+#IPGrouper(41)
+#MANETPull(59)
 
 RunConfigs
 
