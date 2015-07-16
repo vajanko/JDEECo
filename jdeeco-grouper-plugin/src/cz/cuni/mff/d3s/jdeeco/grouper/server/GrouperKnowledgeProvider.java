@@ -14,7 +14,7 @@ import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeDataHelper;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
-import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeSource;
+import cz.cuni.mff.d3s.jdeeco.core.KnowledgeSource;
 import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegister;
 import cz.cuni.mff.d3s.jdeeco.grouper.GrouperRegister;
 import cz.cuni.mff.d3s.jdeeco.grouper.GrouperRole;
