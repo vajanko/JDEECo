@@ -7,7 +7,6 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
-import cz.cuni.mff.d3s.jdeeco.core.BasicKnowledgeSource;
 import cz.cuni.mff.d3s.jdeeco.core.KnowledgeSource;
 import cz.cuni.mff.d3s.jdeeco.gossip.AddressRegister;
 import cz.cuni.mff.d3s.jdeeco.gossip.AddressRegisterPlugin;
@@ -103,8 +102,8 @@ public class SendKNPlugin extends SendBasePlugin {
 		
 		this.addressRegister = container.getPluginInstance(AddressRegisterPlugin.class).getRegister();
 		
-		this.knowledgeSource = new BasicKnowledgeSource(this.knowledgeProvider);
-		this.recipientSelector = new StaticRecipientSelector(this.addressRegister);
+		this.setKnowledgeSource(this.knowledgeProvider);
+		this.setRecipientSelector(new StaticRecipientSelector(this.addressRegister));
 		
 		this.address = AddressHelper.createIP(container.getId());
 	}

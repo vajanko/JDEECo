@@ -31,7 +31,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.ReceptionBuffer;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class KnowledgeProviderPlugin implements DEECoPlugin, KnowledgeProvider {
+public class KnowledgeProviderPlugin implements DEECoPlugin, KnowledgeProvider, KnowledgeSource {
 	
 	private ReceptionBuffer receptionBuffer;
 	private KnowledgeManagerContainer kmContainer;
@@ -59,6 +59,15 @@ public class KnowledgeProviderPlugin implements DEECoPlugin, KnowledgeProvider {
 	public Collection<KnowledgeData> getReplicaKnowledgeData() {
 		return getKnowledgeDataCopy(kmContainer.getReplicas(), false);
 	}
+	
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.jdeeco.core.KnowledgeSource#getKnowledge()
+	 */
+	@Override
+	public Collection<KnowledgeData> getKnowledge() {
+		return getLocalKnowledgeData();
+	}
+	
 	/**
 	 * Create a copy of given knowledge data prepared for network transfer. This
 	 * implies without data marked with {@link cz.cuni.mff.d3s.deeco.annotations.Local} annotation.
@@ -192,6 +201,4 @@ public class KnowledgeProviderPlugin implements DEECoPlugin, KnowledgeProvider {
 		RuntimeMetadataFactory factory = RuntimeMetadataFactoryExt.eINSTANCE;
 		emptyPath.add(factory.createKnowledgePath());
 	}
-
-	
 }
