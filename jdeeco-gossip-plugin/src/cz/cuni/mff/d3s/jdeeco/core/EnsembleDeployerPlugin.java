@@ -30,6 +30,10 @@ public class EnsembleDeployerPlugin implements DEECoPlugin {
 	 */
 	public static final String DEPLOY_ENSEMBLES_DEFAULT = "";
 	
+	/**
+	 * Collection of custom annotation preprocessors which should be added before the ensembles
+	 * are deployed on the node. 
+	 */
 	private static ArrayList<AnnotationProcessorExtensionPoint> preprocessors = new ArrayList<AnnotationProcessorExtensionPoint>();
 	
 	/**
