@@ -4,7 +4,10 @@
 package cz.cuni.mff.d3s.jdeeco.gossip.buffer;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
+
+import cz.cuni.mff.d3s.jdeeco.core.ExtensibleStorage;
 
 /**
  * 

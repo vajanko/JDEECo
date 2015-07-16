@@ -18,7 +18,7 @@ import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
 import cz.cuni.mff.d3s.jdeeco.core.ConfigHelper;
 import cz.cuni.mff.d3s.jdeeco.core.KnowledgeProviderPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipHelper;
-import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
+import cz.cuni.mff.d3s.jdeeco.gossip.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.send.SendKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.address.Address;

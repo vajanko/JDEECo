@@ -3,8 +3,8 @@ package cz.cuni.mff.d3s.jdeeco.gossip.send;
 import java.util.Collection;
 
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
-import cz.cuni.mff.d3s.jdeeco.gossip.buffer.MessageHeader;
-import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ItemHeader;
+import cz.cuni.mff.d3s.jdeeco.gossip.ItemHeader;
+import cz.cuni.mff.d3s.jdeeco.gossip.MessageHeader;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.address.MANETBroadcastAddress;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;

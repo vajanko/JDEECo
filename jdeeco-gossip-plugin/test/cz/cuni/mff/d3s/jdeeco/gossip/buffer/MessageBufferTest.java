@@ -7,6 +7,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import cz.cuni.mff.d3s.jdeeco.core.MessageBuffer;
+
 /**
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
