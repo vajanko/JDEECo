@@ -10,9 +10,9 @@ import cz.cuni.mff.d3s.deeco.task.TimerTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
 import cz.cuni.mff.d3s.jdeeco.core.KnowledgeProviderPlugin;
 import cz.cuni.mff.d3s.jdeeco.core.PeriodicTask;
+import cz.cuni.mff.d3s.jdeeco.gossip.AddressRegisterPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.GossipHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.ReceptionBuffer;
-import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegisterPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
 

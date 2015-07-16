@@ -6,7 +6,7 @@ package cz.cuni.mff.d3s.jdeeco.grouper;
 import java.util.Collection;
 import java.util.HashMap;
 
-import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegister;
+import cz.cuni.mff.d3s.jdeeco.gossip.AddressRegister;
 import cz.cuni.mff.d3s.jdeeco.network.address.Address;
 
 /**

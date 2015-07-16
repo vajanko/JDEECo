@@ -12,7 +12,7 @@ import cz.cuni.mff.d3s.deeco.annotations.Local;
 import cz.cuni.mff.d3s.deeco.annotations.TriggerOnChange;
 import cz.cuni.mff.d3s.deeco.annotations.Process;
 import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
-import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegister;
+import cz.cuni.mff.d3s.jdeeco.gossip.AddressRegister;
 import cz.cuni.mff.d3s.jdeeco.grouper.GrouperRole;
 import cz.cuni.mff.d3s.jdeeco.network.address.IPAddress;
 

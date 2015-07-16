@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cz.cuni.mff.d3s.jdeeco.gossip.register;
+package cz.cuni.mff.d3s.jdeeco.gossip;
 
 import java.util.Arrays;
 import java.util.List;
