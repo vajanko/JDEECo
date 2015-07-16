@@ -30,6 +30,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l1.ReceivedInfo;
  * delay) to destination loop device.
  * 
  * @author Vladimir Matena <matena@d3s.mff.cuni.cz>
+ * @author Ondrej Kov·Ë <info@vajanko.me>
  *
  */
 public class MulticastDevice implements DEECoPlugin {
@@ -39,6 +40,21 @@ public class MulticastDevice implements DEECoPlugin {
 	
 	public static final String MULTICAST_TOPOLOGY = "deeco.multicast.topology";
 	public static final String MULTICAST_TOPOLOGY_DEFAULT = "";
+	
+	/**
+	 * 
+	 * @author Ondrej Kov·Ë <info@vajanko.me>
+	 */
+	private class NetworkLink {
+		
+		public int node1;
+		public int node2;
+		
+		public NetworkLink(int node1, int node2) {
+			this.node1 = node1;
+			this.node2 = node2;
+		}
+	}
 	
 	/**
 	 * Loop device used to provide broadcast device to layer 1
