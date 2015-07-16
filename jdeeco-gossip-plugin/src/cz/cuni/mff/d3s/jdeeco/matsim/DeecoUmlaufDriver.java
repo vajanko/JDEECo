@@ -1,14 +1,12 @@
 /**
  * 
  */
-package cz.cuni.mff.d3s.jdeeco.matsim.transit;
+package cz.cuni.mff.d3s.jdeeco.matsim;
 
 import org.matsim.core.mobsim.qsim.InternalInterface;
 import org.matsim.core.mobsim.qsim.pt.TransitStopAgentTracker;
 import org.matsim.core.mobsim.qsim.pt.UmlaufDriver;
 import org.matsim.pt.Umlauf;
-
-import cz.cuni.mff.d3s.jdeeco.matsim.DeecoAgent;
 
 /**
  * 

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cz.cuni.mff.d3s.jdeeco.matsim.transit;
+package cz.cuni.mff.d3s.jdeeco.matsim;
 
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.mobsim.qsim.agents.AgentFactory;

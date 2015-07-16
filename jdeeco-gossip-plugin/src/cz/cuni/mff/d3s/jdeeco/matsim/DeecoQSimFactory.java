@@ -23,9 +23,6 @@ import org.matsim.core.mobsim.qsim.qnetsimengine.ParallelQNetsimEngineFactory;
 import org.matsim.core.mobsim.qsim.qnetsimengine.QNetsimEngine;
 import org.matsim.core.mobsim.qsim.qnetsimengine.QNetsimEngineFactory;
 
-import cz.cuni.mff.d3s.jdeeco.matsim.transit.DeecoTransitDriverFactory;
-import cz.cuni.mff.d3s.jdeeco.matsim.transit.PassengerAgentFactory;
-
 /**
  * Extension of {@link QSimFactory} which only creates one instance and then always returns
  * the same one.
