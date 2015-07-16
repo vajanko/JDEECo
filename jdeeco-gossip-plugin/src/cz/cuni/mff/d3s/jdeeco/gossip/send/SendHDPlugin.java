@@ -3,12 +3,16 @@ package cz.cuni.mff.d3s.jdeeco.gossip.send;
 import java.util.Collection;
 import java.util.Iterator;
 
+import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.MessageHeader;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ItemHeader;
+import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.address.MANETBroadcastAddress;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
 import cz.cuni.mff.d3s.jdeeco.network.l2.PacketHeader;
+import cz.cuni.mff.d3s.jdeeco.network.marshaller.MarshallerRegistry;
+import cz.cuni.mff.d3s.jdeeco.network.marshaller.SerializingMarshaller;
 
 /**
  * Broadcasts headers of received messages on the current node.
@@ -60,5 +64,17 @@ public class SendHDPlugin extends SendBasePlugin {
 		L2Packet packet = new L2Packet(header, data);
 		
 		this.networkLayer.sendL2Packet(packet, MANETBroadcastAddress.BROADCAST);
+	}
+	
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.jdeeco.gossip.send.SendBasePlugin#init(cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)
+	 */
+	@Override
+	public void init(DEECoContainer container) {
+		super.init(container);
+		
+		Network network = container.getPluginInstance(Network.class);
+		MarshallerRegistry registry = network.getL2().getMarshallers();
+		registry.registerMarshaller(L2PacketType.MESSAGE_HEADERS, new SerializingMarshaller());
 	}
 }

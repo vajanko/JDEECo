@@ -10,7 +10,7 @@ import cz.cuni.mff.d3s.deeco.task.TimerTask;
 import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
 import cz.cuni.mff.d3s.jdeeco.core.KnowledgeProviderPlugin;
 import cz.cuni.mff.d3s.jdeeco.core.PeriodicTask;
-import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.GossipHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegisterPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
@@ -35,7 +35,7 @@ public abstract class SendBasePlugin implements TimerTaskListener, DEECoPlugin {
 	 */
 	public SendBasePlugin(long period) {
 		this.period = period;
-		this.delay = GossipPlugin.generator.nextInt((int)period);
+		this.delay = GossipHelper.generator.nextInt((int)period);
 	}
 		
 	/* (non-Javadoc)

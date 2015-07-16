@@ -3,10 +3,14 @@
  */
 package cz.cuni.mff.d3s.jdeeco.gossip.receive;
 
+import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.MessageHeader;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ItemHeader;
+import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
 import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
+import cz.cuni.mff.d3s.jdeeco.network.marshaller.MarshallerRegistry;
+import cz.cuni.mff.d3s.jdeeco.network.marshaller.SerializingMarshaller;
 
 /**
  * Strategy for processing headers of pulled messages.
@@ -46,5 +50,17 @@ public class ReceivePLPlugin extends ReceiveBasePlugin {
 			// make this knowledge as PULLed, will be broadcasted when present
 			//messageBuffer.notifyPull(header.id);
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveBasePlugin#init(cz.cuni.mff.d3s.deeco.runtime.DEECoContainer)
+	 */
+	@Override
+	public void init(DEECoContainer container) {
+		super.init(container);
+		
+		Network network = container.getPluginInstance(Network.class);
+		MarshallerRegistry registry = network.getL2().getMarshallers();
+		registry.registerMarshaller(L2PacketType.PULL_REQUEST, new SerializingMarshaller());
 	}
 }

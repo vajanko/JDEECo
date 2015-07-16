@@ -8,7 +8,7 @@ import java.util.HashSet;
 
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
-import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.GossipHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.RecipientSelector;
 import cz.cuni.mff.d3s.jdeeco.network.address.Address;
 
@@ -42,7 +42,7 @@ public class RangeRecipientSelector implements RecipientSelector {
 	public Collection<Address> getRecipients(KnowledgeData data) {
 		Collection<Address> res = new HashSet<Address>();		
 		for (int i = 0; i < count; i++) {
-			int ip = GossipPlugin.generator.nextInt(to - from) + from;
+			int ip = GossipHelper.generator.nextInt(to - from) + from;
 			if (ip == local)
 				continue;
 			res.add(AddressHelper.createIP(ip));

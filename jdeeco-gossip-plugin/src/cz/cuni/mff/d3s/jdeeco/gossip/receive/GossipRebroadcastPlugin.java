@@ -17,7 +17,7 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
 import cz.cuni.mff.d3s.jdeeco.core.ConfigHelper;
 import cz.cuni.mff.d3s.jdeeco.core.KnowledgeProviderPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.GossipHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.send.SendKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
@@ -96,7 +96,7 @@ public class GossipRebroadcastPlugin implements L2Strategy, DEECoPlugin {
 				networkLayer.sendL2Packet(pck, MANETBroadcastAddress.BROADCAST);
 				receptionBuffer.clearPulledTag(meta.componentId);
 			}
-			else if (GossipPlugin.generator.nextDouble() < probability) {
+			else if (GossipHelper.generator.nextDouble() < probability) {
 				// rebroadcast with certain probability on MANET
 				networkLayer.sendL2Packet(pck, MANETBroadcastAddress.BROADCAST);
 			}
@@ -107,7 +107,7 @@ public class GossipRebroadcastPlugin implements L2Strategy, DEECoPlugin {
 					continue;
 				
 				// rebroadcast with certain probability on IP
-				if (GossipPlugin.generator.nextDouble() < probability) {
+				if (GossipHelper.generator.nextDouble() < probability) {
 					networkLayer.sendL2Packet(pck, adr);
 				}
 			}

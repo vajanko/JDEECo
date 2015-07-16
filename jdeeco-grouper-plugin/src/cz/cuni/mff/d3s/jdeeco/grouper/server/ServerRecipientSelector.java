@@ -13,7 +13,7 @@ import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeDataHelper;
 import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
-import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
+import cz.cuni.mff.d3s.jdeeco.gossip.GossipHelper;
 import cz.cuni.mff.d3s.jdeeco.gossip.RecipientSelector;
 import cz.cuni.mff.d3s.jdeeco.grouper.GrouperPartitions;
 import cz.cuni.mff.d3s.jdeeco.grouper.GrouperRange;
@@ -56,7 +56,7 @@ public class ServerRecipientSelector implements RecipientSelector {
 		
 		HashSet<Address> res = new HashSet<Address>(count);
 		for (int i = 0; i < count; i++) {
-			int idx = GossipPlugin.generator.nextInt(all.size());
+			int idx = GossipHelper.generator.nextInt(all.size());
 			res.add(allArray[idx]);
 		}
 		

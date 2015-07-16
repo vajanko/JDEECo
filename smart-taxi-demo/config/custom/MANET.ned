@@ -63,7 +63,7 @@ network MANET
             	@display("p=391,24");
         }
         
-        node[numNodes]: IPNode {
+        node[numNodes]: Node {
         	useEthernet = ethernet;
         }
 

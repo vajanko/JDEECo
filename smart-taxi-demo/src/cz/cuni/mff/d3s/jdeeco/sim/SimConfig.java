@@ -24,7 +24,6 @@ import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
 import cz.cuni.mff.d3s.jdeeco.core.ConfigHelper;
 import cz.cuni.mff.d3s.jdeeco.core.EnsembleDeployerPlugin;
 import cz.cuni.mff.d3s.jdeeco.core.KnowledgeProviderPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.GossipPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.RecipientSelector;
 import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ItemHeader;
@@ -322,8 +321,6 @@ public class SimConfig {
 		else if (devices.equalsIgnoreCase("omnet-broadcast")) {
 			sim.addPlugin(OMNeTBroadcastDevice.class);
 		}
-
-		sim.addPlugin(GossipPlugin.class);
 	}
 	public static DEECoNode createNode(DEECoSimulation sim, int nodeId) throws InstantiationException, IllegalAccessException, DEECoException {
 		
