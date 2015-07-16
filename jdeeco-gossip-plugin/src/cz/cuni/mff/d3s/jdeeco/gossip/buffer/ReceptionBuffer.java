@@ -15,9 +15,6 @@ import java.util.Map.Entry;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
-import cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet;
-import cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy;
-import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
 
 /**
  * Buffered collection of items which are passed between multiple nodes across
@@ -27,7 +24,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class ReceptionBuffer implements L2Strategy, DEECoPlugin {
+public class ReceptionBuffer implements DEECoPlugin {
 	
 	/**
 	 * Minimal possible value of item reception.
@@ -252,7 +249,6 @@ public class ReceptionBuffer implements L2Strategy, DEECoPlugin {
 		// get a list of outdated messages but which are still visible in the network
 		for (Entry<String, ItemInfo> entry : buffer.entrySet()) {
 			if (currentTime - entry.getValue().localReception >= localTimeout) {
-				// TODO: which reception time should be used ???
 				result.add(new ItemHeader(entry.getKey(), entry.getValue().localReception));
 			}
 		}
@@ -274,8 +270,9 @@ public class ReceptionBuffer implements L2Strategy, DEECoPlugin {
 		// ... then take all left items
 		ArrayList<ItemHeader> result = new ArrayList<ItemHeader>();
 		for (Entry<String, ItemInfo> entry : buffer.entrySet()) {
-			// TODO: could locally obsolete items be omitted?
+			// TODO: could locally obsolete items be omitted? 
 			// obsolete items will be sent in the PULL request as well
+			// but this is just an optimization
 			result.add(new ItemHeader(entry.getKey(), entry.getValue().globalReception));
 		}
 		return result;
@@ -330,19 +327,6 @@ public class ReceptionBuffer implements L2Strategy, DEECoPlugin {
 	}
 	
 	/* (non-Javadoc)
-	 * @see cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy#processL2Packet(cz.cuni.mff.d3s.jdeeco.network.l2.L2Packet)
-	 */
-	@Override
-	public void processL2Packet(L2Packet packet) {
-		/*if (packet.header.type.equals(L2PacketType.KNOWLEDGE)) {			
-			KnowledgeData kd = (KnowledgeData)packet.getObject();
-			KnowledgeMetaData meta = kd.getMetaData();
-			
-			receiveLocal(meta.componentId, meta.createdAt, meta.versionId);
-		}*/
-	}
-
-	/* (non-Javadoc)
 	 * @see cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin#getDependencies()
 	 */
 	@Override
@@ -354,8 +338,6 @@ public class ReceptionBuffer implements L2Strategy, DEECoPlugin {
 	 */
 	@Override
 	public void init(DEECoContainer container) {
-		// register L2 strategy
-//		Layer2 networkLayer = container.getPluginInstance(Network.class).getL2();
-//		networkLayer.registerL2Strategy(this);
+		// nothing to be initialised
 	}
 }
