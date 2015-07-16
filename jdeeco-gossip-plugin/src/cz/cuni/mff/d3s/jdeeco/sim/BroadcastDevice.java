@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cz.cuni.mff.d3s.jdeeco.gossip.device;
+package cz.cuni.mff.d3s.jdeeco.sim;
 
 import java.util.Arrays;
 import java.util.HashSet;

@@ -1,4 +1,4 @@
-package cz.cuni.mff.d3s.jdeeco.gossip.device;
+package cz.cuni.mff.d3s.jdeeco.sim;
 
 import java.util.ArrayList;
 import java.util.Arrays;

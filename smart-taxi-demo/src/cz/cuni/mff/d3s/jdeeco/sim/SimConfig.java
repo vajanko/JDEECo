@@ -29,8 +29,6 @@ import cz.cuni.mff.d3s.jdeeco.gossip.MessageHeader;
 import cz.cuni.mff.d3s.jdeeco.gossip.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.RecipientSelector;
 import cz.cuni.mff.d3s.jdeeco.gossip.RequestLoggerPlugin;
-import cz.cuni.mff.d3s.jdeeco.gossip.device.BroadcastDevice;
-import cz.cuni.mff.d3s.jdeeco.gossip.device.MulticastDevice;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveHDPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveKNPlugin;

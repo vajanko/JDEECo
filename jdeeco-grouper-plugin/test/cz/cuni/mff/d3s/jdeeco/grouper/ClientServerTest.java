@@ -15,7 +15,6 @@ import cz.cuni.mff.d3s.jdeeco.core.KnowledgeProviderPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoComponent;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoEnsemble;
-import cz.cuni.mff.d3s.jdeeco.gossip.device.BroadcastDevice;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.register.AddressRegisterPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.send.SendKNPlugin;
@@ -24,6 +23,7 @@ import cz.cuni.mff.d3s.jdeeco.grouper.client.GrouperClientPlugin;
 import cz.cuni.mff.d3s.jdeeco.grouper.server.GrouperServerPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.device.InfrastructureLoopback;
+import cz.cuni.mff.d3s.jdeeco.sim.BroadcastDevice;
 
 /**
  * 
