@@ -11,7 +11,7 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoNode;
 import cz.cuni.mff.d3s.deeco.timer.DiscreteEventTimer;
 import cz.cuni.mff.d3s.deeco.timer.SimulationTimer;
 import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
-import cz.cuni.mff.d3s.jdeeco.gossip.KnowledgeProviderPlugin;
+import cz.cuni.mff.d3s.jdeeco.core.KnowledgeProviderPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoComponent;
 import cz.cuni.mff.d3s.jdeeco.gossip.common.DemoEnsemble;

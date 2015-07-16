@@ -1,12 +1,11 @@
 /**
  * 
  */
-package cz.cuni.mff.d3s.jdeeco.gossip;
+package cz.cuni.mff.d3s.jdeeco.core;
 
 import java.util.Collection;
 
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
-import cz.cuni.mff.d3s.jdeeco.core.KnowledgeSource;
 
 /**
  * 

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cz.cuni.mff.d3s.jdeeco.gossip;
+package cz.cuni.mff.d3s.jdeeco.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +23,6 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.deeco.runtime.RuntimeFramework;
 import cz.cuni.mff.d3s.deeco.timer.CurrentTimeProvider;
-import cz.cuni.mff.d3s.jdeeco.core.KnowledgeProvider;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 
 /**

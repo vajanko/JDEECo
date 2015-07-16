@@ -10,6 +10,7 @@ import java.util.Random;
 import cz.cuni.mff.d3s.deeco.runners.DEECoSimulation;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
+import cz.cuni.mff.d3s.jdeeco.core.KnowledgeProviderPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.buffer.ReceptionBuffer;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.GossipRebroadcastPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.receive.ReceiveHDPlugin;
