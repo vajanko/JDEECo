@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
+import cz.cuni.mff.d3s.jdeeco.core.ExtensibleStorage;
 import cz.cuni.mff.d3s.jdeeco.network.Network;
 
 /**
@@ -38,10 +39,40 @@ public class ReceptionBuffer implements DEECoPlugin {
 	public static final long LOCAL_TIMEOUT_DEFAULT = 0;
 	
 	/**
-	 * A collection of item IDs and associated information about item reception
-	 * by the current node and globally by nodes in the network.
+	 * Collection of message IDs and associated extensible data. Any plugin can register
+	 * additional data to be stored in the buffer. 
 	 */
-	private Map<String, ItemInfo> buffer = new HashMap<String, ItemInfo>();
+	private Map<String, ExtensibleStorage> buffer = new HashMap<String, ExtensibleStorage>();
+	/**
+	 * Gets data of type {@code clazz} associated with message identified by {@code id}.
+	 * @param clazz Type of value to be stored with message.
+	 * @param id Unique message identifier.
+	 * @return Associated message value or null if there is no such a value. 
+	 */
+	public <T> T getData(Class<T> clazz, String id) {
+		ExtensibleStorage msgStorage = this.buffer.get(id);
+		if (msgStorage == null)
+			return null;
+		
+		return msgStorage.get(clazz);
+	}
+	/**
+	 * Associate provided {@code data} of type {@code clazz} with message identified by {@code id}.
+	 * If some value of type {@code clazz} exist it is overwritten.
+	 * @param clazz Type of value to be stored with message.
+	 * @param id Unique message identifier.
+	 * @param data Value to be stored together with the message.
+	 */
+	public <T> void putData(Class<T> clazz, String id, T data) {
+		ExtensibleStorage msgStorage = this.buffer.get(id);
+		if (msgStorage == null) {
+			msgStorage = new ExtensibleStorage();
+			this.buffer.put(id, msgStorage);
+		}
+		
+		msgStorage.put(clazz, data);
+	}
+	
 	/**
 	 * After this timeout a message is considered to be uninteresting for any node
 	 * in the network and therefore can be removed from the buffer.
@@ -61,6 +92,17 @@ public class ReceptionBuffer implements DEECoPlugin {
 		globalTimeout = Long.getLong(GLOBAL_TIMEOUT, GLOBAL_TIMEOUT_DEFAULT);
 	}
 	
+	private boolean hasItemInfo(String id) {
+		ItemInfo info = this.getData(ItemInfo.class, id);
+		return info != null;
+	}
+	private void putItemInfo(String id, ItemInfo value) {
+		this.putData(ItemInfo.class, id, value);
+	}
+	private ItemInfo getItemInfo(String id) {
+		return this.getData(ItemInfo.class, id);
+	}
+	
 	/**
 	 * Stores information about receiving a message with given {@code id} locally.
 	 * Receiving a message locally also implies global message update.
@@ -74,11 +116,11 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 * @param version Current message version
 	 */
 	public void receiveLocal(String id, long time, long version) {
-		if (!buffer.containsKey(id)) {
-			buffer.put(id, new ItemInfo(time, time, version));
+		if (!this.hasItemInfo(id)) {
+			this.putItemInfo(id, new ItemInfo(time, time, version));
 		}
 		else {
-			ItemInfo info = buffer.get(id); 
+			ItemInfo info = this.getItemInfo(id);
 			if (info.localReception < time)
 				info.localReception = time;
 			// We separately test also global reception time, but it is probably
@@ -101,7 +143,7 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 * or by any node in the network
 	 */
 	public void receiveGlobal(String id, long time) {
-		if (!buffer.containsKey(id)) {
+		if (!this.hasItemInfo(id)) {
 			// Item was never seen on the current node. The very first idea is
 			// to add something similar: new ItemInfo(MINUS_INFINITE,  time). The problem of
 			// this approach is that the item is immediately obsolete and will be PULLed.
@@ -110,10 +152,10 @@ public class ReceptionBuffer implements DEECoPlugin {
 			// Our approach is that when a header of item never seen before is received
 			// we are waiting for PULL timeout and only then we sent the PULL request.
 			// It is probable that the item will be received meantime.
-			buffer.put(id, new ItemInfo(time, time, MINUS_INFINITE));
+			this.putItemInfo(id, new ItemInfo(time, time, MINUS_INFINITE));
 		}
 		else {
-			ItemInfo info = buffer.get(id);
+			ItemInfo info = this.getItemInfo(id); 
 			if (info.globalReception < time)
 				info.globalReception = time;
 		}
@@ -127,13 +169,13 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 * @param time System or simulation time of last message received by remote node.
 	 */
 	public void receivePull(String id, long time) {
-		if (!buffer.containsKey(id)) {
+		if (!this.hasItemInfo(id)) {
 			ItemInfo info = new ItemInfo(MINUS_INFINITE, time, MINUS_INFINITE);
 			info.pulled = true;
-			buffer.put(id, info);
+			this.putItemInfo(id, info);
 		}
 		else {
-			ItemInfo info = buffer.get(id);
+			ItemInfo info = this.getItemInfo(id);
 			info.pulled = true;
 			//info.localReception = MINUS_INFINITE;
 			if (info.globalReception < time)
@@ -147,7 +189,7 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 * @return True if message was pulled, otherwise false.
 	 */
 	public boolean getPulledTag(String id) {
-		ItemInfo info = buffer.get(id);
+		ItemInfo info = this.getItemInfo(id);
 		return info != null && info.pulled;
 	}
 	/**
@@ -156,7 +198,7 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 * @param id Unique message identifier.
 	 */
 	public void clearPulledTag(String id) {
-		ItemInfo info = buffer.get(id);
+		ItemInfo info = this.getItemInfo(id);
 		if (info != null) {
 			info.pulled = false;
 		}
@@ -169,9 +211,11 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 */
 	public Collection<String> getPulledItems() {
 		ArrayList<String> result = new ArrayList<String>();
-		for (Entry<String, ItemInfo> item : buffer.entrySet())
-			if (item.getValue().pulled)
+		for (Entry<String, ExtensibleStorage> item : buffer.entrySet()) {
+			boolean pl = item.getValue().get(ItemInfo.class).pulled;
+			if (pl)
 				result.add(item.getKey());
+		}
 		return result;
 	}
 	
@@ -183,7 +227,7 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 * if the item was never received locally.
 	 */
 	public long getLocalReceptionTime(String id) {
-		ItemInfo info = buffer.get(id);
+		ItemInfo info = this.getItemInfo(id);
 		if (info == null)
 			return MINUS_INFINITE;
 		return info.localReception;
@@ -196,7 +240,7 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 * if the item was never received globally.
 	 */
 	public long getGlobalReceptionTime(String id) {
-		ItemInfo info = buffer.get(id);
+		ItemInfo info = this.getItemInfo(id);
 		if (info == null)
 			return MINUS_INFINITE;
 		return info.globalReception;
@@ -209,7 +253,7 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 * was never received locally.
 	 */
 	public long getVersion(String id) {
-		ItemInfo info = buffer.get(id);
+		ItemInfo info = this.getItemInfo(id);
 		if (info == null)
 			return MINUS_INFINITE;
 		return info.version;
@@ -225,10 +269,11 @@ public class ReceptionBuffer implements DEECoPlugin {
 		if (globalTimeout == 0)
 			return;
 		
-		Iterator<Entry<String, ItemInfo>> it = buffer.entrySet().iterator();
+		Iterator<Entry<String, ExtensibleStorage>> it = buffer.entrySet().iterator();
 		while (it.hasNext()) {
-			Entry<String, ItemInfo> entry = it.next();
-			if (currentTime - entry.getValue().globalReception >= globalTimeout) {
+			Entry<String, ExtensibleStorage> entry = it.next();
+			long gl = entry.getValue().get(ItemInfo.class).globalReception;
+			if (currentTime - gl >= globalTimeout) {
 				// at "currentTime" the globally known reception time exceeds the timeout
 				it.remove();
 			}
@@ -247,9 +292,10 @@ public class ReceptionBuffer implements DEECoPlugin {
 		// ... then filter only outdated items
 		ArrayList<ItemHeader> result = new ArrayList<ItemHeader>(); 
 		// get a list of outdated messages but which are still visible in the network
-		for (Entry<String, ItemInfo> entry : buffer.entrySet()) {
-			if (currentTime - entry.getValue().localReception >= localTimeout) {
-				result.add(new ItemHeader(entry.getKey(), entry.getValue().localReception));
+		for (Entry<String, ExtensibleStorage> entry : buffer.entrySet()) {
+			long lc = entry.getValue().get(ItemInfo.class).localReception;
+			if (currentTime - lc >= localTimeout) {
+				result.add(new ItemHeader(entry.getKey(), lc));
 			}
 		}
 		
@@ -269,11 +315,12 @@ public class ReceptionBuffer implements DEECoPlugin {
 		removeGloballyObsoleteItems(currentTime);
 		// ... then take all left items
 		ArrayList<ItemHeader> result = new ArrayList<ItemHeader>();
-		for (Entry<String, ItemInfo> entry : buffer.entrySet()) {
+		for (Entry<String, ExtensibleStorage> entry : buffer.entrySet()) {
 			// TODO: could locally obsolete items be omitted? 
 			// obsolete items will be sent in the PULL request as well
 			// but this is just an optimization
-			result.add(new ItemHeader(entry.getKey(), entry.getValue().globalReception));
+			long gl = entry.getValue().get(ItemInfo.class).globalReception;
+			result.add(new ItemHeader(entry.getKey(), gl));
 		}
 		return result;
 	}
@@ -288,7 +335,7 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 * @return True if message can be received otherwise false.
 	 */
 	public boolean canReceive(String id, long version) {
-		ItemInfo info = buffer.get(id);
+		ItemInfo info = this.getItemInfo(id);
 		return info == null || info.version < version;
 	}
 	
@@ -316,7 +363,9 @@ public class ReceptionBuffer implements DEECoPlugin {
 		 * Last message version received by the current node.
 		 */
 		public long version = 0;
-		
+		/**
+		 * Indication whether the associated message has been pulled by another node.
+		 */
 		public boolean pulled = false;
 		
 		public ItemInfo(long localReception, long globalReception, long version) {
