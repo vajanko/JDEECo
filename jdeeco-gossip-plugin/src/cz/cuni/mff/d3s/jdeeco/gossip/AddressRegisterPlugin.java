@@ -10,13 +10,20 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 
 /**
+ * Plugin providing a singleton instance of address register for particular node.
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
 public class AddressRegisterPlugin implements DEECoPlugin {
 	
+	// single instance of address register for a node
 	private AddressRegister register = new AddressRegister();
 	
+	/**
+	 * Gets the shared instance of address register of known peer nodes.
+	 * 
+	 * @return Address register of known peer nodes.
+	 */
 	public AddressRegister getRegister() {
 		return register;
 	}
