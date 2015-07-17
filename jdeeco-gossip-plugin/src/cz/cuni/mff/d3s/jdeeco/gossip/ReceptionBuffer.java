@@ -91,7 +91,12 @@ public class ReceptionBuffer implements DEECoPlugin {
 		localTimeout = Long.getLong(LOCAL_TIMEOUT, LOCAL_TIMEOUT_DEFAULT);
 		globalTimeout = Long.getLong(GLOBAL_TIMEOUT, GLOBAL_TIMEOUT_DEFAULT);
 	}
-	
+	/**
+	 * Gets value indicating whether there is an ItemInfo associated with a message with given ID.
+	 * 
+	 * @param id Message ID
+	 * @return True if there is ItemInfo object associated with the message, otherwise false.
+	 */
 	private boolean hasItemInfo(String id) {
 		ItemInfo info = this.getData(ItemInfo.class, id);
 		return info != null;
