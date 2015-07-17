@@ -8,15 +8,15 @@ import java.util.Collection;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 
 /**
- * Provides knowledge data for publishing on the network.
+ * Provides local knowledge data for publishing on the network.
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public interface KnowledgeSource {
+public interface LocalKnowledgeSource {
 	/**
 	 * Gets collection of knowledge data which can be published on the network.
 	 * 
 	 * @return Collection of knowledge data.
 	 */
-	public Collection<KnowledgeData> getKnowledge();
+	public Collection<KnowledgeData> getLocalKnowledge();
 }

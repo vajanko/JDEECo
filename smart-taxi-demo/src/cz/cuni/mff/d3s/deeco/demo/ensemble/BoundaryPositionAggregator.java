@@ -51,13 +51,17 @@ public class BoundaryPositionAggregator {
 	
 	@CommunicationBoundary
 	public static boolean boundary(KnowledgeData data, ReadOnlyKnowledgeManager sender) throws KnowledgeNotFoundException {
+		try {
 		KnowledgePath posPath = KnowledgeDataHelper.getPath(data, "position");
 		Position senderPos = (Position)sender.get(Arrays.asList(posPath)).getValue(posPath);
 		Position compPos = (Position) data.getKnowledge().getValue(posPath);
 		
-		// less than 2 km
+		// less than 500 m
 		boolean rebroadcast = distance(senderPos, compPos) < 500;
 		return rebroadcast;
+		} catch (KnowledgeNotFoundException e) {
+			throw e;
+		}
 	}
 	
 	private static double distance(Position a, Position b) {

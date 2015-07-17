@@ -9,9 +9,9 @@ import java.util.List;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
-import cz.cuni.mff.d3s.jdeeco.core.KnowledgeProvider;
+import cz.cuni.mff.d3s.jdeeco.core.ReplicaKnowledgeSource;
 import cz.cuni.mff.d3s.jdeeco.core.KnowledgeProviderPlugin;
-import cz.cuni.mff.d3s.jdeeco.core.KnowledgeSource;
+import cz.cuni.mff.d3s.jdeeco.core.LocalKnowledgeSource;
 import cz.cuni.mff.d3s.jdeeco.gossip.send.SendKNPlugin;
 import cz.cuni.mff.d3s.jdeeco.grouper.GrouperAddressRegisterPlugin;
 import cz.cuni.mff.d3s.jdeeco.grouper.GrouperPartitions;
@@ -40,7 +40,7 @@ public class GrouperServerPlugin implements DEECoPlugin {
 		
 		try {
 			// get dependency plugins
-			KnowledgeProvider knowledgeProvider = container.getPluginInstance(KnowledgeProviderPlugin.class);
+			ReplicaKnowledgeSource knowledgeProvider = container.getPluginInstance(KnowledgeProviderPlugin.class);
 			
 			GrouperAddressRegisterPlugin register = container.getPluginInstance(GrouperAddressRegisterPlugin.class);
 			GrouperRegister grouperRegister =  register.getRegister();
@@ -52,7 +52,7 @@ public class GrouperServerPlugin implements DEECoPlugin {
 			
 			// replace knowledge provider and recipient selector with a special grouper implementation
 			SendKNPlugin sendKN = container.getPluginInstance(SendKNPlugin.class);
-			KnowledgeSource knowledgeSource = new GrouperKnowledgeProvider(sendKN.getKnowledgeSource(), grouperRegister);
+			LocalKnowledgeSource knowledgeSource = new GrouperKnowledgeProvider(sendKN.getKnowledgeSource(), grouperRegister);
 			sendKN.setKnowledgeSource(knowledgeSource);
 			
 			IPAddress address = AddressHelper.createIP(container.getId());

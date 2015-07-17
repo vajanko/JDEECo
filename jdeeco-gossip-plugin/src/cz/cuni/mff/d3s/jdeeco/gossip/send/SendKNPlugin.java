@@ -7,7 +7,7 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeMetaData;
 import cz.cuni.mff.d3s.deeco.runtime.DEECoContainer;
 import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
-import cz.cuni.mff.d3s.jdeeco.core.KnowledgeSource;
+import cz.cuni.mff.d3s.jdeeco.core.LocalKnowledgeSource;
 import cz.cuni.mff.d3s.jdeeco.gossip.AddressRegister;
 import cz.cuni.mff.d3s.jdeeco.gossip.AddressRegisterPlugin;
 import cz.cuni.mff.d3s.jdeeco.gossip.RecipientSelector;
@@ -36,17 +36,17 @@ public class SendKNPlugin extends SendBasePlugin {
 	/**
 	 * Provides source to be published (sent).
 	 */
-	private KnowledgeSource knowledgeSource;
-	public void setKnowledgeSource(KnowledgeSource knowledgeSource) {
+	private LocalKnowledgeSource knowledgeSource;
+	public void setKnowledgeSource(LocalKnowledgeSource knowledgeSource) {
 		this.knowledgeSource = knowledgeSource;
 	}
-	public KnowledgeSource getKnowledgeSource() {
+	public LocalKnowledgeSource getKnowledgeSource() {
 		return this.knowledgeSource;
 	}
 	
 	/**
 	 * Provides target addresses for knowledge to be sent retrieved
-	 * from {@link KnowledgeSource}.
+	 * from {@link LocalKnowledgeSource}.
 	 */
 	private RecipientSelector recipientSelector;
 	
@@ -70,7 +70,7 @@ public class SendKNPlugin extends SendBasePlugin {
 		publish();
 	}
 	private void publish() {
-		for(KnowledgeData data: knowledgeSource.getKnowledge()) {
+		for(KnowledgeData data: knowledgeSource.getLocalKnowledge()) {
 			PacketHeader header = new PacketHeader(L2PacketType.KNOWLEDGE);
 			
 			L2Packet packet = new L2Packet(header, data);

@@ -31,7 +31,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.ReceptionBuffer;
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
-public class KnowledgeProviderPlugin implements DEECoPlugin, KnowledgeProvider, KnowledgeSource {
+public class KnowledgeProviderPlugin implements DEECoPlugin, ReplicaKnowledgeSource, LocalKnowledgeSource {
 	
 	private ReceptionBuffer receptionBuffer;
 	private KnowledgeManagerContainer kmContainer;
@@ -45,27 +45,20 @@ public class KnowledgeProviderPlugin implements DEECoPlugin, KnowledgeProvider, 
 	private String getNodeId() {
 		return nodeId;
 	}
-	/**
-	 * 
-	 * @return Copy of local knowledge data prepared for network transfer.
-	 */
-	public Collection<KnowledgeData> getLocalKnowledgeData() {
-		return getKnowledgeDataCopy(kmContainer.getLocals(), true);
-	}
-	/**
-	 * 
-	 * @return Copy of replica knowledge data prepared for network transfer.
-	 */
-	public Collection<KnowledgeData> getReplicaKnowledgeData() {
-		return getKnowledgeDataCopy(kmContainer.getReplicas(), false);
-	}
-	
 	/* (non-Javadoc)
-	 * @see cz.cuni.mff.d3s.jdeeco.core.KnowledgeSource#getKnowledge()
+	 * @see cz.cuni.mff.d3s.jdeeco.core.LocalKnowledgeSource#getLocalKnowledge()
 	 */
 	@Override
-	public Collection<KnowledgeData> getKnowledge() {
-		return getLocalKnowledgeData();
+	public Collection<KnowledgeData> getLocalKnowledge() {
+		return getKnowledgeDataCopy(kmContainer.getLocals(), true);
+	}
+
+	/* (non-Javadoc)
+	 * @see cz.cuni.mff.d3s.jdeeco.core.ReplicaKnowledgeSource#getReplicaKnowledgeData()
+	 */
+	@Override
+	public Collection<KnowledgeData> getReplicaKnowledgeData() {
+		return getKnowledgeDataCopy(kmContainer.getReplicas(), false);
 	}
 	
 	/**

@@ -14,7 +14,7 @@ import cz.cuni.mff.d3s.deeco.annotations.PeriodicScheduling;
 import cz.cuni.mff.d3s.deeco.annotations.Process;
 import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
-import cz.cuni.mff.d3s.jdeeco.core.KnowledgeProvider;
+import cz.cuni.mff.d3s.jdeeco.core.ReplicaKnowledgeSource;
 import cz.cuni.mff.d3s.jdeeco.grouper.GrouperPartitions;
 import cz.cuni.mff.d3s.jdeeco.grouper.GrouperRange;
 import cz.cuni.mff.d3s.jdeeco.grouper.GrouperRegister;
@@ -44,13 +44,13 @@ public class GrouperServerComponent {
 	// In the future it can be updated by the IPService
 	//@Local public GrouperRange range;
 	@Local public GrouperPartitions partitions;
-	@Local public KnowledgeProvider knowledgeProvider;
+	@Local public ReplicaKnowledgeSource knowledgeProvider;
 	@Local public GrouperRegister register;
 	
 	/**
 	 * 
 	 */
-	public GrouperServerComponent(int nodeId, GrouperPartitions partitions, GrouperRegister register, KnowledgeProvider knowledgeProvider) {
+	public GrouperServerComponent(int nodeId, GrouperPartitions partitions, GrouperRegister register, ReplicaKnowledgeSource knowledgeProvider) {
 		this.id = AddressHelper.encodeID("GS", nodeId);
 		this.partitions = partitions;
 		this.knowledgeProvider = knowledgeProvider;	
@@ -61,7 +61,7 @@ public class GrouperServerComponent {
 	@PeriodicScheduling(period = 1000)
 	public static void processKnowledge(
 			@In("partitions") GrouperPartitions partitions,
-			@In("knowledgeProvider") KnowledgeProvider knowledgeProvider,
+			@In("knowledgeProvider") ReplicaKnowledgeSource knowledgeProvider,
 			@In("register") GrouperRegister register) {
 		
 		// process all replica knowledge received from other components
