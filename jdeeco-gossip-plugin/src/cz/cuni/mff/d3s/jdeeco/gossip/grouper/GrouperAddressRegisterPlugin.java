@@ -14,24 +14,42 @@ import cz.cuni.mff.d3s.jdeeco.core.EnsembleDeployerPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.address.IPAddress;
 
 /**
- * Plugin providing a register used by the grouper to store group memberships
+ * Plugin providing a register used by the grouper to store group memberships 
+ * and partition functions.
  * 
  * @author Ondrej Kovac <info@vajanko.me>
  */
 public class GrouperAddressRegisterPlugin implements DEECoPlugin {
 
+	// service assigning ranges to groupers
 	private RangeConfigurator rangeConfig;
-	
+	// partitions of the grouper deployed on the same node
 	private GrouperPartitions partitions = new GrouperPartitions();
+	// grouper storage of group members
 	private GrouperRegister register;
 	
+	/**
+	 * Gets partitions of the current grouper.
+	 * 
+	 * @return Partition collection.
+	 */
 	public GrouperPartitions getPartitions() {
 		return partitions;
 	}
+	/**
+	 * Gets register of the current grouper containing members of already formed groups.
+	 * 
+	 * @return Grouper register.
+	 */
 	public GrouperRegister getRegister() {
 		return register;
 	}
-	
+	/**
+	 * Creates a new instance of plugin providing register and partitions of grouper
+	 * deployed on the same node.
+	 * 
+	 * @param rangeConfig Configuration service assigning ranges to individual groupers.
+	 */
 	public GrouperAddressRegisterPlugin(RangeConfigurator rangeConfig) {
 		this.rangeConfig = rangeConfig;
 	}

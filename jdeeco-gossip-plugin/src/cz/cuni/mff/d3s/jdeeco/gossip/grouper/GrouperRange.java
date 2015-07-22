@@ -11,6 +11,11 @@ package cz.cuni.mff.d3s.jdeeco.gossip.grouper;
  * @author Ondrej Kovac <info@vajanko.me>
  */
 public interface GrouperRange {
-	
+	/**
+	 * Gets value indicating whether given value is inside the range.
+	 * 
+	 * @param key Value from a specific domain.
+	 * @return True if provided value is from the range otherwise false.
+	 */
 	public boolean inRange(Object key);
 }

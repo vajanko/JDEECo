@@ -8,8 +8,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Grouper range as enumerated set of values.
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class GrouperSetRange implements GrouperRange {
 	
@@ -23,6 +24,11 @@ public class GrouperSetRange implements GrouperRange {
 		return this.range.contains(key);
 	}
 	
+	/**
+	 * Creates a new instance of grouper range from given set of enumerated values.
+	 *  
+	 * @param range Range of value which forms the grouper range.
+	 */
 	public GrouperSetRange(Collection<Object> range) {
 		this.range = new HashSet<Object>(range);
 	}

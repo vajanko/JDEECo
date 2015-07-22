@@ -21,10 +21,16 @@ public class GrouperRegister {
 	// range of keys for which current grouper is responsible for
 	//private GrouperRange range;
 	
+	/**
+	 * Gets address of the node where the grouper is deployed.
+	 * 
+	 * @return Grouper node address.
+	 */
 	public Address getAddress() {
 		return address;
 	}
 	
+	// partition value associated with the group members
 	private HashMap<Object, AddressRegister> register = new HashMap<Object, AddressRegister>();
 	
 	public void add(Object partitionValue, Address address) {
@@ -40,11 +46,22 @@ public class GrouperRegister {
 		
 		reg.add(address);
 	}
+	/**
+	 * Removes given address from all groups.
+	 * 
+	 * @param address Node address to be removed from all groups.
+	 */
 	public void remove(Address address) {
 		for (AddressRegister reg : this.register.values()) {
 			reg.remove(address);
 		}
 	}
+	/**
+	 * Removes given address from group with given partition value.
+	 * 
+	 * @param partitionValue Partition value of the group from which address should be removed.
+	 * @param address Address which should be removed from the group.
+	 */
 	public void remove(Object partitionValue, Address address) {
 		AddressRegister reg = this.register.get(partitionValue);
 		if (reg == null)
@@ -60,13 +77,29 @@ public class GrouperRegister {
 		else if (reg.size() == 1 && reg.getAddresses().contains(this.address))
 			this.register.remove(partitionValue);
 	}
+	/**
+	 * Gets the collection of all groups in the grouper register.
+	 * 
+	 * @return Collection of address registers.
+	 */
 	public Collection<AddressRegister> getRegisters() {
 		return this.register.values();
 	}
+	/**
+	 * Gets members of group with particular partition value.
+	 * 
+	 * @param partitionValue Partition value of the required group. 
+	 * @return Address register of group with particular partition value.
+	 */
 	public AddressRegister getRegister(Object partitionValue) {
 		return this.register.get(partitionValue);
 	}
 	
+	/**
+	 * Create a new instance of grouper register storing members of communication groups.
+	 * 
+	 * @param address Address of node where the grouper is deployed.
+	 */
 	public GrouperRegister(Address address/*, GrouperRange range*/) {
 		this.address = address;
 		//this.range = range;
