@@ -19,7 +19,7 @@ import cz.cuni.mff.d3s.jdeeco.core.Position;
 import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
 
 /**
- * Base class for all components in the demo.
+ * Base class for all components in the smart car sharing demo.
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */

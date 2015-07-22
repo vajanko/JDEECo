@@ -8,6 +8,8 @@ import cz.cuni.mff.d3s.jdeeco.core.AddressHelper;
 import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
 
 /**
+ * Deeco component class implementing functionality of the passenger
+ * as described in the smart car sharing demo.
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
@@ -15,18 +17,11 @@ import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
 public class PassengerComponent extends ActorComponent {
 	
 	/**
-	 * 
+	 * Create a new instance of Deeco passenger component with given ID of node where
+	 * this component is about to be deployed and a sensor providing node mobility
+	 * information.
 	 */
 	public PassengerComponent(int nodeId, AgentSensor aSensor) {
 		super(AddressHelper.encodeID("P", nodeId), ActorRole.passenger, aSensor);
 	}
-	
-//	@Process
-//	@PeriodicScheduling(period = 1000)
-//	public static void process(
-//			@In("id") String id,
-//			@In("position") Position position) {
-//		
-//		//System.out.println(String.format("%s: %s", id, position));
-//	}
 }

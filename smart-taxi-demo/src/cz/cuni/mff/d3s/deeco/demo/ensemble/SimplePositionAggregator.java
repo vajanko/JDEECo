@@ -16,6 +16,8 @@ import cz.cuni.mff.d3s.deeco.task.ParamHolder;
 import cz.cuni.mff.d3s.jdeeco.core.Position;
 
 /**
+ * Deeco ensemble providing the exchange of current positions between drivers and
+ * passengers.
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */

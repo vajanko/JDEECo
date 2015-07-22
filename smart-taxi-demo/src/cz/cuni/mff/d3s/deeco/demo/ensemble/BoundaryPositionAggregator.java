@@ -23,6 +23,8 @@ import cz.cuni.mff.d3s.deeco.task.ParamHolder;
 import cz.cuni.mff.d3s.jdeeco.core.Position;
 
 /**
+ * Deeco ensemble providing the exchange of current positions between drivers and
+ * passengers.
  * 
  * @author Ondrej Kov·Ë <info@vajanko.me>
  */
@@ -63,7 +65,13 @@ public class BoundaryPositionAggregator {
 			throw e;
 		}
 	}
-	
+	/**
+	 * Calculates distance between to points.
+	 * 
+	 * @param a Begin position
+	 * @param b End position
+	 * @return Distance between two points.
+	 */
 	private static double distance(Position a, Position b) {
 		return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 	}
