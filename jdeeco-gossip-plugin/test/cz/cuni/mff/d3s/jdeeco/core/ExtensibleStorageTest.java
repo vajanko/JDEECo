@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cz.cuni.mff.d3s.jdeeco.gossip.buffer;
+package cz.cuni.mff.d3s.jdeeco.core;
 
 import static org.junit.Assert.*;
 
