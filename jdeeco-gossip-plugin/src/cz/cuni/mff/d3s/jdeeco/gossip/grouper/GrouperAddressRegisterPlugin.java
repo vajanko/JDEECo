@@ -14,8 +14,9 @@ import cz.cuni.mff.d3s.jdeeco.core.EnsembleDeployerPlugin;
 import cz.cuni.mff.d3s.jdeeco.network.address.IPAddress;
 
 /**
+ * Plugin providing a register used by the grouper to store group memberships
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class GrouperAddressRegisterPlugin implements DEECoPlugin {
 

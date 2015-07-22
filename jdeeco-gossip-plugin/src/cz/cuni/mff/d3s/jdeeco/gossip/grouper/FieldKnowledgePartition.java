@@ -10,7 +10,7 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeDataHelper;
 /**
  * Represents knowledge partitioning by knowledge field value.
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class FieldKnowledgePartition implements KnowledgePartition  {
 	
@@ -25,6 +25,12 @@ public class FieldKnowledgePartition implements KnowledgePartition  {
 		return knowledgeData.getKnowledge().getValue(path);
 	}
 	
+	/**
+	 * Creates a new instance of knowledge partitioning function using single
+	 * knowledge field.
+	 *  
+	 * @param fieldName Full path to the knowledge field.
+	 */
 	public FieldKnowledgePartition(String fieldName) {
 		this.fieldName = fieldName;
 	}
