@@ -19,6 +19,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
 import cz.cuni.mff.d3s.jdeeco.network.l2.PacketHeader;
 
 /**
+ * Broadcasts local knowledge data on the network.
  * 
  * @author Ondrej Kovac <info@vajanko.me>
  */
@@ -45,10 +46,21 @@ public class SendKNPlugin extends SendBasePlugin {
 	 * Provides local knowledge to be published (sent).
 	 */
 	private LocalKnowledgeSource knowledgeSource;
-	
+	/**
+	 * Sets knowledge source used to retrieve knowledge which should be published on
+	 * the network.
+	 * 
+	 * @param knowledgeSource Instance of knowledge source service.
+	 */
 	public void setKnowledgeSource(LocalKnowledgeSource knowledgeSource) {
 		this.knowledgeSource = knowledgeSource;
 	}
+	/**
+	 * Gets used knowledge source service providing knowledge which should be published
+	 * on the network.
+	 * 
+	 * @return Instance of current knowledge source service.
+	 */
 	public LocalKnowledgeSource getKnowledgeSource() {
 		return this.knowledgeSource;
 	}
@@ -58,10 +70,19 @@ public class SendKNPlugin extends SendBasePlugin {
 	 * from {@link LocalKnowledgeSource}.
 	 */
 	private RecipientSelector recipientSelector;
-	
+	/**
+	 * Gets used recipient selector providing target addresses of knowledge data.
+	 *  
+	 * @return Recipient selector instance.
+	 */
 	public RecipientSelector getRecipientSelector() {
 		return this.recipientSelector;
 	}
+	/**
+	 * Sets used recipient selector providing target addresses of knowledge data.
+	 * 
+	 * @param recipientSelector Instance of recipinet selector to be used.
+	 */
 	public void setRecipientSelector(RecipientSelector recipientSelector) {
 		this.recipientSelector = recipientSelector;
 	}
@@ -81,6 +102,9 @@ public class SendKNPlugin extends SendBasePlugin {
 	public void at(long time, Object triger) {		
 		publish();
 	}
+	/**
+	 * Publish local knowledge data on the network.
+	 */
 	private void publish() {
 		for(KnowledgeData data: knowledgeSource.getLocalKnowledge()) {
 			PacketHeader header = new PacketHeader(L2PacketType.KNOWLEDGE);
