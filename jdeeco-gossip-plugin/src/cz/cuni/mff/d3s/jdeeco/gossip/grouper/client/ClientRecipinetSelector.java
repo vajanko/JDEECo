@@ -18,14 +18,23 @@ import cz.cuni.mff.d3s.jdeeco.network.address.Address;
 import cz.cuni.mff.d3s.jdeeco.network.address.IPAddress;
 
 /**
+ * Provides a set of recipients for particular knowledge before publish.
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class ClientRecipinetSelector implements RecipientSelector {
 	
+	/**
+	 * Configuration property expressing how many of the known hosts set
+	 * will be selected for publish.
+	 */
 	public static final String PUBLISH_COUNT = "deeco.sendKN.count";
 
+	/**
+	 * IP address of the current node.
+	 */
 	private IPAddress address;
+	
 	private RecipientSelector innerSelector;
 	private int count = 2;
 	
@@ -41,6 +50,7 @@ public class ClientRecipinetSelector implements RecipientSelector {
 	@Override
 	public Collection<Address> getRecipients(KnowledgeData data) {
 		
+		// retrieves recipients from the inner source
 		Collection<Address> all = getAllRecipients(data);
 		if (all.size() <= count)
 			return all;
@@ -48,6 +58,7 @@ public class ClientRecipinetSelector implements RecipientSelector {
 		Address []allArray = new Address[all.size()];
 		all.toArray(allArray);
 		
+		// filter random subset of particular size
 		HashSet<Address> res = new HashSet<Address>(count);
 		for (int i = 0; i < count; i++) {
 			int idx = GossipHelper.generator.nextInt(all.size());
@@ -57,6 +68,13 @@ public class ClientRecipinetSelector implements RecipientSelector {
 		return res;
 	}
 	
+	/**
+	 * Gets the whole set of recipients for particular knowledge data. These recipients
+	 * could be further filtered.
+	 * 
+	 * @param data Published knowledge data.
+	 * @return Set of addresses where given knowledge should be published.
+	 */
 	private Collection<Address> getAllRecipients(KnowledgeData data) {
 		Address senderAdr = AddressHelper.decodeAddress(data.getMetaData().componentId);
 		if (senderAdr.equals(this.address)) {
@@ -75,6 +93,12 @@ public class ClientRecipinetSelector implements RecipientSelector {
 		return Arrays.asList();
 	}
 	
+	/**
+	 * Gets value indicating whether given knowledge comes from the grouper.
+	 * 
+	 * @param data Knowledge data to be classified.
+	 * @return True if given knowledge data comes from the grouper otherwise false.
+	 */
 	private boolean isGrouperKnowledge(KnowledgeData data) {
 		KnowledgePath rolePath = KnowledgeDataHelper.getPath(data, "grouperRole");
 		GrouperRole role = (GrouperRole)data.getKnowledge().getValue(rolePath);

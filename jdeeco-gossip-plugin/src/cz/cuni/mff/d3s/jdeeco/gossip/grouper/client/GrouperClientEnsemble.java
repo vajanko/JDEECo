@@ -15,8 +15,10 @@ import cz.cuni.mff.d3s.deeco.task.ParamHolder;
 import cz.cuni.mff.d3s.jdeeco.gossip.grouper.GrouperRole;
 
 /**
- * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * Deeco ensemble deployed on non-grouper nodes allowing for data exchange between
+ * gouper server and the client.
+ *  
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 @Ensemble
 @PeriodicScheduling(period = 1000)

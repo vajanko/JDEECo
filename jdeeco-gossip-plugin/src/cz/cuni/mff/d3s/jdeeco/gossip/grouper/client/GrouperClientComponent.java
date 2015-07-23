@@ -17,11 +17,16 @@ import cz.cuni.mff.d3s.jdeeco.gossip.grouper.GrouperRole;
 import cz.cuni.mff.d3s.jdeeco.network.address.IPAddress;
 
 /**
+ * Deeco component deployed on non-grouper nodes receiving notification from grouper
+ * component about its group members.
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 @Component
 public class GrouperClientComponent {
+	/**
+	 * Unique component ID
+	 */
 	public String id;
 	/**
 	 * Component role
@@ -59,7 +64,5 @@ public class GrouperClientComponent {
 			register.add(new IPAddress(address));
 				
 		groupMembers.clear();
-		
-		//System.out.println(id + " - register: " + register);
 	}
 }

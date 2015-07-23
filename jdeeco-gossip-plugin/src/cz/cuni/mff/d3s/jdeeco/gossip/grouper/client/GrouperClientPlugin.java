@@ -20,7 +20,7 @@ import cz.cuni.mff.d3s.jdeeco.network.address.IPAddress;
 /**
  * Plugin allows to receive notifications from grouper about members of communication group.
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class GrouperClientPlugin implements DEECoPlugin {
 	/* (non-Javadoc)
