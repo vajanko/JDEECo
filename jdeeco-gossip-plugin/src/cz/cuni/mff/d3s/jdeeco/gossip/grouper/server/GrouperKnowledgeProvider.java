@@ -20,15 +20,34 @@ import cz.cuni.mff.d3s.jdeeco.gossip.grouper.GrouperRegister;
 import cz.cuni.mff.d3s.jdeeco.gossip.grouper.GrouperRole;
 
 /**
+ * Provides knowledge data of local components on the grouper node prepared
+ * for publishing on the network. This source extracts knowledge of the grouper,
+ * selects individual groups and publish this data only to those groups and only
+ * with relevant portion of data for that group.
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class GrouperKnowledgeProvider implements LocalKnowledgeSource {
 
+	/**
+	 * The original knowledge data source as initialised on the non-grouper nodes.
+	 */
 	private LocalKnowledgeSource innerSource;
+	/**
+	 * Register of grouper holding members of particular groups.
+	 */
 	private GrouperRegister register;
+	/**
+	 * A service for creating deep copies of knowledge data.
+	 */
 	private Cloner cloner = new Cloner();
 
+	/**
+	 * Creates a new instance of knowledge provider designated for grouper nodes.
+	 * 
+	 * @param innerSource The original knowledge source as deployed on non-grouper nodes.
+	 * @param register Grouper register holding information about formed communication groups.
+	 */
 	public GrouperKnowledgeProvider(LocalKnowledgeSource innerSource, GrouperRegister register) {
 		this.innerSource = innerSource;
 		this.register = register;
@@ -71,7 +90,12 @@ public class GrouperKnowledgeProvider implements LocalKnowledgeSource {
 		
 		return res;
 	}
-
+	/**
+	 * Creates a deep copy of provided knowledge data and its metadata.
+	 * 
+	 * @param kd Knowledge data to be cloned.
+	 * @return Deep copy of provided knowledge data.
+	 */
 	private KnowledgeData cloneValues(KnowledgeData kd) {
 		
 		ValueSet knowledge = cloneValues(kd.getKnowledge());
@@ -82,6 +106,12 @@ public class GrouperKnowledgeProvider implements LocalKnowledgeSource {
 		KnowledgeData res = new KnowledgeData(knowledge, security, authors, metadata);
 		return res;
 	}
+	/**
+	 * Creates a deep copy of given value set.
+	 * 
+	 * @param values Value set to be cloned.
+	 * @return Deep copy of provided value set.
+	 */
 	private ValueSet cloneValues(ValueSet values) {
 		ValueSet res = new ValueSet();
 		

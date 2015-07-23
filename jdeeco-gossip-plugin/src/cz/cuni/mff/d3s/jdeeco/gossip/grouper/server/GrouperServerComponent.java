@@ -23,14 +23,23 @@ import cz.cuni.mff.d3s.jdeeco.gossip.grouper.KnowledgePartition;
 import cz.cuni.mff.d3s.jdeeco.network.address.Address;
 
 /**
+ * Deeco component deployed on grouper nodes evaluating the received knowledge and
+ * forming the communication groups.
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 @Component
 public class GrouperServerComponent {
+	/**
+	 * Unique component ID
+	 */
 	public String id;
+	/**
+	 * Component role
+	 */
 	public GrouperRole grouperRole = GrouperRole.server;
-	public String group = "destination";
+	
+	//public String group = "destination";
 	/**
 	 * This field is dynamically modified when published to particular hosts.
 	 * Knowledge of this component can not be published on MANET as it doesn't
@@ -48,7 +57,13 @@ public class GrouperServerComponent {
 	@Local public GrouperRegister register;
 	
 	/**
+	 * Creates a new instance of Deeco component deployed on grouper node evaluating received knowledge
+	 * and forming communication groups.
 	 * 
+	 * @param nodeId ID of node where this component is about to be deployed.
+	 * @param partitions Partitions of the grouper.
+	 * @param register Grouper register holding formed communication groups.
+	 * @param knowledgeProvider Service providing deep copy of replica knowledge data.
 	 */
 	public GrouperServerComponent(int nodeId, GrouperPartitions partitions, GrouperRegister register, ReplicaKnowledgeSource knowledgeProvider) {
 		this.id = AddressHelper.encodeID("GS", nodeId);

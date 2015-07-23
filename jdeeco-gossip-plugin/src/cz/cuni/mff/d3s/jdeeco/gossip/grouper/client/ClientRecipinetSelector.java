@@ -18,7 +18,7 @@ import cz.cuni.mff.d3s.jdeeco.network.address.Address;
 import cz.cuni.mff.d3s.jdeeco.network.address.IPAddress;
 
 /**
- * Provides a set of recipients for particular knowledge before publish.
+ * Provides a set of recipients for particular knowledge before publish on a non-grouper node.
  * 
  * @author Ondrej Kovac <info@vajanko.me>
  */

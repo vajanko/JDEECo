@@ -20,8 +20,9 @@ import cz.cuni.mff.d3s.jdeeco.network.Network;
 import cz.cuni.mff.d3s.jdeeco.network.address.IPAddress;
 
 /**
+ * Plugin which configures the current node and transforms it into the grouper
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class GrouperServerPlugin implements DEECoPlugin {
 	

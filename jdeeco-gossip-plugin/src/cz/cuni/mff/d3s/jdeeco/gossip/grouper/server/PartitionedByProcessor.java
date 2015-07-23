@@ -11,8 +11,9 @@ import cz.cuni.mff.d3s.deeco.annotations.processor.AnnotationProcessorExtensionP
 import cz.cuni.mff.d3s.deeco.model.runtime.api.EnsembleDefinition;
 
 /**
+ * Model preprocessor extension supporting the PartitionBy annotation.
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class PartitionedByProcessor extends AnnotationProcessorExtensionPoint {
 	/* (non-Javadoc)
