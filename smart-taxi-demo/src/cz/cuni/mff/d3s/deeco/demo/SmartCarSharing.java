@@ -34,7 +34,6 @@ public class SmartCarSharing {
 	 */
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, DEECoException, AnnotationProcessorException, IOException {	
 		String configFile = "./config/test.properties";
-		configFile = "C:/tmp/logs/config58.properties";
 		if (args.length > 0)
 			configFile = args[0];
 		
