@@ -20,23 +20,32 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.PacketHeader;
 
 /**
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class SendKNPlugin extends SendBasePlugin {
 	
+	/**
+	 * Configuration property name of message knowledge publish period.
+	 */
 	public static final String TASK_PERIOD = "deeco.sendKN.period";
 	/**
 	 * Default value of knowledge broadcasting period in milliseconds.
 	 */
 	public static final long TASK_PERIOD_DEFAULT = 2000;
-	
+	/**
+	 * IP address of the current node.
+	 */
 	private IPAddress address;
+	/**
+	 * Register of known IP address of the current node.
+	 */
 	private AddressRegister addressRegister;
 	
 	/**
-	 * Provides source to be published (sent).
+	 * Provides local knowledge to be published (sent).
 	 */
 	private LocalKnowledgeSource knowledgeSource;
+	
 	public void setKnowledgeSource(LocalKnowledgeSource knowledgeSource) {
 		this.knowledgeSource = knowledgeSource;
 	}
@@ -57,7 +66,10 @@ public class SendKNPlugin extends SendBasePlugin {
 		this.recipientSelector = recipientSelector;
 	}
 	
-	
+	/**
+	 * Creates a new instance of plugin sending local knowledge data
+	 * initialised with period from configuration file.
+	 */
 	public SendKNPlugin() {
 		super(Long.getLong(TASK_PERIOD, TASK_PERIOD_DEFAULT));
 	}

@@ -17,7 +17,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.L2PacketType;
  * Strategy for processing received knowledge message. Message header is extracted
  * and stored to local buffer.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class ReceiveKNPlugin extends ReceiveBasePlugin {
 	
@@ -52,6 +52,11 @@ public class ReceiveKNPlugin extends ReceiveBasePlugin {
 			receive((KnowledgeData)packet.getObject());
 		}
 	}
+	/**
+	 * Receive given knowledge data on the current node.
+	 * 
+	 * @param kd Knowledge data to be received.
+	 */
 	private void receive(KnowledgeData kd) {
 		KnowledgeMetaData meta = kd.getMetaData();
 		

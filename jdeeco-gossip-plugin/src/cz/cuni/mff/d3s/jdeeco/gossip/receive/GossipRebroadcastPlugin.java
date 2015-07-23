@@ -37,16 +37,22 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
  */
 public class GossipRebroadcastPlugin implements L2Strategy, DEECoPlugin {
 
+	/**
+	 * Name of the configuration property expressing probability of gossip rebroadcast
+	 */
 	public static final String REBROADCAST_PROBABILITY = "deeco.gossipRebroadcast.probability";
 	/**
 	 * Default value of knowledge rebroadcast probability when received by current node.
 	 */
 	public static final double REBROADCAST_PROBABILITY_DEFAULT = 0.5;
 	
-	//public static final String REBROADCAST_COUNT = "deeco.gossipRebroadcast.count";
-	//public static final int REBROADCAST_COUNT_DEFAULT = 1;
-	
+	/**
+	 * Probability of gossip rebroadcast.
+	 */
 	private double probability;
+	/**
+	 * Network layer allowing message sending.
+	 */
 	private Layer2 networkLayer;
 	private ReceptionBuffer receptionBuffer;
 	private KnowledgeProviderPlugin knowledgeProvider;
@@ -55,8 +61,17 @@ public class GossipRebroadcastPlugin implements L2Strategy, DEECoPlugin {
 	private KnowledgeManagerContainer kmContainer;
 	
 	private SendKNPlugin knowledgeSender;
+	/**
+	 * IP address of the current node.
+	 */
 	private IPAddress address;
 	
+	/**
+	 * Modify given knowledge data for rebroadcast. In particular the hop count is incremented
+	 * and the sender is set to the current node.
+	 * @param kd Knowledge data to be rebroadcasted.
+	 * @return Modified knowledge data prepared for rebroadcast.
+	 */
 	protected KnowledgeData prepareForRebroadcast(KnowledgeData kd) {		
 		KnowledgeMetaData meta = kd.getMetaData().clone();
 		meta.sender = nodeId;
@@ -113,7 +128,11 @@ public class GossipRebroadcastPlugin implements L2Strategy, DEECoPlugin {
 			}
 		}
 	}
-	
+	/**
+	 * Gets value indicating whether given knowledge data is within MANET communication boundary.
+	 * @param data Received knowledge data.
+	 * @return True if given knowledge is within the communication boundary.
+	 */
 	protected boolean withinBoundary(KnowledgeData data) {
 		
 		// FIXME: create a KM which will contain union of the entire node knowledge

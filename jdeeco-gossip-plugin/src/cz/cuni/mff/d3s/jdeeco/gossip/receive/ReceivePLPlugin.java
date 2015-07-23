@@ -15,7 +15,7 @@ import cz.cuni.mff.d3s.jdeeco.network.marshaller.SerializingMarshaller;
 /**
  * Strategy for processing headers of pulled messages.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class ReceivePLPlugin extends ReceiveBasePlugin {
 		
@@ -30,7 +30,11 @@ public class ReceivePLPlugin extends ReceiveBasePlugin {
 			receive((MessageHeader)packet.getObject());
 		}
 	}
-	
+	/**
+	 * Receive pull request on the current node.
+	 * 
+	 * @param header Pull request to be received.
+	 */
 	private void receive(MessageHeader header) {
 		for (ItemHeader hd : header.getHeaders()) {
 			// PULL request from other node:

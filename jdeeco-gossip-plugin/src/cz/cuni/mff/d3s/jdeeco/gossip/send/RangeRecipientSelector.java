@@ -16,7 +16,7 @@ import cz.cuni.mff.d3s.jdeeco.network.address.Address;
  * The core of gossip protocol for infrastructure network. Selects random recipients
  * from range of IP addresses.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class RangeRecipientSelector implements RecipientSelector {
 
@@ -25,9 +25,7 @@ public class RangeRecipientSelector implements RecipientSelector {
 	private int to;
 	private int count;
 	
-	/**
-	 * 
-	 */
+	
 	public RangeRecipientSelector(int local, int from, int to, int count) {
 		this.local = local;
 		this.from = from;

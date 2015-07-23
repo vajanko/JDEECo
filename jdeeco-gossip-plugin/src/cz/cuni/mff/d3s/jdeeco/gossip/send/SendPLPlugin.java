@@ -20,9 +20,19 @@ import cz.cuni.mff.d3s.jdeeco.network.marshaller.SerializingMarshaller;
  */
 public class SendPLPlugin extends SendBasePlugin {
 	
+	/**
+	 * Configuration property name of pull request check period.
+	 */
 	public static final String TASK_PERIOD = "deeco.sendPL.period";
+	/**
+	 * Default value of pull request check period in milliseconds.
+	 */
 	public static final long TASK_PERIOD_DEFAULT = 1000;
 	
+	/**
+	 * Creates a new instance of plugin sending pull request initialised with period from 
+	 * configuration file.
+	 */
 	public SendPLPlugin() {
 		super(Long.getLong(TASK_PERIOD, TASK_PERIOD_DEFAULT));
 	}

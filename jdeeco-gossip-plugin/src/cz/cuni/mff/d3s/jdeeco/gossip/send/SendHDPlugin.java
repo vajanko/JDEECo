@@ -21,12 +21,19 @@ import cz.cuni.mff.d3s.jdeeco.network.marshaller.SerializingMarshaller;
  */
 public class SendHDPlugin extends SendBasePlugin {
 	
+	/**
+	 * Configuration property name of message headers publish period.
+	 */
 	public static final String TASK_PERIOD = "deeco.sendHD.period";
 	/**
 	 * Default value of message headers broadcasting period in milliseconds.
 	 */
 	public static final long TASK_PERIOD_DEFAULT = 2000;
 	
+	/**
+	 * Creates a new instance of plugin sending headers of received messages
+	 * initialised with period from configuration file.
+	 */
 	public SendHDPlugin() {
 		super(Long.getLong(TASK_PERIOD, TASK_PERIOD_DEFAULT));
 	}
@@ -41,6 +48,11 @@ public class SendHDPlugin extends SendBasePlugin {
 
 		// PULL request on IP network is not implemented
 	}
+	/**
+	 * Publishes header of received messages on the network.
+	 * 
+	 * @param time Current system or simulation time.
+	 */
 	private void publish(long time) {
 		PacketHeader header = new PacketHeader(L2PacketType.MESSAGE_HEADERS);
 		

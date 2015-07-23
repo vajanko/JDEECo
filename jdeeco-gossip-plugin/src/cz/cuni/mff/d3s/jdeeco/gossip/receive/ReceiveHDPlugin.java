@@ -13,7 +13,7 @@ import cz.cuni.mff.d3s.jdeeco.network.marshaller.SerializingMarshaller;
  * Strategy for processing headers of received messages. Received headers
  * are stored in a buffer.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class ReceiveHDPlugin extends ReceiveBasePlugin {
 	

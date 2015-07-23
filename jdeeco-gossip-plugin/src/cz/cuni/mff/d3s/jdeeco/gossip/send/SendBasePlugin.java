@@ -19,19 +19,31 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
 /**
  * Base class for gossip send tasks working with message buffer.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public abstract class SendBasePlugin implements TimerTaskListener, DEECoPlugin {
 	
 	protected KnowledgeProviderPlugin knowledgeProvider;
 	protected ReceptionBuffer receptionBuffer;
+	/**
+	 * Network layer 2 allowing for sending messages.
+	 */
 	protected Layer2 networkLayer;
 	
+	/**
+	 * Period of the sending routine.
+	 */
 	private long period;
+	/**
+	 * Initial fixed delay of the sending routine.
+	 */
 	private long delay = 0;
 	
 	/**
+	 * Base constructor for plugin periodically executing sending routine 
+	 * emiting messages on the network.
 	 * 
+	 * @param period Period of the sending routine.
 	 */
 	public SendBasePlugin(long period) {
 		this.period = period;
