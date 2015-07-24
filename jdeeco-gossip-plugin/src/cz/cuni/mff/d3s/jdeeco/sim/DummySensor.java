@@ -8,7 +8,7 @@ import cz.cuni.mff.d3s.jdeeco.core.Position;
 
 /**
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class DummySensor implements AgentSensor {
 

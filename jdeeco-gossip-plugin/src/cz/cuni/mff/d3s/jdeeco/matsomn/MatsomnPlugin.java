@@ -31,7 +31,7 @@ import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
  * Simulation plugin providing functionality of MATSim as well as OMNeT.
  * Plugin name comes from (MATS)im and (OMN)eT.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class MatsomnPlugin implements DEECoPlugin, TimerTaskListener {
 	

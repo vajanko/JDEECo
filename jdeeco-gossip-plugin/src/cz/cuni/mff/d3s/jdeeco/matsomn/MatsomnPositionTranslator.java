@@ -13,7 +13,7 @@ import cz.cuni.mff.d3s.jdeeco.core.PositionTranslator;
 /**
  * Translates MATSim position to OMNeT position
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class MatsomnPositionTranslator implements PositionTranslator {
 

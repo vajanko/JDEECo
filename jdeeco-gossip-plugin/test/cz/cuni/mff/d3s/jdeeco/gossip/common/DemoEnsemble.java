@@ -13,7 +13,7 @@ import cz.cuni.mff.d3s.deeco.annotations.PeriodicScheduling;
 
 /**
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 @Ensemble
 @PeriodicScheduling(period=1000)

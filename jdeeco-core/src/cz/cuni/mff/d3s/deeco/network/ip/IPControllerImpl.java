@@ -11,7 +11,7 @@ import cz.cuni.mff.d3s.deeco.network.DataReceiver;
 
 /**
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class IPControllerImpl extends DataReceiver<IPData> implements
 		IPController {

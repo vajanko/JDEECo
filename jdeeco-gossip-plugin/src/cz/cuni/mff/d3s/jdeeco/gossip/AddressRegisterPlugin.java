@@ -12,7 +12,7 @@ import cz.cuni.mff.d3s.deeco.runtime.DEECoPlugin;
 /**
  * Plugin providing a singleton instance of address register for particular node.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class AddressRegisterPlugin implements DEECoPlugin {
 	

@@ -9,7 +9,7 @@ import cz.cuni.mff.d3s.jdeeco.network.address.IPAddress;
 /**
  * Helper class providing ability to work with IP addresses.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class AddressHelper {
 	

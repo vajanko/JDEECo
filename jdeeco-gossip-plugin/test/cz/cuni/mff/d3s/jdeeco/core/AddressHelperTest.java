@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 
 /**
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class AddressHelperTest {
 	@Test

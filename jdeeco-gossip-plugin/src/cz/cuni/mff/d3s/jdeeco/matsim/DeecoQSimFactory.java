@@ -27,7 +27,7 @@ import org.matsim.core.mobsim.qsim.qnetsimengine.QNetsimEngineFactory;
  * Extension of {@link QSimFactory} which only creates one instance and then always returns
  * the same one.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class DeecoQSimFactory extends QSimFactory {
 

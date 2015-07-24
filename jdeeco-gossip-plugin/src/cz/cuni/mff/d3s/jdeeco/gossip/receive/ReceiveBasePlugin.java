@@ -18,7 +18,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
  * Base class for gossip receive strategies working with message buffer.
  * 
  * @see ReceptionBuffer
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public abstract class ReceiveBasePlugin implements L2Strategy, DEECoPlugin {
 

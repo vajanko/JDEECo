@@ -10,7 +10,7 @@ import java.io.Serializable;
  * is populated into the network so that other nodes can know about messages sent
  * by other nodes.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class ItemHeader implements Serializable {
 	/**

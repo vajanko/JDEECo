@@ -26,7 +26,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l1.ReceivedInfo;
  * This is a copy of {@link cz.cuni.mff.d3s.jdeeco.network.device.BroadcastLoopback}
  * for special purpose.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class BroadcastDevice implements DEECoPlugin {
 	

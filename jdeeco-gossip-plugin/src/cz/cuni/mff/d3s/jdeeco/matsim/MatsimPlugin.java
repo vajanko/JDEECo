@@ -30,7 +30,7 @@ import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
 /**
  * Plugin enabling MATSim simulation. Use only one instance of this plugin. 
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class MatsimPlugin implements DEECoPlugin, TimerEventListener, MobsimInitializedListener, MobsimBeforeCleanupListener {
 	public static final String MATSIM_CONFIG = "deeco.matsim.config";

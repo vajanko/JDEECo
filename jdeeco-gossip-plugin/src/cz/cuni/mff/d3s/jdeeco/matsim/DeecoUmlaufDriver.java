@@ -10,7 +10,7 @@ import org.matsim.pt.Umlauf;
 
 /**
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class DeecoUmlaufDriver extends UmlaufDriver implements DeecoAgent {
 

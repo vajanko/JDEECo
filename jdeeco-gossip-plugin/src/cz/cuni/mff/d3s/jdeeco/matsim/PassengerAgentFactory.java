@@ -11,7 +11,7 @@ import org.matsim.core.mobsim.qsim.pt.MobsimDriverPassengerAgent;
 /**
  * Factory class for creating transit vehicle passenger agents.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class PassengerAgentFactory implements AgentFactory {
 	private final Netsim simulation;

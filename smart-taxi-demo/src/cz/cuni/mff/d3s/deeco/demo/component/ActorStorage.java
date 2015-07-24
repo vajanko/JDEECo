@@ -14,7 +14,7 @@ import cz.cuni.mff.d3s.jdeeco.core.Position;
  * A class encapsulating a collection of actors (drivers or passengers) together with
  * their's current position.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class ActorStorage implements Serializable {
 	/**

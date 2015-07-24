@@ -13,7 +13,7 @@ import java.util.Collection;
  * These data are used by nodes to discover that some specific message is 
  * missing on the current node or to request a particular message rebroadcast.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class MessageHeader implements Serializable {
 	/**

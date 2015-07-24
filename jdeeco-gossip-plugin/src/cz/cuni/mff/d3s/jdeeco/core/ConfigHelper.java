@@ -10,7 +10,7 @@ import java.io.InputStream;
 /**
  * Manages system properties specified by user in *.properties file.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class ConfigHelper {
 	

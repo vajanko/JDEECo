@@ -29,7 +29,7 @@ import cz.cuni.mff.d3s.jdeeco.gossip.ReceptionBuffer;
  * Provides the ability to create a copy of knowledge data prepared for marshaling
  * and sending through the network.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class KnowledgeProviderPlugin implements DEECoPlugin, ReplicaKnowledgeSource, LocalKnowledgeSource {
 	

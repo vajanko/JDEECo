@@ -30,7 +30,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l1.ReceivedInfo;
  * delay) to destination loop device.
  * 
  * @author Vladimir Matena <matena@d3s.mff.cuni.cz>
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  *
  */
 public class MulticastDevice implements DEECoPlugin {
@@ -43,7 +43,7 @@ public class MulticastDevice implements DEECoPlugin {
 	
 	/**
 	 * 
-	 * @author Ondrej Kov·Ë <info@vajanko.me>
+	 * @author Ondrej Kovac <info@vajanko.me>
 	 */
 	private class NetworkLink {
 		

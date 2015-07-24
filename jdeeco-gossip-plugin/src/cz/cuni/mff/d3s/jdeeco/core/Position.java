@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Structure for representing GPS position.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class Position implements Serializable {
 	/**

@@ -27,7 +27,7 @@ import org.matsim.pt.transitSchedule.api.TransitStopFacility;
  * that the constructor is protected. Otherwise the agent can not be extended which
  * is totally stupid.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me> protected constructor
+ * @author Ondrej Kovac <info@vajanko.me> protected constructor
  * @author mrieser
  */
 public class MatsimTransitAgent extends PersonDriverAgentImpl implements MobsimDriverPassengerAgent {

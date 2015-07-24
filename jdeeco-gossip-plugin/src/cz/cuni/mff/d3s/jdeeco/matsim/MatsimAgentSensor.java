@@ -16,7 +16,7 @@ import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
 /**
  * Provides data about MATSim agent to deeco runtime.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class MatsimAgentSensor implements AgentSensor {
 	

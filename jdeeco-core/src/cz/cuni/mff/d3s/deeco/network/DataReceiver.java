@@ -5,7 +5,7 @@ package cz.cuni.mff.d3s.deeco.network;
 
 /**
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public abstract class DataReceiver<T> {
 

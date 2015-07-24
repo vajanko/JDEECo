@@ -16,7 +16,7 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeDataHelper;
  * This strategy selects addresses of all hosts in all partitions of given {@link KnowledgeData}.
  * Sender address is excluded automatically.
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class IPGossipPartitionStrategy implements IPGossipStrategy {
 

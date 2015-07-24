@@ -21,7 +21,7 @@ import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
 /**
  * Base class for all components in the smart car sharing demo.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public abstract class ActorComponent {
 	public String id;

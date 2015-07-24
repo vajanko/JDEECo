@@ -12,7 +12,7 @@ import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
  * This task can be dynamically rescheduled with given delay and than automatically
  * continues with its regular periodic execution.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class PeriodicTask extends TimerTask {
 

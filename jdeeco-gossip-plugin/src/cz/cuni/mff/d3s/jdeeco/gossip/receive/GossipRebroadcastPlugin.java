@@ -33,7 +33,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.Layer2;
  * Rebroadcast received L2 packets over MANET with certain probability.
  * Different probabilities are used for knowledge and other types of data.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class GossipRebroadcastPlugin implements L2Strategy, DEECoPlugin {
 

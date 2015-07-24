@@ -9,7 +9,7 @@ import cz.cuni.mff.d3s.deeco.knowledge.KnowledgeManager;
  * gossip-base protocol. The decision is made based on {@link KnowledgeData} sent and
  * the sender.
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public interface IPGossipStrategy {
 	/**

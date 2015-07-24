@@ -9,7 +9,7 @@ import cz.cuni.mff.d3s.deeco.model.runtime.api.KnowledgePath;
 
 /**
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class KnowledgeDataHelper {
 	

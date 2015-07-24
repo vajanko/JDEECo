@@ -10,7 +10,7 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
  * Provides list of recipient IP addresses for given knowledge data and sender
  * based on ensemble partitioning.
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class IPGossipClientStrategy extends IPGossipPartitionStrategy {
 	

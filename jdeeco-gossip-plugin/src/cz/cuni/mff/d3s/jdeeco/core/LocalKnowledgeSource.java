@@ -10,7 +10,7 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 /**
  * Provides local knowledge data for publishing on the network.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public interface LocalKnowledgeSource {
 	/**

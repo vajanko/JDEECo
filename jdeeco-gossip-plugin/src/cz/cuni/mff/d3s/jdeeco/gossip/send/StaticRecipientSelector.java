@@ -12,8 +12,10 @@ import cz.cuni.mff.d3s.jdeeco.gossip.RecipientSelector;
 import cz.cuni.mff.d3s.jdeeco.network.address.Address;
 
 /**
+ * For all knowledge data provides a list of addresses where this knowledge should be sent.
+ * The addresses are taken from a local register.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class StaticRecipientSelector implements RecipientSelector {
 

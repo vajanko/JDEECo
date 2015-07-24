@@ -10,7 +10,7 @@ import cz.cuni.mff.d3s.deeco.annotations.Process;
 
 /**
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 @Component
 public class OtherComponent {

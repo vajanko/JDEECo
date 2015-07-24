@@ -18,7 +18,7 @@ import cz.cuni.mff.d3s.deeco.task.ParamHolder;
 
 /**
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 @Ensemble
 //@PeriodicScheduling(period = 2000)

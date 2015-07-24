@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 /**
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class DicEntry implements Serializable {
 	private Object key;

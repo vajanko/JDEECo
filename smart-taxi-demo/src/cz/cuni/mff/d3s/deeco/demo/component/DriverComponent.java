@@ -11,7 +11,7 @@ import cz.cuni.mff.d3s.jdeeco.sim.AgentSensor;
  * Deeco component class implementing functionality of the driver
  * as described in the smart car sharing demo.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 @Component
 public class DriverComponent extends ActorComponent {

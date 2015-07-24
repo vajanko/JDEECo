@@ -12,7 +12,7 @@ import org.matsim.population.algorithms.XY2Links;
  * Extension of default MATSim {@link Controler}. Loads network, population and facilities 
  * data upon creation and not just before run as the default {@link Controler} does.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class PreloadingControler extends Controler {
 

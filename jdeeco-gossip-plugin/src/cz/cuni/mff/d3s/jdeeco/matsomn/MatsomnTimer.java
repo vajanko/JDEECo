@@ -10,7 +10,7 @@ import cz.cuni.mff.d3s.deeco.timer.TimerEventListener;
 /**
  * Implementation of {@link SimulationTimer} for simulation using OMNeT and MATSim.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class MatsomnTimer implements SimulationTimer {
 

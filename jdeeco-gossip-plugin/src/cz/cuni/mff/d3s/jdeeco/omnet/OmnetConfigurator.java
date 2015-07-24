@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class OmnetConfigurator {
 	

@@ -17,7 +17,7 @@ import cz.cuni.mff.d3s.jdeeco.network.marshaller.SerializingMarshaller;
 /**
  * Broadcasts headers of received messages on the current node.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class SendHDPlugin extends SendBasePlugin {
 	

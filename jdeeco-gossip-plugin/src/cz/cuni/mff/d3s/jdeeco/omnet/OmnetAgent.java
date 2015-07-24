@@ -11,7 +11,7 @@ import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTInfrastructureDevice;
 
 /**
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class OmnetAgent implements OMNeTNativeListener {
 	

@@ -17,7 +17,7 @@ import cz.cuni.mff.d3s.deeco.network.ip.IPRegister;
 
 /**
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class IPGossipConnectorStrategy implements IPGossipStrategy {
 	private IPController controller;

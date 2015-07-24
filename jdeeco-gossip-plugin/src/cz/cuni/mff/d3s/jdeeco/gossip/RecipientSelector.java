@@ -9,9 +9,9 @@ import cz.cuni.mff.d3s.deeco.network.KnowledgeData;
 import cz.cuni.mff.d3s.jdeeco.network.address.Address;
 
 /**
- * For given packet provides a list of addresses where this packet should be sent.
+ * For given knowledge data provides a list of addresses where this packet should be sent.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public interface RecipientSelector {
 	/**

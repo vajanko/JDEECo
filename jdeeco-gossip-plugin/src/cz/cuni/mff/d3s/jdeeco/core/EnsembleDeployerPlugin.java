@@ -16,7 +16,7 @@ import cz.cuni.mff.d3s.deeco.runtime.DuplicateEnsembleDefinitionException;
 /**
  * Plugin deploying ensembles on each node as specified in the configuration file 
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class EnsembleDeployerPlugin implements DEECoPlugin {
 	/**

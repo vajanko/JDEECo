@@ -10,7 +10,7 @@ import org.matsim.api.core.v01.Id;
 
 /**
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class MatsimOutputProvider {
 	

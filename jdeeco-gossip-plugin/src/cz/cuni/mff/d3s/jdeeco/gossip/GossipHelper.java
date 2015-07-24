@@ -9,7 +9,7 @@ import java.util.Random;
  * Common functionality necessary for the gossip protocol used by several
  * plugins.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class GossipHelper {
 	/**

@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 /**
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class ExtensibleStorage {
 	

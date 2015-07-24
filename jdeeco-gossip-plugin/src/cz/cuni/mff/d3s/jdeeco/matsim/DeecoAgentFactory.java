@@ -11,7 +11,7 @@ import org.matsim.core.mobsim.qsim.interfaces.Netsim;
 /**
  * Creates extended agents for standard QSim simulation which are connected to deeco component.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class DeecoAgentFactory implements AgentFactory {
 

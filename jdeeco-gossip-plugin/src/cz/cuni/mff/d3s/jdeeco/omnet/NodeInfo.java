@@ -5,7 +5,7 @@ package cz.cuni.mff.d3s.jdeeco.omnet;
 
 /**
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class NodeInfo {
 	public double x;

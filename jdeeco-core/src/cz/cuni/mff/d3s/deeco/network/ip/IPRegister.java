@@ -10,7 +10,7 @@ import java.util.Set;
  * 
  * TODO: this class should be renamed properly.
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class IPRegister {
 	private Set<String> register;

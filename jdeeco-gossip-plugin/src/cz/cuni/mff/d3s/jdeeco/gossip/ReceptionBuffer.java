@@ -23,7 +23,7 @@ import cz.cuni.mff.d3s.jdeeco.network.Network;
  * last reception of an item locally by current node and a belief of the most
  * recent reception of the item globally by any node in the network.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class ReceptionBuffer implements DEECoPlugin {
 	
@@ -350,7 +350,7 @@ public class ReceptionBuffer implements DEECoPlugin {
 	 * {@link #localReception} <= {@link #globalReception}, because when an item
 	 * is received locally it is also considered as global reception in the network.
 	 * 
-	 * @author Ondrej Kov·Ë <info@vajanko.me>
+	 * @author Ondrej Kovac <info@vajanko.me>
 	 */
 	class ItemInfo {
 		/**

@@ -58,7 +58,7 @@ import cz.cuni.mff.d3s.jdeeco.network.omnet.OMNeTSimulation;
 
 /**
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class SimConfig {
 	

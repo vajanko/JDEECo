@@ -28,7 +28,7 @@ import cz.cuni.mff.d3s.jdeeco.network.l2.L2Strategy;
  * Plugin for debugging purpose only. Allows for logging of sent and received
  * messages.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class RequestLoggerPlugin implements L2Strategy, L2PacketSender, DEECoPlugin {
 	

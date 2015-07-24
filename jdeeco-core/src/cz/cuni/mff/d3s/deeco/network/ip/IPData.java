@@ -10,7 +10,7 @@ import java.util.Set;
 
 /**
  * 
- * @author Ondrej Kováč <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class IPData implements Serializable {
 	

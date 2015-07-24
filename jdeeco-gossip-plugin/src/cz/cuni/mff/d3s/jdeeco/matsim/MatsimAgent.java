@@ -24,7 +24,7 @@ import org.matsim.core.utils.misc.PopulationUtils;
 
 /**
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class MatsimAgent implements MobsimDriverAgent, MobsimPassengerAgent, HasPerson, PlanAgent, DeecoAgent {
 	

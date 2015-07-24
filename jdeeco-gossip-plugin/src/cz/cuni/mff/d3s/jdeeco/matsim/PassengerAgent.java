@@ -17,7 +17,7 @@ import org.matsim.pt.transitSchedule.api.TransitStopFacility;
 
 /**
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class PassengerAgent extends MatsimTransitAgent implements DeecoAgent {
 	

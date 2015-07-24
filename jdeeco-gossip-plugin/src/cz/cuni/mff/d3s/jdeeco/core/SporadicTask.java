@@ -7,7 +7,7 @@ import cz.cuni.mff.d3s.deeco.task.TimerTaskListener;
 /**
  * Task with sporadic execution planning by explicitly calling a method.
  * 
- * @author Ondrej Kov·Ë <info@vajanko.me>
+ * @author Ondrej Kovac <info@vajanko.me>
  */
 public class SporadicTask extends TimerTask {
 
